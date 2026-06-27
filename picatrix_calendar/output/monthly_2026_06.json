@@ -1,0 +1,307 @@
+{
+  "year": 2026,
+  "month": 6,
+  "month_name": "June",
+  "days": [
+    {
+      "date": "2026-06-01",
+      "day_of_week": "Mon",
+      "day_ruler": "Moon",
+      "moon_sign": "Sagittarius",
+      "moon_mansion": "Nahaym",
+      "num_aspects": 1,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-02",
+      "day_of_week": "Tue",
+      "day_ruler": "Mars",
+      "moon_sign": "Capricorn",
+      "moon_mansion": "Elbelda",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-03",
+      "day_of_week": "Wed",
+      "day_ruler": "Mercury",
+      "moon_sign": "Capricorn",
+      "moon_mansion": "Caadaldeba",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-04",
+      "day_of_week": "Thu",
+      "day_ruler": "Jupiter",
+      "moon_sign": "Capricorn",
+      "moon_mansion": "Caaddebolach",
+      "num_aspects": 1,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-05",
+      "day_of_week": "Fri",
+      "day_ruler": "Venus",
+      "moon_sign": "Aquarius",
+      "moon_mansion": "Caadacohot",
+      "num_aspects": 3,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-06",
+      "day_of_week": "Sat",
+      "day_ruler": "Saturn",
+      "moon_sign": "Aquarius",
+      "moon_mansion": "Caaddalhacbia",
+      "num_aspects": 0,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-07",
+      "day_of_week": "Sun",
+      "day_ruler": "Sun",
+      "moon_sign": "Pisces",
+      "moon_mansion": "Almiquedam",
+      "num_aspects": 1,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-08",
+      "day_of_week": "Mon",
+      "day_ruler": "Moon",
+      "moon_sign": "Pisces",
+      "moon_mansion": "Algarf almuehar",
+      "num_aspects": 4,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-09",
+      "day_of_week": "Tue",
+      "day_ruler": "Mars",
+      "moon_sign": "Aries",
+      "moon_mansion": "Alnath",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-10",
+      "day_of_week": "Wed",
+      "day_ruler": "Mercury",
+      "moon_sign": "Aries",
+      "moon_mansion": "Albotain",
+      "num_aspects": 4,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-11",
+      "day_of_week": "Thu",
+      "day_ruler": "Jupiter",
+      "moon_sign": "Aries",
+      "moon_mansion": "Azoraya",
+      "num_aspects": 5,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-12",
+      "day_of_week": "Fri",
+      "day_ruler": "Venus",
+      "moon_sign": "Taurus",
+      "moon_mansion": "Aldebaran",
+      "num_aspects": 4,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-13",
+      "day_of_week": "Sat",
+      "day_ruler": "Saturn",
+      "moon_sign": "Taurus",
+      "moon_mansion": "Almices",
+      "num_aspects": 3,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-14",
+      "day_of_week": "Sun",
+      "day_ruler": "Sun",
+      "moon_sign": "Gemini",
+      "moon_mansion": "Athaya",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-15",
+      "day_of_week": "Mon",
+      "day_ruler": "Moon",
+      "moon_sign": "Gemini",
+      "moon_mansion": "Aldirah",
+      "num_aspects": 1,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-16",
+      "day_of_week": "Tue",
+      "day_ruler": "Mars",
+      "moon_sign": "Cancer",
+      "moon_mansion": "Annathra",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-17",
+      "day_of_week": "Wed",
+      "day_ruler": "Mercury",
+      "moon_sign": "Cancer",
+      "moon_mansion": "Atarf",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-18",
+      "day_of_week": "Thu",
+      "day_ruler": "Jupiter",
+      "moon_sign": "Leo",
+      "moon_mansion": "Algebha",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-19",
+      "day_of_week": "Fri",
+      "day_ruler": "Venus",
+      "moon_sign": "Leo",
+      "moon_mansion": "Acarfa",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-20",
+      "day_of_week": "Sat",
+      "day_ruler": "Saturn",
+      "moon_sign": "Virgo",
+      "moon_mansion": "Alahue",
+      "num_aspects": 1,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-21",
+      "day_of_week": "Sun",
+      "day_ruler": "Sun",
+      "moon_sign": "Virgo",
+      "moon_mansion": "Azimech",
+      "num_aspects": 3,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-22",
+      "day_of_week": "Mon",
+      "day_ruler": "Moon",
+      "moon_sign": "Libra",
+      "moon_mansion": "Algarfa",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-23",
+      "day_of_week": "Tue",
+      "day_ruler": "Mars",
+      "moon_sign": "Libra",
+      "moon_mansion": "Algarfa",
+      "num_aspects": 3,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-24",
+      "day_of_week": "Wed",
+      "day_ruler": "Mercury",
+      "moon_sign": "Scorpio",
+      "moon_mansion": "Azubene",
+      "num_aspects": 5,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-25",
+      "day_of_week": "Thu",
+      "day_ruler": "Jupiter",
+      "moon_sign": "Scorpio",
+      "moon_mansion": "Alichil",
+      "num_aspects": 4,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-26",
+      "day_of_week": "Fri",
+      "day_ruler": "Venus",
+      "moon_sign": "Scorpio",
+      "moon_mansion": "Alcalb",
+      "num_aspects": 5,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-27",
+      "day_of_week": "Sat",
+      "day_ruler": "Saturn",
+      "moon_sign": "Sagittarius",
+      "moon_mansion": "Exaula",
+      "num_aspects": 3,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-28",
+      "day_of_week": "Sun",
+      "day_ruler": "Sun",
+      "moon_sign": "Sagittarius",
+      "moon_mansion": "Nahaym",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-29",
+      "day_of_week": "Mon",
+      "day_ruler": "Moon",
+      "moon_sign": "Capricorn",
+      "moon_mansion": "Elbelda",
+      "num_aspects": 1,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    },
+    {
+      "date": "2026-06-30",
+      "day_of_week": "Tue",
+      "day_ruler": "Mars",
+      "moon_sign": "Capricorn",
+      "moon_mansion": "Caadaldeba",
+      "num_aspects": 2,
+      "num_hours_day": 12,
+      "num_hours_night": 12
+    }
+  ]
+}

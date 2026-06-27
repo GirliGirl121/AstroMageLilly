@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, follow">
+<title>Shams Al Maarif English</title>
+<style>
+  /* Reset & base */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #222;
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 20px;
+  }
+
+  body.dark {
+    background-color: #121212;
+    color: #ddd;
+  }
+
+  /* Container max width lebih lebar */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header styling */
+  header.articles--title {
+    position: relative; /* for toggle button */
+    margin-bottom: 30px;
+  }
+
+  /* Toggle button */
+  .dark-toggle-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    font-size: 1.6rem;
+    transition: color 0.3s;
+  }
+
+  .dark-toggle-btn svg {
+    width: 1.6em;
+    height: 1.6em;
+    fill: currentColor;
+  }
+
+  header.articles--title h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    padding-right: 50px; /* space for toggle button */
+  }
+
+  /* Article content */
+  article.content p {
+    margin-bottom: 1em;
+  }
+
+  article.content strong {
+    font-weight: 700;
+  }
+
+  blockquote {
+    background-color: #f1f1f1;
+    border-left: 5px solid #ccc;
+    padding: 1em 1.2em;
+    margin: 1.5em 0;
+    border-radius: 4px;
+  }
+
+  body.dark blockquote {
+    background-color: #222;
+    border-left-color: #555;
+  }
+
+ /* Container iklan */
+.ad-container {
+  margin: 2em 0;
+  padding: 10px 0;
+  text-align: center; /* Center iframe/img inline */
+}
+
+/* =========================
+   Banner 728x90 (Leaderboard)
+========================= */
+.ad-banner-728x90 iframe,
+.ad-banner-728x90 img {
+  width: 100%;       /* Lebar penuh container */
+  max-width: 728px;  /* Maksimal desktop */
+  height: auto;      /* Proporsional */
+  border: none;
+  margin: 0 auto;    /* Center horizontal */
+  display: block;
+}
+
+/* =========================
+   Banner 300x250 (Side by Side)
+========================= */
+.ad-banner-300x250-container {
+  display: flex;
+  justify-content: center; /* Center row desktop */
+  flex-wrap: wrap;
+  gap: 20px;               /* Jarak antar iklan */
+}
+
+.ad-banner-300x250 {
+  width: 300px;
+  height: 250px;
+  border: none;
+  border-radius: 6px;
+  margin: 0 auto;          /* Center horizontal mobile */
+  display: block;
+}
+
+/* =========================
+   Responsif untuk Mobile
+========================= */
+@media (max-width: 480px) {
+  /* 728x90 → tetap lebar penuh & center */
+  .ad-banner-728x90 iframe,
+  .ad-banner-728x90 img {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* 300x250 → stack vertikal, center */
+  .ad-banner-300x250-container {
+    flex-direction: column;
+    align-items: center; /* Center anak secara vertikal */
+    gap: 15px;
+  }
+
+  .ad-banner-300x250 {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+
+  /* Dark mode border colors for ads */
+  body.dark .ad-banner-728x90 img,
+  body.dark .ad-banner-300x250-container img {
+    border-color: #555;
+  }
+
+  /* Footer styling */
+  footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 1px solid #ccc;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  body.dark footer {
+    border-color: #444;
+    color: #aaa;
+  }
+
+
+.image-container {
+  float: left;
+  margin: 0 15px 15px 0;
+  max-width: 40%; /* batasi lebar relatif terhadap konten */
+}
+
+.image-container img {
+  width: 100%; /* biar mengikuti ukuran parent */
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.image-container img:hover { 
+  transform: scale(1.05); 
+}
+
+/* RESPONSIVE FIX */
+@media (max-width: 768px) {
+  .image-container {
+    float: none;             /* nonaktifkan float di layar kecil */
+    margin: 0 auto 15px auto; /* tengah */
+    max-width: 80%;          /* lebar lebih besar di mobile */
+    text-align: center;
+  }
+  .image-container img {
+    width: 100%;
+    max-width: 300px;        /* biar tidak terlalu besar */
+    margin: 0 auto;
+  }
+}
+
+/* ====== MODAL POPUP CENTER FIX + FADE ZOOM ANIMATION (BOOTSTRAP FRIENDLY) ====== */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 2000 !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: opacity 0.3s ease;
+  padding: 20px; /* agar tetap bisa scroll di mobile */
+}
+
+.modal.show {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  animation: fadeInZoom 0.25s ease forwards;
+}
+
+@keyframes fadeInZoom {
+  from { opacity: 0; transform: scale(0.9) translateY(30px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+/* ====== Kontainer Modal ====== */
+.modal-content {
+  background: #1c1d21;
+  color: #fff;
+  border-radius: 10px;
+  width: 95%;
+  max-width: 550px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  overflow: hidden;
+  border: 1px solid #333;
+  animation: modalZoom 0.3s ease;
+}
+
+@keyframes modalZoom {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #333;
+  background: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h5 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #36d399;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  border-top: 1px solid #333;
+  background: #1a1a1a;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Tombol close */
+.close {
+  color: #fff;
+  font-size: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.close:hover {
+  opacity: 1;
+}
+
+/* Tombol bootstrap look */
+.btn {
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-primary {
+  background: #36d399;
+  color: #fff;
+}
+.btn-primary:hover {
+  background: #2db985;
+  box-shadow: 0 0 10px #36d399;
+}
+.btn-secondary {
+  background: #333;
+  color: #ccc;
+}
+.btn-secondary:hover {
+  background: #444;
+}
+
+/* Input field style */
+.form-control.border {
+  width: 100%;
+  background: #2c2c2c;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+}
+.form-control.border:focus {
+  outline: none;
+  border-color: #36d399;
+  box-shadow: 0 0 0 2px rgba(54,211,153,0.2);
+}
+
+/* Label */
+label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Backdrop layer disable default */
+.modal-backdrop {
+  display: none !important;
+}
+
+</style>
+</head>
+<body>
+<script type='text/javascript' src='//vaccinethemrobes.com/90/30/78/90307841e035f6f5621c740ad862c22f.js'></script>
+  <div class="container">
+    <header class="articles--title">
+      <button aria-label="Toggle Dark Mode" class="dark-toggle-btn" id="darkToggle" title="Toggle Dark/Light Mode">
+        <!-- Sun icon (light mode default) -->
+        <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" >
+          <circle cx="12" cy="12" r="5" />
+          <g stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </g>
+        </svg>
+        <!-- Moon icon hidden by default -->
+        <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="display:none;">
+          <path fill="currentColor" d="M21 12.79A9 9 0 0112.21 3a7 7 0 009 9.79z" />
+        </svg>
+      </button>
+      <h1>Shams Al Maarif English</h1>
+    </header>
+
+    <article class="content">
+
+      <strong>shams al maarif english</strong> is a term that resonates deeply with enthusiasts of mystical literature, spiritual studies, and esoteric knowledge. Originally rooted in Arabic tradition, "Shams al Maarif" translates to "The Sun of Secrets" or "The Sun of Knowledge," and it is widely known as a legendary grimoire or mystical manuscript believed to contain profound secrets of the universe, spiritual wisdom, and mystical practices. Over the years, the term has gained popularity among English-speaking audiences eager to explore its teachings, teachings that delve into the realms of spirituality, magic, and the esoteric. In this comprehensive article, we will explore the origins of Shams al Maarif, its significance in the world of mysticism, how it has been translated and interpreted into English, and practical insights for those interested in its teachings.
+<h2>Understanding Shams al Maarif: Origins and Historical Context</h2>
+
+<h3>The Roots of Shams al Maarif</h3>
+Shams al Maarif is believed to have been authored by the renowned Egyptian scholar and mystic Al-Buni (Ali ibn Umar Al-Buni) in the 12th century. Al-Buni was an influential figure in the realm of Islamic mysticism, astrology, and magic, and his works have been revered across centuries for their depth and spiritual insight.
+
+The original manuscript was written in Arabic and is a comprehensive compendium of mystical knowledge, covering a broad spectrum of topics such as:
+- Esoteric sciences
+- Astrology
+- Numerology
+- Magical practices
+- Spiritual development
+- Theurgy and divine secrets
+
+The book gained notoriety for its detailed instructions on spiritual practices, talisman creation, and divine invocation, making it a cornerstone in the study of Islamic mysticism and magic.
+
+<h3>The Significance of Shams al Maarif in Mystical Traditions</h3>
+Shams al Maarif is often considered a sacred text among scholars of the occult and spiritual practitioners. Its significance lies in:
+- Comprehensive Knowledge: It consolidates various esoteric sciences into a single volume.
+- Spiritual Power: The teachings aim to elevate the practitioner's spiritual awareness and divine connection.
+- Mystical Secrets: The book claims to unlock hidden knowledge about the universe, divine secrets, and the nature of reality.
+- Practices and Rituals: It provides detailed instructions for performing rituals, creating talismans, and invoking divine energies.
+
+While some view it as a manual for magical practices, others regard it as a spiritual guide meant to deepen one's understanding of divine laws.
+<h2>Shams al Maarif in English: Translation and Interpretation</h2>
+
+<h3>Challenges of Translating Esoteric Texts</h3>
+Translating Shams al Maarif into English presents unique challenges due to:
+- The complexity of mystical terminology
+- Cultural and religious nuances
+- The symbolic language used in the original texts
+- The potential for misinterpretation of spiritual concepts
+
+Many translations attempt to preserve the original essence, but the depth of the material often requires contextual understanding.
+
+<h3>Popular English Translations and Editions</h3>
+Several scholars and practitioners have undertaken the task of translating Shams al Maarif into English. Some of the notable editions include:
+- "Shams al Maarif" translated by Dr. Omar Akhmedov – A modern translation that aims to make the teachings accessible to English-speaking audiences.
+- Annotated editions that include commentaries and explanations to aid understanding.
+- Compilations and summaries that extract key concepts for practical application.
+
+It is important for readers to discern the credibility of translations and seek editions that faithfully represent the original text.
+
+<h3>Interpreting the Teachings in the Modern Context</h3>
+Interpreting Shams al Maarif in English involves:
+- Recognizing its spiritual and mystical framework
+- Distinguishing between literal magic practices and spiritual symbolism
+- Applying teachings to personal spiritual development
+- Respecting the cultural and religious origins of the text
+
+Many modern practitioners view the book as a spiritual guide rather than a mere manual for magical practices, emphasizing ethical use and spiritual growth.
+<h2>Key Topics Covered in Shams al Maarif (English Version)</h2>
+
+<h3>1. Esoteric Sciences and Mystical Knowledge</h3>
+Shams al Maarif delves into various esoteric sciences, including:
+- The nature of divine and cosmic energies
+- The role of celestial bodies and their influence
+- The significance of sacred letters and symbols
+- The mysteries of the universe and divine creation
+
+<h3>2. Magic and Talisman Crafting</h3>
+The text provides detailed instructions on:
+- Creating protective talismans
+- Rituals for abundance, love, and health
+- Techniques for spiritual protection
+- Invocation of divine names and energies
+
+<h3>3. Spiritual Development and Self-Realization</h3>
+Beyond magic, Shams al Maarif emphasizes:
+- Inner purification
+- Meditation and visualization techniques
+- Connecting with divine consciousness
+- Attaining higher spiritual states
+
+<h3>4. Astrology and Numerology</h3>
+The book discusses:
+- The influence of planets and stars
+- Numerological calculations for personal insights
+- Timing of rituals based on celestial configurations
+
+<h3>5. Divine Secrets and Mystical Symbols</h3>
+The text explores:
+- The power of sacred symbols
+- The significance of certain geometrical patterns
+- Methods to access divine knowledge through symbols
+<h2>Practical Uses of Shams al Maarif in the Modern World</h2>
+
+<h3>Spiritual Growth and Self-Discovery</h3>
+Many practitioners use teachings from Shams al Maarif to:
+- Enhance their spiritual awareness
+- Develop intuition and psychic abilities
+- Deepen their connection with divine energies
+
+<h3>Protection and Healing</h3>
+The book offers practical guidance for:
+- Creating talismans for protection against negative influences
+- Performing rituals for health and healing
+- Spiritual cleansing and purifying environments
+
+<h3>Magical and Ritual Practices</h3>
+While some view these with skepticism, others see value in:
+- Learning the symbolism and energy work involved
+- Using rituals ethically for positive purposes
+- Respecting the spiritual laws inherent in the practices
+
+<h3>Educational and Cultural Significance</h3>
+Understanding Shams al Maarif enriches knowledge of:
+- Islamic mysticism
+- The history of magic and esoteric sciences
+- Cross-cultural spiritual traditions
+<h2>Ethical Considerations and Cautions</h2>
+
+While exploring Shams al Maarif, especially in English, it is essential to approach with respect and discernment. Some key points include:
+- Ethical Use: Avoid harmful or manipulative practices.
+- Spiritual Responsibility: Recognize the power of spiritual work and act responsibly.
+- Authenticity: Seek reputable translations and teachings to avoid misinformation.
+- Cultural Respect: Honor the origins and cultural context of the teachings.
+<h2>Conclusion: Embracing the Mystical Wisdom of Shams al Maarif in English</h2>
+
+Shams al Maarif in English offers a gateway to the profound mystical knowledge embedded in the original Arabic manuscripts. Its teachings encompass a holistic approach to spiritual development, understanding divine secrets, and harnessing cosmic energies for positive purposes. Whether one approaches it as a spiritual guide, a mystical manual, or a cultural artifact, understanding its depth requires respect, discernment, and an open heart.
+
+For those interested in exploring the realms of esoteric sciences, the translation and interpretation of Shams al Maarif serve as invaluable resources. By engaging with its teachings responsibly, modern practitioners can unlock new dimensions of spiritual insight, personal growth, and divine understanding. As with all mystical sciences, approach with reverence, curiosity, and a sincere desire for spiritual truth.
+Keywords for SEO Optimization:
+- Shams al Maarif English translation
+- Shams al Maarif meaning
+- Esoteric sciences in Shams al Maarif
+- Mystical knowledge and magic
+- Islamic mysticism books
+- Talismans and rituals from Shams al Maarif
+- Spiritual development techniques
+- Divine secrets in Shams al Maarif
+- Egyptian mystical texts
+- Al-Buni and mystical literature
+      <!-- ads -->
+<div class="ad-container ad-banner-728x90" role="complementary" aria-label="Advertisement">
+<script type="text/javascript">
+	atOptions = {
+		'key' : 'c5bb839ff299c2abad7231d4209b59fa',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//vaccinethemrobes.com/c5bb839ff299c2abad7231d4209b59fa/invoke.js"></script>
+</div>
+
+       <hr>
+ Shams al Maarif English is a captivating translation of one of the most enigmatic and revered mystical texts in Islamic tradition. Originally written in Arabic, "Shams al Maarif" (The Sun of Secrets) has gained worldwide recognition not only for its profound spiritual insights but also for its historical significance. The English translation aims to make this treasure trove of esoteric knowledge accessible to a broader audience, bridging cultural and linguistic gaps. In this comprehensive review, we'll explore the origins of the text, its thematic richness, translation quality, cultural relevance, and practical implications for readers interested in mysticism, spirituality, and Islamic esoteric sciences.
+<h2>Understanding Shams al Maarif</h2>
+
+<h3>Historical Background</h3>
+"Shams al Maarif" is a classical Arabic text attributed to the Moroccan mystic and scholar Muhammad ibn Ali al-Sarraj, often associated with Sufism and Islamic mysticism. The book was compiled over centuries, with its earliest versions dating back to the 15th century, though the existing manuscripts have undergone multiple revisions and commentaries. The work delves into various mystical, numerological, and spiritual doctrines, serving as a guide for initiates seeking divine knowledge and enlightenment.
+
+In recent decades, the translation of "Shams al Maarif" into English has opened doors for non-Arabic speakers to explore its teachings. The translation effort aims to preserve the depth and nuance of the original while making it accessible for modern readers unfamiliar with classical Arabic or Islamic esoteric sciences.
+
+<h3>What Makes Shams al Maarif Unique?</h3>
+- Esoteric Depth: The text combines mystical philosophy, numerology, symbolism, and spiritual practices.
+- Historical Significance: It has influenced various mystical traditions, including Sufism, occult sciences, and even popular culture.
+- Controversial Aspects: Due to its focus on magic, talismans, and spiritual power, some parts of the book have been controversial, sparking debates about its ethical and religious implications.
+<h2>Features of the English Translation</h2>
+
+<h3>Translation Quality and Fidelity</h3>
+The quality of translation is crucial in conveying the complex notions embedded in "Shams al Maarif." Reputable translators have invested significant effort to maintain fidelity to the original text's spiritual essence while making it comprehensible for contemporary readers.
+
+Pros:
+- Clear explanations of esoteric terms
+- Preservation of poetic and mystical language
+- Annotated footnotes for contextual understanding
+
+Cons:
+- Occasional loss of nuance due to linguistic differences
+- Some complex concepts require prior knowledge of Islamic mysticism for full comprehension
+
+<h3>Accessibility and Readability</h3>
+Most translations aim to strike a balance between scholarly rigor and readability. They often include introductory chapters that contextualize the work historically and spiritually, making it suitable both for academic study and personal exploration.
+
+Features:
+- Glossaries of terms
+- Appendices with historical background
+- Cross-references to related mystical texts
+
+Limitations:
+- Dense and technical sections may challenge casual readers
+- Some mystical symbolism may require supplementary explanations
+<h2>Content Breakdown and Thematic Overview</h2>
+
+<h3>Core Themes and Concepts</h3>
+"Shams al Maarif" covers a broad spectrum of mystical topics, which can be categorized as follows:
+
+- Divine Names and Attributes: The significance of Allah's names and their spiritual power.
+- Numerology and Symbolism: The role of numbers, letters, and symbols in spiritual practice.
+- Magic and Talismans: Rituals, charms, and spiritual tools for protection and manifestation.
+- Dream Interpretation: Understanding visions as gateways to divine knowledge.
+- Spiritual Practices: Meditation, invocation, and other methods to attain higher consciousness.
+
+<h3>Structure and Organization</h3>
+The book is often organized into chapters or sections, each focusing on specific aspects of mysticism. Some editions include commentaries that elucidate difficult passages, making the text more approachable.
+<h2>Practical Implications for Readers</h2>
+
+<h3>For Spiritual Seekers</h3>
+"Shams al Maarif" serves as an invaluable resource for those interested in deepening their spiritual journey. Its teachings on divine names, meditation, and mystical practices can be integrated into personal routines.
+
+Benefits:
+- Enhances understanding of Islamic mysticism
+- Provides practical tools for spiritual development
+- Encourages introspection and divine connection
+
+Cautions:
+- The esoteric nature may be confusing without guidance
+- Some practices require ethical considerations and proper understanding
+
+<h3>Academic and Cultural Significance</h3>
+For scholars of Islamic studies, mysticism, and comparative religion, the translated "Shams al Maarif" offers rich material for research and analysis.
+
+Uses:
+- Comparative studies of mystical traditions
+- Research into Islamic occult sciences
+- Cultural exploration of spiritual practices
+
+Limitations:
+- Variations in translation can lead to differing interpretations
+- Requires background knowledge for nuanced understanding
+<h2>Pros and Cons Summary</h2>
+
+Pros:
+- Provides access to a complex mystical tradition
+- Combines historical depth with practical insights
+- Well-annotated for better understanding
+- Bridges cultural gaps through translation
+
+Cons:
+- Dense language may challenge lay readers
+- Some concepts can be misunderstood without guidance
+- Ethical considerations regarding magical practices
+- Variability in translation quality across editions
+<h2>Conclusion</h2>
+"Shams al Maarif English" represents a significant achievement in making a profound esoteric text accessible to a global audience. Its translation offers a gateway into the mystical and spiritual dimensions of Islamic tradition, blending poetic symbolism, spiritual philosophy, and practical mysticism. While it requires patience and discernment to fully grasp its depth, the translation serves as an invaluable resource for seekers, scholars, and curious minds alike.
+
+Whether approached as a spiritual manual, an academic study, or a cultural artifact, "Shams al Maarif" in English opens up a world of divine secrets, mystical wisdom, and esoteric knowledge that has captivated readers for centuries. As with any profound spiritual text, it is best explored with respect, guidance, and an open mind to truly appreciate its richness and complexity.  
+  <!-- ads -->
+<div class="ad-container ad-banner-300x250-container" role="complementary" aria-label="Advertisement">
+  <div class="ad-banner-300x250">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '67afc2b5ae106f3b8e810cf438915392',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//vaccinethemrobes.com/67afc2b5ae106f3b8e810cf438915392/invoke.js"></script>
+  </div>
+
+  <div class="ad-banner-300x250">
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '51ff4182c7dc364cf35db1076f415e7c',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//vaccinethemrobes.com/51ff4182c7dc364cf35db1076f415e7c/invoke.js"></script>
+  </div>
+</div>
+      	<blockquote>
+      <table border="1" cellpadding="5" cellspacing="0" width="100%">
+<tr><th>Question</th><th>Answer</th></tr>
+<tr>
+    <td>What is &#039;Shams al-Ma&#039;arif&#039; in English translation?</td>
+    <td>&#039;Shams al-Ma&#039;arif&#039; translates to &#039;The Sun of Knowledge&#039; or &#039;The Sun of the Knowledge&#039; in English.</td>
+</tr>
+<tr>
+    <td>Is there an English version of &#039;Shams al-Ma&#039;arif&#039; available for readers?</td>
+    <td>While the original &#039;Shams al-Ma&#039;arif&#039; is in Arabic, there are some translated versions and summaries available in English, but they may vary in accuracy and completeness.</td>
+</tr>
+<tr>
+    <td>What are the main topics covered in &#039;Shams al-Ma&#039;arif&#039;?</td>
+    <td>&#039;Shams al-Ma&#039;arif&#039; primarily covers topics related to magic, esoteric knowledge, and spiritual practices, including talismans, invocations, and mystical sciences.</td>
+</tr>
+<tr>
+    <td>Is &#039;Shams al-Ma&#039;arif&#039; considered a reliable source for learning about magic and mysticism?</td>
+    <td>It is regarded as a significant historical text in the field of esoteric studies, but modern perspectives often view it with skepticism; caution is advised when using it as a practical guide.</td>
+</tr>
+<tr>
+    <td>Why is &#039;Shams al-Ma&#039;arif&#039; popular among students of mysticism and magic today?</td>
+    <td>Its reputation for containing ancient secrets and mystical knowledge makes it a sought-after reference for those interested in spiritual and magical practices.</td>
+</tr>
+<tr>
+    <td>Are there any modern adaptations or interpretations of &#039;Shams al-Ma&#039;arif&#039; in English?</td>
+    <td>Yes, some authors and researchers have produced modern summaries, analyses, or reinterpretations of &#039;Shams al-Ma&#039;arif&#039; in English, aiming to make its content more accessible to contemporary readers.</td>
+</tr>
+</table>
+</blockquote>
+      <footer>
+      &copy; 2025. All rights reserved.
+	  <a href="/Legal-Information.php" >Legal Information</a>
+    </footer>
+  </div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GHQ1VYP4VS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-GHQ1VYP4VS');
+</script>
+
+ <!-- Histats.com  START  (aync)-->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,5029481,4,0,0,0,00010000']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5029481&101" alt="free tracking" border="0"></a></noscript>
+<!-- Histats.com  END  -->
+    <!-- Histats.com  START  (aync)-->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,5010926,4,0,0,0,00010000']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5010926&101" alt="hit counter code" border="0"></a></noscript>
+<!-- Histats.com  END  -->
+<script>
+  const toggleBtn = document.getElementById('darkToggle');
+  const body = document.body;
+  const iconSun = document.getElementById('iconSun');
+  const iconMoon = document.getElementById('iconMoon');
+
+  toggleBtn.addEventListener('click', () => {
+    body.classList.toggle('dark');
+
+    // Toggle icon visibility
+    if(body.classList.contains('dark')) {
+      iconSun.style.display = 'none';
+      iconMoon.style.display = 'block';
+    } else {
+      iconSun.style.display = 'block';
+      iconMoon.style.display = 'none';
+    }
+  });
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

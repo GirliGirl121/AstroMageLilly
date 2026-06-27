@@ -1,0 +1,675 @@
+{
+  "source": "Picatrix (Ghayat al-Hakim / The Goal of the Sage)",
+  "translation": "Picatrix: Liber Rubeus (Litton translation, 2009)",
+  "extraction_notes": "Planetary correspondences extracted from Book Three, Chapters 1-3; Book Three, Chapter 37 (stones and figures); Book Four, Chapters 2 and 6",
+  "planets": {
+    "Saturn": {
+      "picatrix_citation": "Book Three, Chapter 1 (The parts of the planets that exist in plants, animals and metals); Book Three, Chapter 3 (Of the figures, colors, garments, and incenses of the planets); Book Three, Chapter 37 (The stones proper to each planet); Book Four, Chapter 2 (What ought to be done with each of the seven planets); Book Four, Chapter 6 (How the suffumigations of the stars ought to be made)",
+      "nature": "Cold and dry, infortune, destructive",
+      "virtue": "Retentive virtue",
+      "colors": {
+        "planet_color": "Like burned wool; dark and tawny colors",
+        "garment_colors": "Black, best made of wool"
+      },
+      "metals": ["Lead", "Iron", "All metals that are black and smell bad"],
+      "stones_minerals": [
+        "Onyx",
+        "All black stones",
+        "Diamond",
+        "Cameo",
+        "Azebehe (black and clear)",
+        "Iron ore",
+        "Magnesia",
+        "Ruby (in part)",
+        "Yellow marcasite",
+        "Hematite",
+        "Turquoise (rules among stones for rings)"
+      ],
+      "incenses_suffumigations": [
+        "All things that smell bad",
+        "Asafoetida",
+        "Gum arabic",
+        "Bdellium",
+        "Hemlock",
+        "Southernwood",
+        "Bericus seeds",
+        "Juniper root",
+        "Preserved dates",
+        "Cashew nuts",
+        "Opium",
+        "Actarag (an herb)",
+        "Saffron",
+        "Laurel seed",
+        "Caraway",
+        "Wormwood",
+        "Lanolin",
+        "Colocynth",
+        "Head of a black cat (mixed with urine of black goat)"
+      ],
+      "plants": [
+        "Elder trees",
+        "Oaks",
+        "Carubia trees",
+        "Palms",
+        "Vines",
+        "Cumin",
+        "Rue",
+        "Onions",
+        "All plants that have thick leaves"
+      ],
+      "animals": [
+        "Black camels",
+        "Pigs",
+        "Apes",
+        "Bears",
+        "Dogs",
+        "Cats",
+        "Birds with long necks and coarse voices",
+        "Cranes",
+        "Ostriches",
+        "Duga",
+        "Crows",
+        "All animals that thrive under ground",
+        "Small animals that are dry and stinking"
+      ],
+      "foods_tastes": "Unpleasant tastes",
+      "body_parts": {
+        "external_organs": "Right ear",
+        "internal_organs": "Spleen (source of melancholy)"
+      },
+      "professions": [
+        "Those that work with the earth",
+        "Plowing",
+        "Digging",
+        "Extracting minerals",
+        "Builders",
+        "Architects",
+        "Farmers",
+        "Blacksmithing (shared with Mars)"
+      ],
+      "colors_of_clothing": "Black (all black clothing), made of wool",
+      "associated_operations_works": [
+        "Profound sciences",
+        "Science of laws",
+        "Seeking out causes and roots of things and their effects",
+        "Speaking of wonders",
+        "Understanding deep and secret qualities",
+        "Works involving sorrow, melancholy, and sadness",
+        "Controversies",
+        "Great and long journeys",
+        "Great and enduring enmities",
+        "Bringing evils, battles and all things unwanted",
+        "Inheritances",
+        "Buildings",
+        "Fear, great thoughts, cares, angers, betrayals, sorrows, anguish, death",
+        "Orphans, old places, appraisals",
+        "Secret sciences, secret meanings, profound knowledge",
+        "Works of retentive and enduring nature"
+      ],
+      "rulerships": [
+        "Hebrew and Chaldean languages",
+        "Judaism",
+        "Black mountains, dark rivers, deep wells, desert boundaries and places"
+      ],
+      "additional_notes": "Saturn rules the turquoise among stones and lead among metals for ring-making. When working with Saturn, dress in black, wear a black cap like doctors wear, wear black shoes, carry an iron ring and iron thurible. Sacrifice: black goat or black crow."
+    },
+    "Jupiter": {
+      "picatrix_citation": "Book Three, Chapter 1 (The parts of the planets that exist in plants, animals and metals); Book Three, Chapter 3 (Of the figures, colors, garments, and incenses of the planets); Book Three, Chapter 37 (The stones proper to each planet); Book Four, Chapter 2 (What ought to be done with each of the seven planets); Book Four, Chapter 6 (How the suffumigations of the stars ought to be made)",
+      "nature": "Warm and moist, temperate and fortunate (the Greater Fortune)",
+      "virtue": "Augmentative virtue",
+      "colors": {
+        "planet_color": "Green; red tending toward white",
+        "garment_colors": "Green, best made of silk"
+      },
+      "metals": ["Tin", "Tutia (impure zinc oxide)", "Gold (in part)"],
+      "stones_minerals": [
+        "Emerald",
+        "All white and yellow stones",
+        "Crystal",
+        "All stones that are bright and considered precious",
+        "Carnelian (in part)",
+        "Quartz",
+        "Chalcedony (rules among stones for rings)"
+      ],
+      "incenses_suffumigations": [
+        "All good and temperate odors",
+        "Amber",
+        "Lignum aloes (aloe wood)",
+        "Classa",
+        "Storax",
+        "Stalks of columbine",
+        "Peony",
+        "Calamus root",
+        "Pine resin",
+        "Hellebore seed",
+        "Common fleabane",
+        "Frankincense",
+        "Nettle tree",
+        "Myrrh",
+        "Clean raisins"
+      ],
+      "plants": [
+        "White mint",
+        "All herbs that are fruitful with a good odor",
+        "Nuts",
+        "Hazelnuts",
+        "Pines",
+        "Pistachios",
+        "All trees that bear fruit with a rind"
+      ],
+      "animals": [
+        "All animals beautiful and valued for their appearance",
+        "Animals that are sacrificed",
+        "Inoffensive, clean, precious animals",
+        "Camels",
+        "Beavers",
+        "Stags",
+        "Gazelles",
+        "Peacocks",
+        "Roosters",
+        "Pigeons",
+        "Quail",
+        "Silk worms"
+      ],
+      "foods_tastes": "Sweet tastes",
+      "body_parts": {
+        "external_organs": "Left ear",
+        "internal_organs": "Liver (rectifies the complexion and humors)"
+      },
+      "professions": [
+        "Ruling and correcting laws",
+        "Selling treasures",
+        "Laws and legal profession",
+        "Jurisprudence",
+        "Skill in obtaining petitions, repayments and retentions",
+        "Wisdom, philosophy, interpretation of dreams"
+      ],
+      "colors_of_clothing": "Green (silk); white and expensive clothing; yellow and white garments when invoking",
+      "associated_operations_works": [
+        "Laws and legal profession",
+        "Wisdom, philosophy, interpretation of dreams",
+        "Obtaining petitions, repayments and retentions",
+        "Guarding against mortal illnesses",
+        "Growth, increase, and augmentation of things",
+        "Works of kings, prelates, and lords",
+        "Faithfulness, chastity, honor, gratitude, eloquence",
+        "Improvement in all business",
+        "Fulfillment of petitions",
+        "Accumulating riches",
+        "Piety, following and upholding the law",
+        "Delighting in crowds and populous places",
+        "Works of beneficence and helping humanity"
+      ],
+      "rulerships": [
+        "Greek language",
+        "Religion that unites all",
+        "Oratories, places famous, full of treasure, and holy"
+      ],
+      "additional_notes": "Jupiter rules tin among metals and chalcedony among stones for ring-making. When invoking Jupiter, dress in yellow and white garments, wear a white cap, carry a crystal ring bearing a cross. Sacrifice: white lamb."
+    },
+    "Mars": {
+      "picatrix_citation": "Book Three, Chapter 1 (The parts of the planets that exist in plants, animals and metals); Book Three, Chapter 3 (Of the figures, colors, garments, and incenses of the planets); Book Three, Chapter 37 (The stones proper to each planet); Book Four, Chapter 2 (What ought to be done with each of the seven planets); Book Four, Chapter 6 (How the suffumigations of the stars ought to be made)",
+      "nature": "Hot and dry, infortune, destructive, cause of evils",
+      "virtive": "Attractive virtue",
+      "colors": {
+        "planet_color": "Intense red",
+        "garment_colors": "Color of flame of fire, best made of silk; linen and skins of rabbits and dogs; garments of several different skins"
+      },
+      "metals": ["Red copper", "Red gold", "Sulfur", "Petroleum", "Glass", "Red bronze", "Iron (rules among metals for rings)"],
+      "stones_minerals": [
+        "Granite",
+        "All stones that are red and dark",
+        "Bloodstone",
+        "Carnelian (in part)",
+        "Onyx (in part)",
+        "All stones that are red and tawny or speckled"
+      ],
+      "incenses_suffumigations": [
+        "Everything hot",
+        "Pepper",
+        "Ginger",
+        "Wormwood",
+        "Aloes",
+        "Squill",
+        "Spurge",
+        "Long pepper",
+        "Watercress"
+      ],
+      "plants": [
+        "All trees whose nature is hot",
+        "Pepper",
+        "Pines",
+        "Scammony",
+        "Cumin",
+        "Cocnidium",
+        "Laurel",
+        "Euphorbia",
+        "Hemlock",
+        "Trees that are useful and burn easily"
+      ],
+      "animals": [
+        "Red camels",
+        "All animals with great red teeth",
+        "Dangerous wild animals",
+        "Vipers",
+        "Scorpions",
+        "Mice",
+        "Elephants",
+        "Lions",
+        "Vultures"
+      ],
+      "foods_tastes": "Hot, dry, and bitter tastes",
+      "body_parts": {
+        "external_organs": "Right nostril",
+        "internal_organs": "Gall bladder (source of choler and heat)"
+      },
+      "professions": [
+        "Blacksmithing",
+        "Weapon making",
+        "Robbery",
+        "Surgery",
+        "Mastery of beasts",
+        "Extracting teeth",
+        "Letting blood",
+        "Circumcision"
+      ],
+      "colors_of_clothing": "Red (flame color), silk; red garments with sword, dress as soldier/fighter",
+      "associated_operations_works": [
+        "Science of nature",
+        "Surgery, mastery of beasts, extracting teeth, letting blood, circumcision",
+        "Wars, battles, lawsuits, terrors, discord",
+        "Destruction, wicked deeds, depopulation",
+        "Fire, combustion, controversies, blood",
+        "Oppressions, sorrows, manslaughter",
+        "Prisons, misery, escape, litigation",
+        "Robbery, treasons, deceptions, frauds",
+        "Highway robbery, breaking walls by night",
+        "All works of anger, violence, and destruction"
+      ],
+      "rulerships": [
+        "Persian language",
+        "Heretics and those who change faith",
+        "Strong fortresses, defensible and warlike places",
+        "Places where fire burns, animals slaughtered, wolves/bears/wild animals congregate, places of judgment"
+      ],
+      "additional_notes": "Mars rules iron among metals. When invoking Mars, dress in red garments, red skullcap, hang sword from neck, arm yourself, wear bronze ring, carry bronze thurible. Sacrifice: leopard or mouse."
+    },
+    "Sun": {
+      "picatrix_citation": "Book Three, Chapter 1 (The parts of the planets that exist in plants, animals and metals); Book Three, Chapter 3 (Of the figures, colors, garments, and incenses of the planets); Book Three, Chapter 37 (The stones proper to each planet); Book Four, Chapter 2 (What ought to be done with each of the seven planets); Book Four, Chapter 6 (How the suffumigations of the stars ought to be made)",
+      "nature": "Hot and dry, of mixed good and ill in his influence; both fortune and infortune",
+      "virtue": "Generative virtue",
+      "colors": {
+        "planet_color": "Color of yellow gold; reddish and yellow like gold",
+        "garment_colors": "Yellow gold, best made of silk and yellow gold; precious and noble clothing made of gold"
+      },
+      "metals": ["Gold", "Egyptian glass", "Azernec (cupric oxide)"],
+      "stones_minerals": [
+        "Ruby",
+        "Jacinth",
+        "Diamond",
+        "Albezedi",
+        "Red pearls",
+        "Stones that are sparkling and clear",
+        "Hematite (in part)",
+        "Azumbedich",
+        "Balassus ruby",
+        "Gold marcasite"
+      ],
+      "incenses_suffumigations": [
+        "Things that are temperate and good odors",
+        "Nutmeg",
+        "Amber",
+        "Yellow sandalwood",
+        "Incense",
+        "Crocus (saffron)"
+      ],
+      "plants": [
+        "Palms that grow tall",
+        "Saffron",
+        "Roses",
+        "Wheat",
+        "Grains",
+        "Olives (shared with Saturn)",
+        "All lofty and beautiful trees"
+      ],
+      "animals": [
+        "Oxen",
+        "Horses",
+        "Camels",
+        "Rams",
+        "Cows",
+        "All animals with great strength and power",
+        "Falcons",
+        "Eagles",
+        "Peacocks (in part)",
+        "Great serpents",
+        "Bears (shared with Mars)"
+      ],
+      "foods_tastes": "Thick and sweet tastes",
+      "body_parts": {
+        "external_organs": "Eyes",
+        "internal_organs": "Heart (rules organs of the body, source of heat, grants life to whole body)"
+      },
+      "professions": [
+        "Philosophy",
+        "Augury",
+        "Exposition of jurisprudence",
+        "Royal and great operations for kings",
+        "All exalted and ornate work with minerals",
+        "Making crowns of kings and sublime things",
+        "Making large books"
+      ],
+      "colors_of_clothing": "Yellow gold, silk and gold thread; precious and noble garments; saffron colored",
+      "associated_operations_works": [
+        "Philosophy, augury, exposition of jurisprudence",
+        "Light, generation, and life-giving works",
+        "Perception and intellect",
+        "Exaltations and high offices",
+        "Triumph over enemies",
+        "Great eloquence and ready responses",
+        "Amassing wealth, good reputation, high positions",
+        "All things proper for kings and great men",
+        "Making legality and goodness",
+        "Royal operations, works of radiance and light"
+      ],
+      "rulerships": [
+        "French language",
+        "Greek language (shared with Mercury)",
+        "Religion of Sabaeans and those who pray to spirits of the planets",
+        "Great cities, royal and beautiful, where kings linger; lofty and expensive places"
+      ],
+      "additional_notes": "The Sun rules gold and diamond among stones. When invoking, wear saffron colored clothing, carry mirror and shield. Sacrifice: young calf. Works of the Sun include all things radiant, royal, and noble."
+    },
+    "Venus": {
+      "picatrix_citation": "Book Three, Chapter 1 (The parts of the planets that exist in plants, animals and metals); Book Three, Chapter 3 (Of the figures, colors, garments, and incenses of the planets); Book Three, Chapter 37 (The stones proper to each planet); Book Four, Chapter 2 (What ought to be done with each of the seven planets); Book Four, Chapter 6 (How the suffumigations of the stars ought to be made)",
+      "nature": "Cold and moist, a fortune",
+      "virtue": "Power of flavor",
+      "colors": {
+        "planet_color": "Saffron colored; sky blue and gold tending a little to green",
+        "garment_colors": "Rose, best made of silk; all painted clothing"
+      },
+      "metals": ["Bronze", "Copper", "Ruby (in part)", "Silver (in part)", "Glass"],
+      "stones_minerals": [
+        "Pearls",
+        "Lapis lazuli",
+        "Almartach",
+        "Coral",
+        "Malachite",
+        "Quartz (in part)",
+        "Lodestone",
+        "Blue stones"
+      ],
+      "incenses_suffumigations": [
+        "Everything fragrant",
+        "Rose",
+        "Violets",
+        "Green myrtle",
+        "Balsam",
+        "Grains of julep",
+        "Nutmeg",
+        "Amber"
+      ],
+      "plants": [
+        "All plants with a good odor",
+        "Saffron",
+        "Arhenda",
+        "Roses",
+        "All flowers with good odor, pleasant smell and appearance"
+      ],
+      "animals": [
+        "Female camels that are beautiful",
+        "All beautiful animals with symmetrical bodies",
+        "Gazelles",
+        "Sheep",
+        "Hares",
+        "Partridges",
+        "Calandras and similar birds",
+        "Small animals that are colorful and beautiful",
+        "All flying and forest animals",
+        "Chickens",
+        "Locusts",
+        "Every flying thing having beautiful feathers"
+      ],
+      "foods_tastes": "All sweet things that taste good",
+      "body_parts": {
+        "external_organs": "Right nostril (external)",
+        "internal_organs": "Those that meet in sexual intercourse and project sperm; stomach; those from which comes virtue and flavor in eating and drinking"
+      },
+      "professions": [
+        "Grammar",
+        "Art of measuring sound and song",
+        "Painting and shaping",
+        "Selling things that smell good",
+        "Playing instruments good to listen to",
+        "Singing, dancing",
+        "Making stringed instruments",
+        "All professions of painting and shaping"
+      ],
+      "colors_of_clothing": "Rose (silk); painted clothing; white garments",
+      "associated_operations_works": [
+        "Grammar, art of measuring sound and song",
+        "Works of youth, happiness, and cosmetics",
+        "Cleanliness, splendor, preciousness",
+        "Delight in music, joy, adornments, laughter",
+        "Beauty, loveliness, playing music",
+        "Delighting in marriage, desiring spices and good odors",
+        "Sending dreams",
+        "Games of chess and dice",
+        "Desiring to lie with women and falling in love",
+        "Desiring to appear beautiful",
+        "Making colors and laboring with skills involving them",
+        "Selling merchandise, spices, and prayers",
+        "Building stables and working in stone"
+      ],
+      "rulerships": [
+        "Arabic language",
+        "Islam",
+        "Places of vice, healing, dancing, singing, cheerfulness, ladies, beautiful women, eating and drinking"
+      ],
+      "additional_notes": "Venus rules bronze and copper among stones for ring-making. When invoking, wear white clothing, carry apple and comb. Sacrifice: white dove."
+    },
+    "Mercury": {
+      "picatrix_citation": "Book Three, Chapter 1 (The parts of the planets that exist in plants, animals and metals); Book Three, Chapter 3 (Of the figures, colors, garments, and incenses of the planets); Book Three, Chapter 37 (The stones proper to each planet); Book Four, Chapter 2 (What ought to be done with each of the seven planets); Book Four, Chapter 6 (How the suffumigations of the stars ought to be made)",
+      "nature": "Changeable, permuting from one nature to another; receives nature of other planets (benefic with benefic, malefic with malefic)",
+      "virtue": "Intellective virtue",
+      "colors": {
+        "planet_color": "Like lac and the color of gold mixed with green; blue and mixed colors",
+        "garment_colors": "Many colors mixed, preferably silk; linen clothing"
+      },
+      "metals": ["Quicksilver (mercury)", "Tin (in part)", "Glass"],
+      "stones_minerals": [
+        "Emerald",
+        "All stones of this type",
+        "Azumbedich (in part)",
+        "All stones shaped and inscribed",
+        "Lodestone (rules among stones for rings)"
+      ],
+      "incenses_suffumigations": [
+        "Mixed odors",
+        "Narcissus",
+        "Violets",
+        "Myrtle",
+        "Ginger",
+        "Spikenard",
+        "Those for medicine and health maintenance"
+      ],
+      "plants": [
+        "Reeds",
+        "Kapok",
+        "Flax",
+        "Pepper",
+        "All plants with a sharp smell like cloves",
+        "All trees with fruit that has an outer rind"
+      ],
+      "animals": [
+        "Humans",
+        "Small camels",
+        "Zebras",
+        "Rumas",
+        "Apes",
+        "Wolves",
+        "All animals that jump or run swiftly",
+        "All beasts that feed through trickery",
+        "Birds that fly smoothly with perception and understanding",
+        "Birds with pleasant voices",
+        "Ants and small animals that move quickly"
+      ],
+      "foods_tastes": "Sharp tastes",
+      "body_parts": {
+        "external_organs": "Visible tongue",
+        "internal_organs": "Brain and heart (source of intellect and powers that arrange things, and sensitive memory)"
+      },
+      "professions": [
+        "Preaching",
+        "Writing verse",
+        "Building carriages",
+        "Geometry",
+        "Interpreting dreams",
+        "Debuxandi (drawing)",
+        "All professions discovered through subtle thought",
+        "Learning sciences, wisdom, dialectic, grammar, philosophy, geometry",
+        "Astronomy and astrology",
+        "Geomancy",
+        "Notory art",
+        "Augury by birds",
+        "Interpreting language of Turks and other peoples"
+      ],
+      "colors_of_clothing": "Many mixed colors, preferably silk; linen; crowned nobleman riding peacock",
+      "associated_operations_works": [
+        "Learning sciences, wisdom, dialectic, grammar, philosophy, geometry",
+        "Astronomy, astrology, geomancy, notory art, augury",
+        "Interpreting language of Turks and other peoples",
+        "Preaching, writing, building carriages",
+        "All professions discovered through subtle thought",
+        "Perception and rational intellect",
+        "Fine eloquence, powerful understanding",
+        "Good intelligence, good memory, agile mind",
+        "Arithmetic, geometry, astrology, geomancy, magic",
+        "Making books, verses, rhymes, calculations, sciences",
+        "Understanding how things will happen",
+        "Buying and selling merchandise",
+        "Judgments and reasonings of people",
+        "Swift in all works, flitting between professions"
+      ],
+      "rulerships": [
+        "Greek language (shared with Sun)",
+        "Those who are forbidden in religion, who speculate about religion, delight in philosophy, live according to senses",
+        "Houses of preaching, places where subtle masters work, springs of water, streams, reservoirs, wells"
+      ],
+      "additional_notes": "Mercury rules quicksilver among metals and lodestone among stones for ring-making. When invoking, wear many mixed colors, carry reed pen and book. Sacrifice: black and white rooster."
+    },
+    "Moon": {
+      "picatrix_citation": "Book Three, Chapter 1 (The parts of the planets that exist in plants, animals and metals); Book Three, Chapter 3 (Of the figures, colors, garments, and incenses of the planets); Book Three, Chapter 37 (The stones proper to each planet); Book Four, Chapter 2 (What ought to be done with each of the seven planets); Book Four, Chapter 6 (How the suffumigations of the stars ought to be made)",
+      "nature": "Cold and moist",
+      "virtue": "Natural virtue (receives virtues of planets and pours them into the world)",
+      "colors": {
+        "planet_color": "White; saffron and red",
+        "garment_colors": "Shining white, silk or linen preferred; hides and scarves"
+      },
+      "metals": ["Silver", "Silver marcasite", "All metals having a white body"],
+      "stones_minerals": [
+        "Very small pearls",
+        "Seed pearls",
+        "Crystal (in part)",
+        "Blue stones (in part)",
+        "Onyx (in part)",
+        "Quartz (in part)",
+        "Pearls (grown in water)",
+        "Stones that are white and clear like crystal"
+      ],
+      "incenses_suffumigations": [
+        "Everything that smells cold",
+        "Camphor",
+        "Lilies",
+        "Incense",
+        "Mastic",
+        "Storax",
+        "Crocus",
+        "Colocynth",
+        "White behem",
+        "Juice of birthwort",
+        "Nutmeg",
+        "Amber",
+        "Gall-nut"
+      ],
+      "plants": [
+        "Iris",
+        "Reeds",
+        "All white trees with good odor",
+        "All born in earth that do not rise above roots",
+        "All small plants, stalks, plants that are grazed",
+        "Plants in the middle between tall and short",
+        "All plants that grow in water"
+      ],
+      "animals": [
+        "Red horses",
+        "Mules",
+        "Donkeys",
+        "Cows",
+        "Hares",
+        "Birds smooth in motion",
+        "All animals born or living in air",
+        "All water birds",
+        "Birds colored white",
+        "White snakes",
+        "Aquatic animals",
+        "Those that are slow moving"
+      ],
+      "foods_tastes": "Tastes that have no taste, like water",
+      "body_parts": {
+        "external_organs": "Left eye",
+        "internal_organs": "Lungs (source of respiration)"
+      },
+      "professions": [
+        "Polishing",
+        "Leather working",
+        "Minting money",
+        "Sailing",
+        "Geometry and arithmetic",
+        "Conjunction of waters, weight and measure",
+        "Magic and medicine",
+        "Petitions",
+        "Plowmen, farm laborers",
+        "Mariners and all work pertaining to water",
+        "Geomancers",
+        "Portraitists",
+        "Stewards"
+      ],
+      "colors_of_clothing": "Shining white (silk or linen); hides and scarves; green and white garments",
+      "associated_operations_works": [
+        "Geometry, arithmetic, conjunction of waters, weight and measure",
+        "Magic, medicine, petitions, ancient things",
+        "Beginning of works, great cogitations",
+        "Good perception and motion",
+        "Best discussions in councils, utterances well spoken",
+        "Daring in all things",
+        "Fortunate concerning food",
+        "Gracious and quick in all actions",
+        "Great appetite for eating",
+        "Studying high sciences: astrology, magic, secret sciences",
+        "Faithful spouses, desiring to produce sons",
+        "Works involving news, learning, messages",
+        "Petitioning kings, messengers sent by land or sea"
+      ],
+      "rulerships": [
+        "German language",
+        "Those who pray to idols and images",
+        "Springs of water, lakes, swamps, places of snow, wherever water is found"
+      ],
+      "additional_notes": "The Moon receives virtues of all planets and pours them into the world. Works vary by sign the Moon is in. When invoking, wear crown, linen garments dyed with pomegranate rinds. Sacrifice: rooster with divided crest (beheaded with bone of another rooster, not iron), or sheep. The Moon's works are especially tied to the 28 Mansions of the Moon detailed in Book Four."
+    }
+  },
+  "planetary_order_notes": {
+    "description": "The Picatrix lists the planets in order from highest (slowest) to lowest (fastest) orbit: Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon",
+    "dignified_planets": "Jupiter and Venus (Fortunes)",
+    "debilitated_planets": "Saturn and Mars (Infortunes)"
+  },
+  "key_source_sections": {
+    "book_3_chapter_1": "The parts of the planets that exist in plants, animals and metals - primary correspondence table",
+    "book_3_chapter_2": "Of the parts of the signs in plants, animals, and minerals",
+    "book_3_chapter_3": "Of the figures, colors, garments, and incenses of the planets",
+    "book_3_chapter_37": "The stones proper to each planet and the formation of figures (also called Book 3, Chapter 10 in some editions)",
+    "book_4_chapter_2": "What vigor the spirit of the Moon brings, and what ought to be done with each of the seven planets",
+    "book_4_chapter_6": "How the suffumigations of the stars ought to be made, and certain compositions necessary to this science"
+  }
+}

@@ -1,0 +1,1804 @@
+{
+  "planet": "Mars",
+  "planet_ar": "Mirih المريخ",
+  "correspondences": {
+    "animal": [
+      "falcons",
+      "hawks",
+      "lions",
+      "scorpions",
+      "tigers",
+      "wolves"
+    ],
+    "body_part": [
+      "blood",
+      "gallbladder",
+      "genitals",
+      "head",
+      "muscles"
+    ],
+    "color": [
+      "blood red",
+      "crimson",
+      "red",
+      "scarlet"
+    ],
+    "incense": [
+      "garlic",
+      "mustard",
+      "nettle",
+      "onion",
+      "pepper",
+      "sulfur"
+    ],
+    "metal": [
+      "copper-red",
+      "iron",
+      "steel"
+    ],
+    "profession": [
+      "barbers",
+      "blacksmiths",
+      "butchers",
+      "soldiers",
+      "surgeons"
+    ],
+    "stone": [
+      "bloodstone",
+      "carnelian",
+      "diamond",
+      "garnet",
+      "jasper",
+      "ruby"
+    ]
+  },
+  "talismanic_timings": [
+    {
+      "operation": "Courage, war, victory",
+      "required_day": "Tuesday",
+      "required_hour": "Mars hour",
+      "required_sign": "Aries",
+      "required_aspect": "Mars in Aries",
+      "description": "Make images of war on Tuesday in Mars hour with Mars in Aries",
+      "picatrix_reference": "Picatrix BII Ch. Images"
+    },
+    {
+      "operation": "Protection from enemies",
+      "required_day": "Tuesday",
+      "required_hour": "Mars hour",
+      "required_sign": "Scorpio",
+      "required_aspect": "Mars in Scorpio",
+      "description": "Make images of protection on Tuesday in Mars hour",
+      "picatrix_reference": "Picatrix BII Ch. Images"
+    }
+  ],
+  "elections": [
+    {
+      "category": "love",
+      "operation": "Destroying love",
+      "rating": "bad",
+      "description": "Make images of separation when Mars is strong.",
+      "picatrix_reference": "Picatrix BIII Ch. 12"
+    },
+    {
+      "category": "health",
+      "operation": "Avoid treatment",
+      "rating": "bad",
+      "description": "Avoid surgery or aggressive treatment when Mars is afflicting.",
+      "picatrix_reference": "Picatrix BIII Ch. Operations"
+    },
+    {
+      "category": "war",
+      "operation": "Victory in battle",
+      "rating": "good",
+      "description": "Make images of war when Mars is in Aries or Scorpio.",
+      "picatrix_reference": "Picatrix BIII Ch. Operations"
+    },
+    {
+      "category": "war",
+      "operation": "Protection from enemies",
+      "rating": "good",
+      "description": "Make images of protection when Mars is strong.",
+      "picatrix_reference": "Picatrix BIII Ch. Operations"
+    },
+    {
+      "category": "war",
+      "operation": "Destroying enemies",
+      "rating": "good",
+      "description": "Make images of destruction when Mars is in fire signs.",
+      "picatrix_reference": "Picatrix BIII Ch. Operations"
+    },
+    {
+      "category": "ritual",
+      "operation": "Making talismans",
+      "rating": "good",
+      "description": "Make talismans on the day and hour of the ruling planet, with the planet strong.",
+      "picatrix_reference": "Picatrix BII Ch. Images"
+    },
+    {
+      "category": "general",
+      "operation": "Avoid travel",
+      "rating": "forbidden",
+      "description": "Avoid long travel in Mars hour when Mars is afflicted.",
+      "picatrix_reference": "Picatrix BIII"
+    },
+    {
+      "category": "general_theory",
+      "operation": "The theoretical part is knowledge of the places of the fixed stars, because from these are composed ",
+      "rating": "neutral",
+      "description": "The theoretical part is knowledge of the places of the fixed stars, because from these are composed the celestial figures and forms of the heavens, and of how their rays project into the planets that move of themselves, and of understanding figures of the heavens when they wish to make them. In this is included all that the sages of old have said about the elections of hours and times to work with images. You should know that those who have equaled the ancients in making images know that the vir",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "general_theory",
+      "operation": "That is, choose the time and date when you set up the figure by means of electional astrology so tha",
+      "rating": "neutral",
+      "description": "That is, choose the time and date when you set up the figure by means of electional astrology so that it furthers your intention.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "general_theory",
+      "operation": "The Moon is cold and moist. She signifies the beginning of works, great cogitations about things, go",
+      "rating": "neutral",
+      "description": "The Moon is cold and moist. She signifies the beginning of works, great cogitations about things, good perception and motion, the best discussions in councils, utterances well spoken, daring in all things; fortunate concerning food that is necessary or desirable; good manners with people; gracious and quick in all actions, clean, moving quickly toward what is desired.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "Dorotheus in his instructions teaches us this, saying that in making judgments and elections of thin",
+      "rating": "neutral",
+      "description": "Dorotheus in his instructions teaches us this, saying that in making judgments and elections of things it is necessary to observe the ascendant and its lord, and the Moon and the lord of the Moon's house. Be careful of the Moon in these elections and judgments, and see that it is not cadent from the ascendant if you can possibly avoid this, and even more so, that the lord of the ascendant and that of the Moon's house not be the two infortunes, applying to an aspect with the Moon from the ascenda",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "Now if the lord of the ascendant is conjunct the part of fortune, this is very good in all workings ",
+      "rating": "neutral",
+      "description": "Now if the lord of the ascendant is conjunct the part of fortune, this is very good in all workings and all your elections. Take diligent care in all your workings that the Moon be not in the third, sixth, eighth, or twelfth houses from the Part of Fortune, because this will be ill and inappropriate for every manner of business.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "Note always in all your workings that the Moon and ascendant be in signs of direct ascension. You sh",
+      "rating": "neutral",
+      "description": "Note always in all your workings that the Moon and ascendant be in signs of direct ascension. You should likewise know and understand that the ascendant and fourth house signify and reveal all dispositions jointly.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "If you find the Moon badly placed, and it should happen that it is necessary for you to act, and you",
+      "rating": "neutral",
+      "description": "If you find the Moon badly placed, and it should happen that it is necessary for you to act, and you are not able to delay at all, make the Moon cadent from the ascendant, having no part in her, and put a fortune in the ascendant, with fortunes rising and ruling the ascendant.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "The strength and goodness of the ascendant consists of two things, that is, form and fortune. Form m",
+      "rating": "neutral",
+      "description": "The strength and goodness of the ascendant consists of two things, that is, form and fortune. Form means that you should put on the ascendant something of similar nature, proportion, and quality to the intention of your election. Similarity of quality is a condition such as this: if you wish to make things happen quickly and complete themselves, or put things in motion, or in the houses of kings, or with great sublimity, place the ascendant in the fiery signs. Along with this rule is the followi",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "You should make fortunate the house of the petition as well as the lord of that house, because the p",
+      "rating": "neutral",
+      "description": "You should make fortunate the house of the petition as well as the lord of that house, because the place or house of the petition shows and reveals what is in the beginning and ordination of the matter, and the lord of the petition signifies and reveals the means by which the petition is resolved, and the lord of the house where the lord of the petition is found signifies the end and outcome of the matter.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "Never place a retrograde planet as the lord of the ascendant or the lord of the petition because, if",
+      "rating": "neutral",
+      "description": "Never place a retrograde planet as the lord of the ascendant or the lord of the petition because, if either one is retrograde, the petition will be delayed and put at a distance and will not go forward.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "dorotheus_elections",
+      "operation": "Never put the Moon on the ascendant of anything you wish to do, because she is the ascendant's enemy",
+      "rating": "neutral",
+      "description": "Never put the Moon on the ascendant of anything you wish to do, because she is the ascendant's enemy, but the Sun is not an enemy of the ascendant.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "moon_conditions",
+      "operation": "You should beware of trying to work magic to a good end when the Moon is applying to an eclipse, or ",
+      "rating": "neutral",
+      "description": "You should beware of trying to work magic to a good end when the Moon is applying to an eclipse, or under the rays of the Sun, that is, twelve degrees before or after. In the same way you should preserve her from Saturn and Mars, and be careful that she not descend in southern latitudes beyond the twelve degrees mentioned above, or the same in northern latitudes. Similarly, you should take care that she not be of lessened course and slow, that is, when she moves less than 12 degrees in a day, be",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "moon_conditions",
+      "operation": "If there should be some very necessary working that cannot possibly wait until the moon is free from",
+      "rating": "neutral",
+      "description": "If there should be some very necessary working that cannot possibly wait until the moon is free from all of the aforesaid debilities, place Jupiter and Venus on the ascendant or midheaven because they will rectify an unfortunate Moon.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "moon_conditions",
+      "operation": "It is necessary to observe, when casting images for love and friendship, that the Moon is fortunate ",
+      "rating": "neutral",
+      "description": "It is necessary to observe, when casting images for love and friendship, that the Moon is fortunate and waxing and not when the Moon is afflicted and waning.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "moon_conditions",
+      "operation": "Make images for love and delight and to visit kings and high lords in the day of the Moon, when she ",
+      "rating": "neutral",
+      "description": "Make images for love and delight and to visit kings and high lords in the day of the Moon, when she is waxing, and in Sagittarius, Taurus, Cancer or Pisces (and if she is with the Dragon's Head it is powerful for workings), and always in a mansion fortunate and appropriate for the work, and when the Moon is joined to Venus in the hour of Jupiter, and Jupiter is in Pisces, Sagittarius and Cancer and the Moon is with him.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "moon_conditions",
+      "operation": "Make images for evil conversely, that is, when the Moon is in a malefic mansion and conjoined to mal",
+      "rating": "neutral",
+      "description": "Make images for evil conversely, that is, when the Moon is in a malefic mansion and conjoined to malefic planets, or aspecting them by square or opposition.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "moon_conditions",
+      "operation": "Note also that working with images is better done at night than in the daytime in all of the aforesa",
+      "rating": "neutral",
+      "description": "Note also that working with images is better done at night than in the daytime in all of the aforesaid.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "planetary_hours_and_images",
+      "operation": "The first is Saturn. Make in the hour of Saturn, Saturn rising in the third face of Aquarius, an ima",
+      "rating": "neutral",
+      "description": "The first is Saturn. Make in the hour of Saturn, Saturn rising in the third face of Aquarius, an image in stone for healing the sadness of maidens, and for retaining blood or the menses of women.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "planetary_hours_and_images",
+      "operation": "Of Jupiter. Make in the hour of Jupiter, Jupiter rising in the second face of Sagittarius and aspect",
+      "rating": "neutral",
+      "description": "Of Jupiter. Make in the hour of Jupiter, Jupiter rising in the second face of Sagittarius and aspecting the Sun an image for the stopping it from raining excessively and to divert condemnation.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "planetary_hours_and_images",
+      "operation": "Of Mars. In the hour of Mars, Mars rising in the first face of Scorpio, make an image for strengthen",
+      "rating": "neutral",
+      "description": "Of Mars. In the hour of Mars, Mars rising in the first face of Scorpio, make an image for strengthening timidity and humbling the anger of a king and to turn aside robbers, wolves, wild beasts and all evil doers.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "planetary_hours_and_images",
+      "operation": "Of the Sun. In the hour of the Sun, to take away bad thoughts and to heal infirmities of the stomach",
+      "rating": "neutral",
+      "description": "Of the Sun. In the hour of the Sun, to take away bad thoughts and to heal infirmities of the stomach, make an image with the Sun rising in the first face of Leo and this image is strong and is said and quickly heals the infirmities of the elderly.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "planetary_hours_and_images",
+      "operation": "Of Venus. In the hour of Venus, Venus rising in the first face of Pisces, make an image to heal wome",
+      "rating": "neutral",
+      "description": "Of Venus. In the hour of Venus, Venus rising in the first face of Pisces, make an image to heal women from infirmities of the genitals and to gladden the sadness of men, and cure melancholy, and to take away bad thoughts and to have vigor and strengthen in sex, and in the first face of Taurus are made images to powerfully and miraculously bring about love and to have the good will of men.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "planetary_hours_and_images",
+      "operation": "Of Mercury. In the hour of Mercury, Mercury rising in the first face of Gemini make images to sharpe",
+      "rating": "neutral",
+      "description": "Of Mercury. In the hour of Mercury, Mercury rising in the first face of Gemini make images to sharpen the memory and intellect in knowledge and wisdom and to acquire grace from men.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "planetary_hours_and_images",
+      "operation": "Of the Moon. In the hour of the Moon, the Moon rising in the first face of Cancer make images for cr",
+      "rating": "neutral",
+      "description": "Of the Moon. In the hour of the Moon, the Moon rising in the first face of Cancer make images for crops and trees and everything grown in the earth to thrive.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "By sages, magical images are called talismans, which may be translated as 'a figure of a planet and ",
+      "rating": "neutral",
+      "description": "By sages, magical images are called talismans, which may be translated as 'a figure of a planet and a star.' Suffumigation: the act of exposing a talisman to the smoke of incense, so the magical qualities of the incense enter into the talisman.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "The images of the fixed stars are considered more enduring in their effects than the images of those",
+      "rating": "neutral",
+      "description": "The images of the fixed stars are considered more enduring in their effects than the images of those things that are capable of retrograde motion.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "If you do a planetary working with the aid of some fixed star of the same nature, it will be more co",
+      "rating": "neutral",
+      "description": "If you do a planetary working with the aid of some fixed star of the same nature, it will be more complete and more perfect because it will have the vigor of the planet and the endurance of the fixed star.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "When the ascendant, the petition, and the planet are of one nature, and you aid yourself therein wit",
+      "rating": "neutral",
+      "description": "When the ascendant, the petition, and the planet are of one nature, and you aid yourself therein with a fixed star, and you have firm belief and will, your petition will swiftly be fulfilled, and it will be strengthened from the vigor of the planet.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "The fixed star Altair assists with movement, while Vega helps with rest.",
+      "rating": "neutral",
+      "description": "The fixed star Altair assists with movement, while Vega helps with rest.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "In founding a city, make use of fixed stars, and in building a house, make use of planets. The inhab",
+      "rating": "neutral",
+      "description": "In founding a city, make use of fixed stars, and in building a house, make use of planets. The inhabitants of a city founded when Mars or another star of its nature is at the midheaven, though, will perish by fire and sword.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Put the significator at the midheaven, in its house or exaltation, and see to it that there is a for",
+      "rating": "neutral",
+      "description": "Put the significator at the midheaven, in its house or exaltation, and see to it that there is a fortitude on the ascendant.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Assist your work with the Sun when you wish to conquer and surpass someone; then your petition will ",
+      "rating": "neutral",
+      "description": "Assist your work with the Sun when you wish to conquer and surpass someone; then your petition will more swiftly be completed and will increase.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Assist your work with the Moon when you wish to retain something; then your petition will more swift",
+      "rating": "neutral",
+      "description": "Assist your work with the Moon when you wish to retain something; then your petition will more swiftly be completed and will increase.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Assist your work with Saturn when you wish to bring down something, and to cause evil; then your pet",
+      "rating": "neutral",
+      "description": "Assist your work with Saturn when you wish to bring down something, and to cause evil; then your petition will more swiftly be completed and will increase.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Assist your work with Jupiter when you wish to ascend to good things; then your petition will more s",
+      "rating": "neutral",
+      "description": "Assist your work with Jupiter when you wish to ascend to good things; then your petition will more swiftly be completed and will increase.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Assist yourself with Mars when you wish to win, in peace as well as in war; then your petition will ",
+      "rating": "neutral",
+      "description": "Assist yourself with Mars when you wish to win, in peace as well as in war; then your petition will more swiftly be completed and will increase.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Assist yourself with Venus when you wish to seek love and friendship; then your petition will more s",
+      "rating": "neutral",
+      "description": "Assist yourself with Venus when you wish to seek love and friendship; then your petition will more swiftly be completed and will increase.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Assist yourself with Mercury when you wish to know and understand, or to expel moisture; then your p",
+      "rating": "neutral",
+      "description": "Assist yourself with Mercury when you wish to know and understand, or to expel moisture; then your petition will more swiftly be completed and will increase.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Delay in results from a petition comes from an error in your performance of the working, or your lac",
+      "rating": "neutral",
+      "description": "Delay in results from a petition comes from an error in your performance of the working, or your lack of faith, or disorder in the structure of the working.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "Workings done with the suffumigations and prayers proper to them are better than those in which the ",
+      "rating": "neutral",
+      "description": "Workings done with the suffumigations and prayers proper to them are better than those in which the suffumigations are insufficient and the will is divided.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "The light of the Sun and the projection of its rays interfere with the spirits of the nocturnal plan",
+      "rating": "neutral",
+      "description": "The light of the Sun and the projection of its rays interfere with the spirits of the nocturnal planets.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "The darkness of night and the stillness of motion interfere with the spirits of the diurnal planets.",
+      "rating": "neutral",
+      "description": "The darkness of night and the stillness of motion interfere with the spirits of the diurnal planets. Thus you ought to comply with each planet according to its timing, and according to that which is proper to it.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "You should not seek union from Mars, just as you should not seek separation from Venus; do not seek ",
+      "rating": "neutral",
+      "description": "You should not seek union from Mars, just as you should not seek separation from Venus; do not seek anything from the planets that deviates from their natures and their paths.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismans_general_rules",
+      "operation": "You may work with comets in those things that pertain to them, when they appear, in the same manner ",
+      "rating": "neutral",
+      "description": "You may work with comets in those things that pertain to them, when they appear, in the same manner as fixed stars.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "specific_image_timings",
+      "operation": "",
+      "rating": "neutral",
+      "description": "",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "weather_rain_invocation",
+      "operation": "The first face of Cancer is of the Moon, and in it you may make an image when it is necessary to cal",
+      "rating": "neutral",
+      "description": "The first face of Cancer is of the Moon, and in it you may make an image when it is necessary to call forth clouds and rain and to bring home absent people, whether by land or by sea.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "weather_rain_invocation",
+      "operation": "The second face of Pisces is of the Moon, and in it you may make an image for the benefit of plants ",
+      "rating": "neutral",
+      "description": "The second face of Pisces is of the Moon, and in it you may make an image for the benefit of plants and fruits and to call forth rain at the necessary time, and for fishes to congregate in any place you wish.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "weather_rain_invocation",
+      "operation": "Of Jupiter. Make in the hour of Jupiter, Jupiter rising in the second face of Sagittarius and aspect",
+      "rating": "neutral",
+      "description": "Of Jupiter. Make in the hour of Jupiter, Jupiter rising in the second face of Sagittarius and aspecting the Sun an image for the stopping it from raining excessively and to divert condemnation.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "weather_rain_invocation",
+      "operation": "Of the Moon. In the hour of the Moon, the Moon rising in the first face of Cancer make images for cr",
+      "rating": "neutral",
+      "description": "Of the Moon. In the hour of the Moon, the Moon rising in the first face of Cancer make images for crops and trees and everything grown in the earth to thrive.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "weather_rain_prevention",
+      "operation": "The second face of Cancer is of Mars, and in it you may make an image to prevent unwanted rain and s",
+      "rating": "neutral",
+      "description": "The second face of Cancer is of Mars, and in it you may make an image to prevent unwanted rain and snow, and to banish unwanted snakes and wild beasts on land or sea.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "weather_rain_prevention",
+      "operation": "The third face of Scorpio is of the Moon, and in it you may make an image to divert and hinder rains",
+      "rating": "neutral",
+      "description": "The third face of Scorpio is of the Moon, and in it you may make an image to divert and hinder rains, and to prevent harm either from rains or from the sea.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "weather_storms_and_wind",
+      "operation": "When clouds appear that look as though they carry hail, and someone wishes to protect his harvest fr",
+      "rating": "neutral",
+      "description": "When clouds appear that look as though they carry hail, and someone wishes to protect his harvest from hailstorms, let him have many associates with him, of which some should carry silk, and some should have nothing in their hands, and let them go out into his field; and one by one let them throw the silk at the clouds, while the others who are without silk go about clapping their hands. All of them should make high-pitched cries, of the sort that farmers make when they want to make birds and no",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "weather_storms_and_wind",
+      "operation": "Take pure steel (that is, iron from Andanica) and make of it a highly polished mirror. Go toward the",
+      "rating": "neutral",
+      "description": "Take pure steel (that is, iron from Andanica) and make of it a highly polished mirror. Go toward the clouds, carrying the mirror in your hands and raising it toward the clouds, shouting in a loud voice, and the tempests will depart from that place.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "weather_storms_and_wind",
+      "operation": "In a certain book edited by Geber the sage, concerning tempests and other things, I found this writt",
+      "rating": "neutral",
+      "description": "In a certain book edited by Geber the sage, concerning tempests and other things, I found this written. Make a mirror of gold or gilt silver, and suffumigate it with hair from a woman's chest, which you moisten with your semen, then suffumigate it with threads from her garment.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "weather_storms_and_wind",
+      "operation": "They pray to Jupiter without suffumigating so that they may be safe from tempests on the sea. Thus s",
+      "rating": "neutral",
+      "description": "They pray to Jupiter without suffumigating so that they may be safe from tempests on the sea. Thus said Rhazes, in his book of metaphysics: to escape in time of peril on the sea, turn to face Jupiter, when he is at the midheaven.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "weather_weather_rules_for_images",
+      "operation": "Let the weather not be cloudy, and do not make it in the middle of the fifth degree or higher, and l",
+      "rating": "neutral",
+      "description": "Let the weather not be cloudy, and do not make it in the middle of the fifth degree or higher, and let the Sun be above the earth.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "weather_weather_rules_for_images",
+      "operation": "The sages of India do not change their custom; rather, they make it in the day and hour of the Sun, ",
+      "rating": "neutral",
+      "description": "The sages of India do not change their custom; rather, they make it in the day and hour of the Sun, and it is proven that it should not be made on a cloudy day. Also, if the Sun is able to shine upon the image, it will not be as good.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "weather_weather_rules_for_images",
+      "operation": "Make it in the day and hour of the Sun, when Jupiter is not combust of the Sun, and the Sun is not e",
+      "rating": "neutral",
+      "description": "Make it in the day and hour of the Sun, when Jupiter is not combust of the Sun, and the Sun is not elevated above Jupiter, and Saturn is in the degree of the ascendant.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "weather_weather_rules_for_images",
+      "operation": "Make it entirely in the first face... it is not cloudy.",
+      "rating": "neutral",
+      "description": "Make it entirely in the first face... it is not cloudy.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "weather_weather_rules_for_images",
+      "operation": "The Sun should be above the earth, and the weather should not be cloudy.",
+      "rating": "neutral",
+      "description": "The Sun should be above the earth, and the weather should not be cloudy.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "weather_plato_on_weather_magic",
+      "operation": "The great sage Plato wrote two books about magic... calling down rain at times when it ought not to ",
+      "rating": "neutral",
+      "description": "The great sage Plato wrote two books about magic... calling down rain at times when it ought not to rain and preventing rain when it ought to rain, and making stars move and cast down rays out of their proper times.",
+      "picatrix_reference": "Book I, Chapter 1 (attributed to Plato)"
+    },
+    {
+      "category": "agriculture_general",
+      "operation": "The parts of the planets that exist in plants, animals and metals.",
+      "rating": "neutral",
+      "description": "The parts of the planets that exist in plants, animals and metals.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "agriculture_general",
+      "operation": "Agriculture, as it says in that book, in the place where it says that you ought to work with the sta",
+      "rating": "neutral",
+      "description": "Agriculture, as it says in that book, in the place where it says that you ought to work with the stars.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "agriculture_general",
+      "operation": "It is called the Chaldean Agriculture elsewhere in Picatrix.",
+      "rating": "neutral",
+      "description": "It is called the Chaldean Agriculture elsewhere in Picatrix.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "Of the Moon. In the hour of the Moon, the Moon rising in the first face of Cancer make images for cr",
+      "rating": "neutral",
+      "description": "Of the Moon. In the hour of the Moon, the Moon rising in the first face of Cancer make images for crops and trees and everything grown in the earth to thrive.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "An image for the growth of harvests and crops. Make the image of a seated man surrounded by harvests",
+      "rating": "neutral",
+      "description": "An image for the growth of harvests and crops. Make the image of a seated man surrounded by harvests, trees and crops, on a silver plate; and make it when Taurus rises, when the Moon is in Taurus and the Sun is going towards Saturn. And bury it in the place you wish, and all seeds and crops will grow well and quickly without damage from beasts or birds or storms or anything else that is a nuisance at harvest time.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "In this Mansion [Albotain] make images to dig for streams and wells, to find hidden treasures, and f",
+      "rating": "neutral",
+      "description": "In this Mansion [Albotain] make images to dig for streams and wells, to find hidden treasures, and for the planting of a great deal of wheat.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "In this Mansion [Acarfa] make images to increase harvests and plants, for the destruction of riches ",
+      "rating": "neutral",
+      "description": "In this Mansion [Acarfa] make images to increase harvests and plants, for the destruction of riches and of ships.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "In this Mansion [Alahue] make images for the increase of trade and profit, the increase of harvests.",
+      "rating": "neutral",
+      "description": "In this Mansion [Alahue] make images for the increase of trade and profit, the increase of harvests.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "In this Mansion [Elbelda] make images to strengthen buildings, to increase harvests, to make a profi",
+      "rating": "neutral",
+      "description": "In this Mansion [Elbelda] make images to strengthen buildings, to increase harvests, to make a profit and firmly keep money.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "In this Mansion [Algarf almuehar] make images to increase merchandise and to acquire profit, to unit",
+      "rating": "neutral",
+      "description": "In this Mansion [Algarf almuehar] make images to increase merchandise and to acquire profit, to unite allies, increase harvests, heal illness.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_planting_and_harvest",
+      "operation": "In this Mansion [Arrexhe] make images to increase merchandise, besiege cities, increase harvests.",
+      "rating": "neutral",
+      "description": "In this Mansion [Arrexhe] make images to increase merchandise, besiege cities, increase harvests.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_destruction_of_crops",
+      "operation": "In this Mansion [Azimech] make images for the love of man and wife, to heal the sick with physic and",
+      "rating": "neutral",
+      "description": "In this Mansion [Azimech] make images for the love of man and wife, to heal the sick with physic and medicine, to destroy harvests and plants.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_destruction_of_crops",
+      "operation": "In this Mansion [Azubene] make images for the destruction of merchandise, harvests and plants.",
+      "rating": "neutral",
+      "description": "In this Mansion [Azubene] make images for the destruction of merchandise, harvests and plants.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_destruction_of_crops",
+      "operation": "In this Mansion [Caaddalhacbia] make images to destroy harvests.",
+      "rating": "neutral",
+      "description": "In this Mansion [Caaddalhacbia] make images to destroy harvests.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "agriculture_specific_agricultural_operations",
+      "operation": "For improving vines. Take chickpeas and anoint them with olive oil, cook them, then grind them very ",
+      "rating": "neutral",
+      "description": "For improving vines. Take chickpeas and anoint them with olive oil, cook them, then grind them very well, and cast around a pound thereof about a vine when the fruit is becoming sour, and the sour taste will naturally depart from the vine.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "agriculture_specific_agricultural_operations",
+      "operation": "If anyone on the first day of the lunar month, and the first hour thereof, takes olive branches with",
+      "rating": "neutral",
+      "description": "If anyone on the first day of the lunar month, and the first hour thereof, takes olive branches with green leaves and no yellow leaves, and carries them to his house, and keeps them until the beginning of the next moon... he will be protected from all the evils and impediments of Saturn.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "agriculture_specific_agricultural_operations",
+      "operation": "If anyone takes a fresh olive pit and cleans it of all outward dirt, perforates it, threads it on a ",
+      "rating": "neutral",
+      "description": "If anyone takes a fresh olive pit and cleans it of all outward dirt, perforates it, threads it on a strong black silken thread, and suspends it from that thread around the neck of any animal, that animal will not be afraid to wander alone at night.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "agriculture_specific_agricultural_operations",
+      "operation": "If anyone takes mallow leaves well ground and mixed with olive oil, and anoints his hands and body w",
+      "rating": "neutral",
+      "description": "If anyone takes mallow leaves well ground and mixed with olive oil, and anoints his hands and body with it, if he puts his hands among bees or wasps, they will not sting him or harm him.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "agriculture_specific_agricultural_operations",
+      "operation": "For removing sorrow. Take chickpeas which you have set in the light of the Moon at night, when her l",
+      "rating": "neutral",
+      "description": "For removing sorrow. Take chickpeas which you have set in the light of the Moon at night, when her light is increasing; in the morning, before the sun rises, anoint them with olive oil, and put them in water to soften them for the space of two hours. Then cook them.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "agriculture_specific_agricultural_operations",
+      "operation": "If you wish that a spring of running water, the flow of which has diminished, will recover the same,",
+      "rating": "neutral",
+      "description": "If you wish that a spring of running water, the flow of which has diminished, will recover the same, do the following. Have a virgin girl, young and beautiful, go to the spring carrying a drum, and standing over the outflow of water, let her begin to beat the drum softly, and let her go on beating it for three hours. At the beginning of the fourth hour, another lovely and beautiful virgin should go to the same place, bringing with her a tambourine.",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "agriculture_planetary_plant_correspondences",
+      "operation": "Among trees, elder trees, oaks, carubia trees, palms and vines; among herbs, cumin, rue, onions and ",
+      "rating": "neutral",
+      "description": "Among trees, elder trees, oaks, carubia trees, palms and vines; among herbs, cumin, rue, onions and all plants that have thick leaves. [Saturn plants]",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "agriculture_planetary_plant_correspondences",
+      "operation": "Hazelnuts, pines, pistachios, and all trees that bear fruit, fruit having a rind; among herbs, white",
+      "rating": "neutral",
+      "description": "Hazelnuts, pines, pistachios, and all trees that bear fruit, fruit having a rind; among herbs, white mint, all herbs that are fruitful with a good odor. [Jupiter plants]",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "agriculture_planetary_plant_correspondences",
+      "operation": "Among trees, all trees that bear fruit with a rind, laurel, euphorbia, hemlock, trees that are usefu",
+      "rating": "neutral",
+      "description": "Among trees, all trees that bear fruit with a rind, laurel, euphorbia, hemlock, trees that are useful and burn easily. [Mars plants]",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "agriculture_planetary_plant_correspondences",
+      "operation": "The parts of the planets that exist in plants, animals and metals.",
+      "rating": "neutral",
+      "description": "The parts of the planets that exist in plants, animals and metals.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "medical_general_medical_doctrines",
+      "operation": "The four humors in the body—blood, yellow bile, phlegm, and black bile—are similar [to the four elem",
+      "rating": "neutral",
+      "description": "The four humors in the body—blood, yellow bile, phlegm, and black bile—are similar [to the four elements].",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "medical_general_medical_doctrines",
+      "operation": "The humors were the basis of traditional medicine in the Western world.",
+      "rating": "neutral",
+      "description": "The humors were the basis of traditional medicine in the Western world.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "medical_general_medical_doctrines",
+      "operation": "In the book of philosophy by Hippocrates we find: When Jupiter is the lord of the solar year, in tha",
+      "rating": "neutral",
+      "description": "In the book of philosophy by Hippocrates we find: When Jupiter is the lord of the solar year, in that year there will be few illnesses and much health, and the generations of animals will be multiplied.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "medical_healing_images",
+      "operation": "An image to heal the sting of a scorpion. Make the image of a scorpion in a bezoar, and do this in t",
+      "rating": "neutral",
+      "description": "An image to heal the sting of a scorpion. Make the image of a scorpion in a bezoar, and do this in the hour of the Moon, with the Moon in the second face of Scorpio, and Leo, Taurus or Aquarius rising. Fasten the stone in a gold ring and stamp the image in soft incense under the constellation we have previously described. Give the person who was stung a drink made from the incense stamped with the seal, and they will be cured at once.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "medical_healing_images",
+      "operation": "An image to heal illnesses involving stones. Make the image of a lion on a sheet of the purest gold,",
+      "rating": "neutral",
+      "description": "An image to heal illnesses involving stones. Make the image of a lion on a sheet of the purest gold, holding a stone in its paw as if dancing with it, and make it in the hour of the Sun with the first degree of the second face of Leo rising. Whoever carries this image will be free from their illness immediately.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "medical_healing_images",
+      "operation": "An image for removing illness, melancholy and spells. Make an image in the purest silver in the hour",
+      "rating": "neutral",
+      "description": "An image for removing illness, melancholy and spells. Make an image in the purest silver in the hour of Venus, when the Moon is in the ascendant, fourth, seventh or tenth houses and aspecting Venus with a good aspect, and the lord of the sixth house aspecting a benefic by trine or opposition, and the lord of the eighth squaring Mercury. Be sure that Mercury is not retrograde, combust or aspecting the malefics. Make this image in the final hour of Sunday, with the lord of the hour in the tenth or",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "medical_healing_images",
+      "operation": "The first is Saturn. Make in the hour of Saturn, Saturn rising in the third face of Aquarius, an ima",
+      "rating": "neutral",
+      "description": "The first is Saturn. Make in the hour of Saturn, Saturn rising in the third face of Aquarius, an image in stone for healing the sadness of maidens, and for retaining blood or the menses of women.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "medical_healing_images",
+      "operation": "Of the Sun. In the hour of the Sun, to take away bad thoughts and to heal infirmities of the stomach",
+      "rating": "neutral",
+      "description": "Of the Sun. In the hour of the Sun, to take away bad thoughts and to heal infirmities of the stomach, make an image with the Sun rising in the first face of Leo.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "medical_healing_images",
+      "operation": "Of Venus. In the hour of Venus, Venus rising in the first face of Pisces, make an image to heal wome",
+      "rating": "neutral",
+      "description": "Of Venus. In the hour of Venus, Venus rising in the first face of Pisces, make an image to heal women from infirmities of the genitals and to gladden the sadness of men, and cure melancholy.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Leo. Its image is placed over all infirmities of the heart. Make it when the Sun is in the 21st degr",
+      "rating": "neutral",
+      "description": "Leo. Its image is placed over all infirmities of the heart. Make it when the Sun is in the 21st degree of Leo, and let it represent a lion with stones before him. Tie this sigil on the lower back above the kidneys.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Virgo. Its image is a woman wrapped in cloth riding on a lion, and in her hand she has a staff or ir",
+      "rating": "neutral",
+      "description": "Virgo. Its image is a woman wrapped in cloth riding on a lion, and in her hand she has a staff or iron. It is placed over all infirmities of the left kidney.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Libra. Its image is placed over all infirmities of the stomach. Make it in the first face from the f",
+      "rating": "neutral",
+      "description": "Libra. Its image is placed over all infirmities of the stomach. Make it in the first face from the first degree until the tenth. Venus should not be retrograde nor Jupiter in Libra, and the Sun should be above the earth, and make it in the day of Jupiter from the first hour until the fifth.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Scorpio. Some specify that its image is that of a crow and others its image is that of a man with a ",
+      "rating": "neutral",
+      "description": "Scorpio. Some specify that its image is that of a crow and others its image is that of a man with a crow in his hand. It is placed over the infirmities of the remaining intestines. Make it when the Moon is waxing and in the day and hour of the Sun.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Sagittarius. Its image is a man shooting arrows with a bow. And it is placed over all infirmities of",
+      "rating": "neutral",
+      "description": "Sagittarius. Its image is a man shooting arrows with a bow. And it is placed over all infirmities of the right hand; and it is greatly recommended against forgetfulness because it is good at expelling all of the infirmities of Saturn, Mars and Venus.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Capricorn. Its image is one white lamb, and the middle of its stomach is black. It is placed over al",
+      "rating": "neutral",
+      "description": "Capricorn. Its image is one white lamb, and the middle of its stomach is black. It is placed over all of the infirmities of the left hand, and expels the infirmities of Mercury and the Moon.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Aquarius. Its image is a man holding two pitchers. And it is placed over all infirmities of the righ",
+      "rating": "neutral",
+      "description": "Aquarius. Its image is a man holding two pitchers. And it is placed over all infirmities of the right foot. Let Saturn, Jupiter and Mars be not retrograde, and the Moon be above the earth, and Venus under the earth.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_zodiac_body_parts",
+      "operation": "Pisces. Its image is placed over all infirmities of the left foot. You may make it when the Moon is ",
+      "rating": "neutral",
+      "description": "Pisces. Its image is placed over all infirmities of the left foot. You may make it when the Moon is in the midheaven; and Mars is not in the midheaven, Jupiter is not retrograde and the Sun is above the earth, and it is not cloudy.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_timing_rules_for_medical_images",
+      "operation": "Saturn, Jupiter and Mars should be retrograde, the Moon should not be in the fifth house nor the Sun",
+      "rating": "neutral",
+      "description": "Saturn, Jupiter and Mars should be retrograde, the Moon should not be in the fifth house nor the Sun in the eighth house, nor is Jupiter in Aquarius nor Saturn in Leo nor Aldebaran under the earth.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_timing_rules_for_medical_images",
+      "operation": "Make it with the Sun in the first to fifth degree of the first face of Virgo. Make the image of a ma",
+      "rating": "neutral",
+      "description": "Make it with the Sun in the first to fifth degree of the first face of Virgo. Make the image of a man riding on a lion. Make it in silver or gold in the day and hour of the Sun, and do not change anything here and be careful of the number of the degrees.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_timing_rules_for_medical_images",
+      "operation": "Let Saturn not be retrograde, nor Mars in the twelfth house, nor Jupiter in the fourth house; and th",
+      "rating": "neutral",
+      "description": "Let Saturn not be retrograde, nor Mars in the twelfth house, nor Jupiter in the fourth house; and the Sun should be above the earth, and the weather should not be cloudy. Make it of gold or silver in the first face, from the first degree until the fifth, in the day and hour of the Sun.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_timing_rules_for_medical_images",
+      "operation": "Let Mercury not be retrograde and let it be above the earth; and let Saturn be under the earth and V",
+      "rating": "neutral",
+      "description": "Let Mercury not be retrograde and let it be above the earth; and let Saturn be under the earth and Venus above the earth in the east, as Enoch says. But the Hindus say that it must be made in the day and hour of the Sun or in the day of Mercury and the hour of the Sun.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_timing_rules_for_medical_images",
+      "operation": "Make it in the day and hour of the Sun, when Jupiter is not combust of the Sun, and the Sun is not e",
+      "rating": "neutral",
+      "description": "Make it in the day and hour of the Sun, when Jupiter is not combust of the Sun, and the Sun is not elevated above Jupiter, and Saturn is in the degree of the ascendant.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "medical_moon_mansion_medical",
+      "operation": "The first Mansion of the Moon is called Alnath. The wise of India begin journeys and take medicines ",
+      "rating": "neutral",
+      "description": "The first Mansion of the Moon is called Alnath. The wise of India begin journeys and take medicines when the Moon is in this Mansion.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "medical_moon_mansion_medical",
+      "operation": "The tenth Mansion is Algebha and is for the cure of infirmities and to make childbirth easy. When th",
+      "rating": "neutral",
+      "description": "The tenth Mansion is Algebha and is for the cure of infirmities and to make childbirth easy. When the Moon is in this mansion, fashion from gold or brass the head of a lion, and above it write the name of the lord of this Mansion. Suffumigate the image with amber.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "medical_moon_mansion_medical",
+      "operation": "The fourteenth mansion is called Azimech. In this Mansion make images for the love of man and wife, ",
+      "rating": "neutral",
+      "description": "The fourteenth mansion is called Azimech. In this Mansion make images for the love of man and wife, to heal the sick with physic and medicine.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "medical_moon_mansion_medical",
+      "operation": "The twenty-second mansion is called Caadaldeba. In this Mansion make images to cure illnesses.",
+      "rating": "neutral",
+      "description": "The twenty-second mansion is called Caadaldeba. In this Mansion make images to cure illnesses.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "medical_moon_mansion_medical",
+      "operation": "The twenty-third mansion is called Caaddebolach. In this Mansion make images to heal illness.",
+      "rating": "neutral",
+      "description": "The twenty-third mansion is called Caaddebolach. In this Mansion make images to heal illness.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "medical_moon_mansion_medical",
+      "operation": "The twenty-seventh mansion is called Algarf almuehar. In this Mansion make images to increase mercha",
+      "rating": "neutral",
+      "description": "The twenty-seventh mansion is called Algarf almuehar. In this Mansion make images to increase merchandise and to acquire profit, to unite allies, increase harvests, heal illness.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_planetary_operations",
+      "operation": "The Operation of Saturn. When you wish to work by means of Saturn, do the following in the day of Sa",
+      "rating": "neutral",
+      "description": "The Operation of Saturn. When you wish to work by means of Saturn, do the following in the day of Saturn, the Sun being in Capricorn, which is the house of Saturn, and the Moon in her 1st Mansion, in which is the exaltation of Saturn. Clean yourself and purify yourself from everything sordid. They used to begin in the first hour of the day, and in the day of Saturn.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Saturn)"
+    },
+    {
+      "category": "ritual_planetary_operations",
+      "operation": "The Operation of Jupiter. When you wish to work by means of Jupiter, do the following in the day of ",
+      "rating": "neutral",
+      "description": "The Operation of Jupiter. When you wish to work by means of Jupiter, do the following in the day of Jupiter, the Sun being in Pisces, which is the house of Jupiter, and the Moon in her 11th Mansion, in which is the exaltation of Jupiter. Purify yourself from everything sordid. They used to begin in the first hour of the day, and in the day of Jupiter.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Jupiter)"
+    },
+    {
+      "category": "ritual_planetary_operations",
+      "operation": "The Operation of Mars. When you wish to work by means of Mars, do the following in the day of Mars, ",
+      "rating": "neutral",
+      "description": "The Operation of Mars. When you wish to work by means of Mars, do the following in the day of Mars, the Sun being in Aries, which is the house of Mars, and the Moon in her 23rd Mansion, in which is the exaltation of Mars. Do this at the end of winter when the trees begin to fruit. Take with you a cow or sheep as sacrifice, and fill an incense burner with charcoal and suffumigate with myrrh, aspand seed and sarcocolla.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Mars)"
+    },
+    {
+      "category": "ritual_planetary_operations",
+      "operation": "The Operation of the Sun. When you wish to work by means of the Sun, do the following in the day of ",
+      "rating": "neutral",
+      "description": "The Operation of the Sun. When you wish to work by means of the Sun, do the following in the day of the Sun, the Sun being in Leo, which is the house of the Sun, and the Moon in her 9th Mansion, in which is the exaltation of the Sun. Clean yourself and purify yourself from everything sordid. They used to begin in the first hour of the day, and in the day of the Sun.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of the Sun)"
+    },
+    {
+      "category": "ritual_planetary_operations",
+      "operation": "The Operation of Venus. When you wish to do the magical works of Venus, do it in the day of Venus, t",
+      "rating": "neutral",
+      "description": "The Operation of Venus. When you wish to do the magical works of Venus, do it in the day of Venus, the Sun being in the beginning of Pisces and the Moon in Cancer. Clean yourself and bathe, and when you are cleaned and bathed, go to where there are figs or palms and take with you a ram. Say, 'Hueydez, Helyz, Hemyluz, Deneriz, Temeyz, Cemluz, Arhuz, Meytaryz.' When you have said this, ask for what you wish.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Venus)"
+    },
+    {
+      "category": "ritual_planetary_operations",
+      "operation": "The Operation of Mercury. When you wish to do the magical works of Mercury, work in the day of Mercu",
+      "rating": "neutral",
+      "description": "The Operation of Mercury. When you wish to do the magical works of Mercury, work in the day of Mercury, with the Sun in Capricorn, because the year of the Chaldeans begins then. Sit in a gold throne in an empty house, and suffumigate yourself with lignum aloes, incense, myrrh, hemlock and elecampane. Put a golden table before you, and around it place seven male goats.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Mercury)"
+    },
+    {
+      "category": "ritual_planetary_operations",
+      "operation": "The Operation of the Moon. When you wish to do the magical works of the Moon, do it in the day of th",
+      "rating": "neutral",
+      "description": "The Operation of the Moon. When you wish to do the magical works of the Moon, do it in the day of the Moon, the Sun being in Cancer, which is the house of the Moon, and the Moon in her 1st Mansion, in which is the exaltation of the Moon. Clean yourself and purify yourself from everything sordid.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of the Moon)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The first Mansion of the Moon is called Alnath. It begins at the first minute of Aries. The wise of ",
+      "rating": "neutral",
+      "description": "The first Mansion of the Moon is called Alnath. It begins at the first minute of Aries. The wise of India begin journeys and take medicines when the Moon is in this Mansion. This Mansion also ought to be used as the root in every image that you wish to make in order to go on a journey, so as to travel safely and return in good health. You should see that the Moon is well dignified and that it is safe from Saturn and Mars and from the combustion of the Sun. Do the contrary in every evil work, tha",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The second mansion is called Albotain. In this Mansion make images to dig for streams and wells, to ",
+      "rating": "neutral",
+      "description": "The second mansion is called Albotain. In this Mansion make images to dig for streams and wells, to find hidden treasures, and for the planting of a great deal of wheat, for the destruction of buildings before they can be completed.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The third Mansion is Azoraye (that is, the Pleiades) and is for the acquisition of all good things. ",
+      "rating": "neutral",
+      "description": "The third Mansion is Azoraye (that is, the Pleiades) and is for the acquisition of all good things. Make the figure of a seated woman with her right hand over her head, and wrap it in cloth, suffumigate it with musk, camphor, mastic and aromatic oils. Say: 'You, Annuncia, make it so.'",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The fourth Mansion is Aldebaran and is for obtaining enmity. Take red wax and when the Moon is passi",
+      "rating": "neutral",
+      "description": "The fourth Mansion is Aldebaran and is for obtaining enmity. Take red wax and when the Moon is passing through this Mansion, make the image of a knight riding on a horse, holding a serpent in his right hand, and suffumigate the image with red myrrh and storax. And say, 'You, Assarez, make it so and fulfill my request.'",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The fifth Mansion is Almizen and is for receiving good from kings and high officials. When the Moon ",
+      "rating": "neutral",
+      "description": "The fifth Mansion is Almizen and is for receiving good from kings and high officials. When the Moon is passing through this Mansion, fashion a figure from silver and in it sculpt a head without a body, and above the head write the name of the lord of this Mansion and your petition and suffumigate it with sandalwood.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The sixth Mansion is Achaya and it is for putting love between two people. When the Moon is passing ",
+      "rating": "neutral",
+      "description": "The sixth Mansion is Achaya and it is for putting love between two people. When the Moon is passing through this Mansion, make two images from white wax, make them embrace each other, and wrap them in white silk. Suffumigate them with amber and lignum aloes.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The seventh Mansion is Aldira and is for the acquisition of all good things. When the Moon is passin",
+      "rating": "neutral",
+      "description": "The seventh Mansion is Aldira and is for the acquisition of all good things. When the Moon is passing through this Mansion, fashion a seal of silver, and sculpt the image of a man clothed in robes and with his hands extended to heaven in the manner of a man who is praying and supplicating. Suffumigate it with sweet smelling things.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The eighth Mansion is Annathra and is for gaining victory. When the Moon is passing through this Man",
+      "rating": "neutral",
+      "description": "The eighth Mansion is Annathra and is for gaining victory. When the Moon is passing through this Mansion, fashion from tin the image of an eagle with the face of a man, and on its breast inscribe the name of the lord of this Mansion. Suffumigate it with sulfur.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The ninth Mansion is Atarfa and is for causing infirmity. When the Moon has passed into this Mansion",
+      "rating": "neutral",
+      "description": "The ninth Mansion is Atarfa and is for causing infirmity. When the Moon has passed into this Mansion, make a lead image of a eunuch holding his hands over his eyes, and on his neck inscribe the name of the Lord of the Mansion. Suffumigate the image with pine resin.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The tenth Mansion is Algebha and is for the cure of infirmities and to make childbirth easy. When th",
+      "rating": "neutral",
+      "description": "The tenth Mansion is Algebha and is for the cure of infirmities and to make childbirth easy. When the Moon is in this mansion, fashion from gold or brass the head of a lion, and above it write the name of the lord of this Mansion. Suffumigate the image with amber.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The eleventh Mansion is Azobra, and it is that you will be feared and receive good things. When the ",
+      "rating": "neutral",
+      "description": "The eleventh Mansion is Azobra, and it is that you will be feared and receive good things. When the Moon is in this Mansion, make in a table of gold the image of a man riding a lion, holding a lance in his right hand and holding the ear of the lion with his left hand.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The twelfth Mansion is Azarfa, and it is for the separation of two lovers. When the Moon is passing ",
+      "rating": "neutral",
+      "description": "The twelfth Mansion is Azarfa, and it is for the separation of two lovers. When the Moon is passing through this Mansion, fashion in black lead the image of a dragon fighting with a man. Suffumigate the image with the hair of a lion mixed with asafoetida.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The thirteenth Mansion is Alahue, and it is for the liberation of men who are not able to come to wo",
+      "rating": "neutral",
+      "description": "The thirteenth Mansion is Alahue, and it is for the liberation of men who are not able to come to women and for putting love between men and women. When the Moon is passing through this Mansion, fashion from red wax the image of an erect man. Suffumigate them with amber and lignum aloes, and wrap them in a piece of white silk which has been washed in rosewater.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The fourteenth Mansion is Azimech, and it is for the separating of men from women. When the Moon is ",
+      "rating": "neutral",
+      "description": "The fourteenth Mansion is Azimech, and it is for the separating of men from women. When the Moon is passing through this Mansion, fashion from red wax the image of a dog with his own tail held in his mouth. Suffumigate it with the hair of a dog and the hair of a cat.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_lunar_mansion_rituals",
+      "operation": "The fifteenth Mansion is Algafra, and it is for the acquisition of friendship and good will. When th",
+      "rating": "neutral",
+      "description": "The fifteenth Mansion is Algafra, and it is for the acquisition of friendship and good will. When the Moon is passing through this Mansion, make in ink the figure of a seated man, holding scrolls in his hand as if reading them. Suffumigate it with frankincense and nutmeg.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "ritual_general_ritual_rules",
+      "operation": "What is necessary in these workings, and cannot be dispensed with, is the union of your whole will a",
+      "rating": "neutral",
+      "description": "What is necessary in these workings, and cannot be dispensed with, is the union of your whole will and belief in the work, so that the power of your spirit is united with the power of the heavens; then all things will be accomplished effectively.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "ritual_general_ritual_rules",
+      "operation": "The working of these operations must be hidden from other people and from the light of the Sun, nor ",
+      "rating": "neutral",
+      "description": "The working of these operations must be hidden from other people and from the light of the Sun, nor should they be done in any place where the Sun may enter, and no other person should learn about your workings, unless it be one who is faithful to you and believes in the work.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "ritual_general_ritual_rules",
+      "operation": "Thabit ibn Qurra in the book he wrote, On Images, says that a body that lacks life is deficient in s",
+      "rating": "neutral",
+      "description": "Thabit ibn Qurra in the book he wrote, On Images, says that a body that lacks life is deficient in spirit. He says this concerning images that are not made in a proper and opportune time, are therefore not apt to receive the spirits of the planets, and therefore are similar to dead bodies in which the spirit is absent. When they are made in a proper and opportune time as they ought, they receive spirits and infused powers from the planets and are similar to living bodies, from which follow mirac",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "ritual_general_ritual_rules",
+      "operation": "The light of the Sun and the projection of its rays interfere with the spirits of the nocturnal plan",
+      "rating": "neutral",
+      "description": "The light of the Sun and the projection of its rays interfere with the spirits of the nocturnal planets.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "ritual_general_ritual_rules",
+      "operation": "The darkness of night and the stillness of motion interfere with the spirits of the diurnal planets.",
+      "rating": "neutral",
+      "description": "The darkness of night and the stillness of motion interfere with the spirits of the diurnal planets. Thus you ought to comply with each planet according to its timing, and according to that which is proper to it.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "ritual_general_ritual_rules",
+      "operation": "Workings done with the suffumigations and prayers proper to them are better than those in which the ",
+      "rating": "neutral",
+      "description": "Workings done with the suffumigations and prayers proper to them are better than those in which the suffumigations are insufficient and the will is divided.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "ritual_general_ritual_rules",
+      "operation": "If the ascendant differs from the nature of the petition, the petition will not be fulfilled, nor wi",
+      "rating": "neutral",
+      "description": "If the ascendant differs from the nature of the petition, the petition will not be fulfilled, nor will prayer attain that which it seeks.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "ritual_sacrifice_and_incense_rules",
+      "operation": "Take with you a cow or sheep as sacrifice, and fill an incense burner with charcoal and suffumigate ",
+      "rating": "neutral",
+      "description": "Take with you a cow or sheep as sacrifice, and fill an incense burner with charcoal and suffumigate with myrrh, aspand seed and sarcocolla, and provide a full dish and fill a pitcher full of wine.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Mars)"
+    },
+    {
+      "category": "ritual_sacrifice_and_incense_rules",
+      "operation": "Clean yourself and bathe, and when you are cleaned and bathed, go to where there are figs or palms a",
+      "rating": "neutral",
+      "description": "Clean yourself and bathe, and when you are cleaned and bathed, go to where there are figs or palms and take with you a ram.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Venus)"
+    },
+    {
+      "category": "ritual_sacrifice_and_incense_rules",
+      "operation": "Suffumigate yourself with lignum aloes, incense, myrrh, hemlock and elecampane. Put a golden table b",
+      "rating": "neutral",
+      "description": "Suffumigate yourself with lignum aloes, incense, myrrh, hemlock and elecampane. Put a golden table before you, and around it place seven male goats, which you shall discipline with a wooden rod so that they cry out. Cut the heads off the goats, skin them and cut them apart and place them around the table, while continue to suffumigate.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Mercury)"
+    },
+    {
+      "category": "ritual_sacrifice_and_incense_rules",
+      "operation": "Call together your friends and associates and prepare food and eat and drink together and perfume wi",
+      "rating": "neutral",
+      "description": "Call together your friends and associates and prepare food and eat and drink together and perfume with perfumes and suffumigate with suffumigations. This is the prayer of the planets that the Roman sages themselves were accustomed to make each year, and especially for Jupiter.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Jupiter)"
+    },
+    {
+      "category": "talismanic_general_rules",
+      "operation": "By sages, magical images are called talismans, which may be translated as 'a figure of a planet and ",
+      "rating": "neutral",
+      "description": "By sages, magical images are called talismans, which may be translated as 'a figure of a planet and a star.' Suffumigation: the act of exposing a talisman to the smoke of incense, so the magical qualities of the incense enter into the talisman.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismanic_general_rules",
+      "operation": "The images of the fixed stars are considered more enduring in their effects than the images of those",
+      "rating": "neutral",
+      "description": "The images of the fixed stars are considered more enduring in their effects than the images of those things that are capable of retrograde motion.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismanic_general_rules",
+      "operation": "If you do a planetary working with the aid of some fixed star of the same nature, it will be more co",
+      "rating": "neutral",
+      "description": "If you do a planetary working with the aid of some fixed star of the same nature, it will be more complete and more perfect because it will have the vigor of the planet and the endurance of the fixed star.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismanic_general_rules",
+      "operation": "When the ascendant, the petition, and the planet are of one nature, and you aid yourself therein wit",
+      "rating": "neutral",
+      "description": "When the ascendant, the petition, and the planet are of one nature, and you aid yourself therein with a fixed star, and you have firm belief and will, your petition will swiftly be fulfilled.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismanic_general_rules",
+      "operation": "Put the significator at the midheaven, in its house or exaltation, and see to it that there is a for",
+      "rating": "neutral",
+      "description": "Put the significator at the midheaven, in its house or exaltation, and see to it that there is a fortitude on the ascendant.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismanic_general_rules",
+      "operation": "Delay in results from a petition comes from an error in your performance of the working, or your lac",
+      "rating": "neutral",
+      "description": "Delay in results from a petition comes from an error in your performance of the working, or your lack of faith, or disorder in the structure of the working.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismanic_general_rules",
+      "operation": "Workings done with the suffumigations and prayers proper to them are better than those in which the ",
+      "rating": "neutral",
+      "description": "Workings done with the suffumigations and prayers proper to them are better than those in which the suffumigations are insufficient and the will is divided.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "When you wish to make images to cause love between two people, make images of the two in their liken",
+      "rating": "neutral",
+      "description": "When you wish to make images to cause love between two people, make images of the two in their likenesses. Let this be done in the hour of Jupiter or Venus, with Caput Draconis rising, and with the Moon making a good aspect to Venus, and let the lord of the seventh house apply to the lord of the ascendant by a trine or sextile aspect.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "The trine is an aspect of perfect love... The sextile is an aspect of moderate friendship... The squ",
+      "rating": "neutral",
+      "description": "The trine is an aspect of perfect love... The sextile is an aspect of moderate friendship... The square aspect is of moderate hatred... The opposition is an aspect of perfect hatred.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "You should know that the virtues of images and their power and the effect that they have only exist ",
+      "rating": "neutral",
+      "description": "You should know that the virtues of images and their power and the effect that they have only exist because of the heavenly bodies, and when these images are made according to the motions of heaven you will not find anything to impede or destroy them.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "It is necessary to observe, when casting images for love and friendship, that the Moon is fortunate ",
+      "rating": "neutral",
+      "description": "It is necessary to observe, when casting images for love and friendship, that the Moon is fortunate and waxing and not when the Moon is afflicted and waning.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "Make images for love and delight and to visit kings and high lords in the day of the Moon, when she ",
+      "rating": "neutral",
+      "description": "Make images for love and delight and to visit kings and high lords in the day of the Moon, when she is waxing, and in Sagittarius, Taurus, Cancer or Pisces (and if she is with the Dragon's Head it is powerful for workings).",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "Make images for evil conversely, that is, when the Moon is in a malefic mansion and conjoined to mal",
+      "rating": "neutral",
+      "description": "Make images for evil conversely, that is, when the Moon is in a malefic mansion and conjoined to malefic planets, or aspecting them by square or opposition.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "Note also that working with images is better done at night than in the daytime in all of the aforesa",
+      "rating": "neutral",
+      "description": "Note also that working with images is better done at night than in the daytime in all of the aforesaid.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_talisman_making_rules",
+      "operation": "The working of these operations must be hidden from other people and from the light of the Sun, nor ",
+      "rating": "neutral",
+      "description": "The working of these operations must be hidden from other people and from the light of the Sun, nor should they be done in any place where the Sun may enter.",
+      "picatrix_reference": "Book II, Chapter 5"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Cancer is of the Moon, and in it you may make an image when it is necessary to cal",
+      "rating": "neutral",
+      "description": "The first face of Cancer is of the Moon, and in it you may make an image when it is necessary to call forth clouds and rain.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Cancer is of Mars, and in it you may make an image to prevent unwanted rain and s",
+      "rating": "neutral",
+      "description": "The second face of Cancer is of Mars, and in it you may make an image to prevent unwanted rain and snow.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Cancer is of Jupiter, in which you may make an image for those on the sea to escap",
+      "rating": "neutral",
+      "description": "The third face of Cancer is of Jupiter, in which you may make an image for those on the sea to escape perils.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Leo is of the Sun, in which you may make an image to acquire the love and benevole",
+      "rating": "neutral",
+      "description": "The first face of Leo is of the Sun, in which you may make an image to acquire the love and benevolence of lords.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Leo is of Jupiter; in it you may make an image to chase away wolves and bears.",
+      "rating": "neutral",
+      "description": "The second face of Leo is of Jupiter; in it you may make an image to chase away wolves and bears.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Leo is of Mars, in which you may make an image to bring together bears, wolves and",
+      "rating": "neutral",
+      "description": "The third face of Leo is of Mars, in which you may make an image to bring together bears, wolves and wild beasts.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Virgo is of Mercury, and in it you may make an image to write well and to profit i",
+      "rating": "neutral",
+      "description": "The first face of Virgo is of Mercury, and in it you may make an image to write well and to profit in your business.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Virgo is of Saturn, in which you may make an image to destroy tools and writing i",
+      "rating": "neutral",
+      "description": "The second face of Virgo is of Saturn, in which you may make an image to destroy tools and writing instruments.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Virgo is of Venus; in it you may make an image to cause peace and love between wom",
+      "rating": "neutral",
+      "description": "The third face of Virgo is of Venus; in it you may make an image to cause peace and love between women and their husbands.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Libra is of Venus, in which you may make an image when you wish to weaken the love",
+      "rating": "neutral",
+      "description": "The first face of Libra is of Venus, in which you may make an image when you wish to weaken the love of a woman, or the contrary.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Libra is of Saturn; in it you may make an image for love according to everything ",
+      "rating": "neutral",
+      "description": "The second face of Libra is of Saturn; in it you may make an image for love according to everything that has been said before.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Libra of Mercury, in which you may make an image for fugitives to return out of wh",
+      "rating": "neutral",
+      "description": "The third face of Libra of Mercury, in which you may make an image for fugitives to return out of whichever place they are.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Scorpio is of Mars, and in it you may make an image to bring together tarantulas, ",
+      "rating": "neutral",
+      "description": "The first face of Scorpio is of Mars, and in it you may make an image to bring together tarantulas, snakes and vipers.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Scorpio is of Jupiter, in which you may make image to drive away tarantulas and s",
+      "rating": "neutral",
+      "description": "The second face of Scorpio is of Jupiter, in which you may make image to drive away tarantulas and snakes.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Scorpio is of the Moon, and in it you may make an image to divert and hinder rains",
+      "rating": "neutral",
+      "description": "The third face of Scorpio is of the Moon, and in it you may make an image to divert and hinder rains.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Sagittarius is of Jupiter, in which you may make an image for love and benevolence",
+      "rating": "neutral",
+      "description": "The first face of Sagittarius is of Jupiter, in which you may make an image for love and benevolence and companionship.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Sagittarius is of Mars, and in it you may make an image to bring afflictions and ",
+      "rating": "neutral",
+      "description": "The second face of Sagittarius is of Mars, and in it you may make an image to bring afflictions and illnesses.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Sagittarius is of the Sun, in which you may make an image to acquire the love and ",
+      "rating": "neutral",
+      "description": "The third face of Sagittarius is of the Sun, in which you may make an image to acquire the love and the grace of kings and superiors.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Capricorn is of Saturn, in which you may make an image to hunt birds and beasts, a",
+      "rating": "neutral",
+      "description": "The first face of Capricorn is of Saturn, in which you may make an image to hunt birds and beasts, and for the milk of herds to thrive.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Capricorn is of Venus, and in it you may make an image to increase the milk of go",
+      "rating": "neutral",
+      "description": "The second face of Capricorn is of Venus, and in it you may make an image to increase the milk of goats, and improve bees.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Capricorn is of Mercury, in which you may make an image to destroy everything cont",
+      "rating": "neutral",
+      "description": "The third face of Capricorn is of Mercury, in which you may make an image to destroy everything contained in the previous faces.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Aquarius is of Saturn, in which you may make an image for love and friendship and ",
+      "rating": "neutral",
+      "description": "The first face of Aquarius is of Saturn, in which you may make an image for love and friendship and companionship with the old.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Aquarius is of Mercury, and in it you may make an image for love and companionshi",
+      "rating": "neutral",
+      "description": "The second face of Aquarius is of Mercury, and in it you may make an image for love and companionship with the young.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Aquarius is of Venus, in which you may make an image for love and benevolence from",
+      "rating": "neutral",
+      "description": "The third face of Aquarius is of Venus, in which you may make an image for love and benevolence from women.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The first face of Pisces is of Jupiter, in which you may make an image for fishing in the sea and fo",
+      "rating": "neutral",
+      "description": "The first face of Pisces is of Jupiter, in which you may make an image for fishing in the sea and for a good voyage.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The second face of Pisces is of the Moon, and in it you may make an image for the benefit of plants ",
+      "rating": "neutral",
+      "description": "The second face of Pisces is of the Moon, and in it you may make an image for the benefit of plants and fruits and to call forth rain.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_decan_face_timings",
+      "operation": "The third face of Pisces is of Mars, in which you may make an image for a good journey in military a",
+      "rating": "neutral",
+      "description": "The third face of Pisces is of Mars, in which you may make an image for a good journey in military activities and for hunting birds and beasts.",
+      "picatrix_reference": "Book IV, Chapter 11"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Aries. Make it in the day and hour of Mars, with Mars rising in the first face of Aries, and the Moo",
+      "rating": "neutral",
+      "description": "Aries. Make it in the day and hour of Mars, with Mars rising in the first face of Aries, and the Moon with Mars, and the lord of the ascendant in the tenth house.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Taurus. Make it in the day and hour of Venus, with Venus rising in the first face of Taurus, and the",
+      "rating": "neutral",
+      "description": "Taurus. Make it in the day and hour of Venus, with Venus rising in the first face of Taurus, and the Moon in the eleventh house.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Gemini. Make it in the day and hour of Mercury, with Mercury rising in the first face of Gemini, and",
+      "rating": "neutral",
+      "description": "Gemini. Make it in the day and hour of Mercury, with Mercury rising in the first face of Gemini, and the Moon in the seventh house.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Cancer. Make it in the day and hour of the Moon, with the Moon rising in the first face of Cancer, a",
+      "rating": "neutral",
+      "description": "Cancer. Make it in the day and hour of the Moon, with the Moon rising in the first face of Cancer, and the Moon in the fourth house.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Leo. Make it in the day and hour of the Sun, with the Sun rising in the first face of Leo, and the M",
+      "rating": "neutral",
+      "description": "Leo. Make it in the day and hour of the Sun, with the Sun rising in the first face of Leo, and the Moon in the first or second face.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Virgo. Make it with the Sun in the first to fifth degree of the first face of Virgo. Make the image ",
+      "rating": "neutral",
+      "description": "Virgo. Make it with the Sun in the first to fifth degree of the first face of Virgo. Make the image of a man riding on a lion. Make it in silver or gold in the day and hour of the Sun.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Libra. Make it in the first face from the first degree until the tenth. Venus should not be retrogra",
+      "rating": "neutral",
+      "description": "Libra. Make it in the first face from the first degree until the tenth. Venus should not be retrograde nor Jupiter in Libra, and the Sun should be above the earth, and make it in the day of Jupiter from the first hour until the fifth.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Scorpio. Make it when the Moon is waxing and in the day and hour of the Sun; and the Sun is above th",
+      "rating": "neutral",
+      "description": "Scorpio. Make it when the Moon is waxing and in the day and hour of the Sun; and the Sun is above the earth; and make it in the first face; at a time that is not cloudy.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Sagittarius. Let Saturn not be retrograde, nor Mars in the twelfth house, nor Jupiter in the fourth ",
+      "rating": "neutral",
+      "description": "Sagittarius. Let Saturn not be retrograde, nor Mars in the twelfth house, nor Jupiter in the fourth house; and the Sun should be above the earth, and the weather should not be cloudy. Make it of gold or silver in the first face, from the first degree until the fifth, in the day and hour of the Sun.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Capricorn. Let Mercury not be retrograde and let it be above the earth; and let Saturn be under the ",
+      "rating": "neutral",
+      "description": "Capricorn. Let Mercury not be retrograde and let it be above the earth; and let Saturn be under the earth and Venus above the earth in the east. Make it in the first face, between the first degree and the tenth.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Aquarius. Let Saturn, Jupiter and Mars be not retrograde, and the Moon be above the earth, and Venus",
+      "rating": "neutral",
+      "description": "Aquarius. Let Saturn, Jupiter and Mars be not retrograde, and the Moon be above the earth, and Venus under the earth. Make it in the first face from the first degree until the fourth. Make it in the day and hour of the Sun, when Jupiter is not combust of the Sun, and the Sun is not elevated above Jupiter, and Saturn is in the degree of the ascendant.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "talismanic_zodiac_engraving_timings",
+      "operation": "Pisces. You may make it when the Moon is in the midheaven; and Mars is not in the midheaven, Jupiter",
+      "rating": "neutral",
+      "description": "Pisces. You may make it when the Moon is in the midheaven; and Mars is not in the midheaven, Jupiter is not retrograde and the Sun is above the earth, and it is not cloudy. Make it entirely in the first face. Make it from gold and not from any other metal.",
+      "picatrix_reference": "Book III, Chapter 3"
+    },
+    {
+      "category": "seasonal_general",
+      "operation": "The four parts of the world—that is, east, west, south, and north, along the wind—and the four seaso",
+      "rating": "neutral",
+      "description": "The four parts of the world—that is, east, west, south, and north, along the wind—and the four seasons of the year—that is, spring, summer, autumn, and winter—and similarly the four humors that are found in human beings as well as in all other animals, that is, blood, phlegm, choler, and melancholy.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "seasonal_general",
+      "operation": "The fourth composite natures are the seasons of the year, that is, spring, winter, summer, and autum",
+      "rating": "neutral",
+      "description": "The fourth composite natures are the seasons of the year, that is, spring, winter, summer, and autumn.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "seasonal_general",
+      "operation": "The natures that are in trees and plants that grow out of the ground, such as oils, tinctures, seeds",
+      "rating": "neutral",
+      "description": "The natures that are in trees and plants that grow out of the ground, such as oils, tinctures, seeds, roots, and the like, are third in order; and of the same order are the sixth composite natures which are tincture, oil, roots, and seeds.",
+      "picatrix_reference": "Book I, Chapter 1"
+    },
+    {
+      "category": "seasonal_seasonal_operations",
+      "operation": "The Operation of Mars. When you wish to work by means of Mars, do the following in the day of Mars, ",
+      "rating": "neutral",
+      "description": "The Operation of Mars. When you wish to work by means of Mars, do the following in the day of Mars, the Sun being in Aries, which is the house of Mars, and the Moon in her 23rd Mansion, in which is the exaltation of Mars. Do this at the end of winter when the trees begin to fruit.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Mars)"
+    },
+    {
+      "category": "seasonal_seasonal_operations",
+      "operation": "The Operation of Venus. When you wish to do the magical works of Venus, do it in the day of Venus, t",
+      "rating": "neutral",
+      "description": "The Operation of Venus. When you wish to do the magical works of Venus, do it in the day of Venus, the Sun being in the beginning of Pisces and the Moon in Cancer.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Venus)"
+    },
+    {
+      "category": "seasonal_seasonal_operations",
+      "operation": "The Operation of Mercury. When you wish to do the magical works of Mercury, work in the day of Mercu",
+      "rating": "neutral",
+      "description": "The Operation of Mercury. When you wish to do the magical works of Mercury, work in the day of Mercury, with the Sun in Capricorn, because the year of the Chaldeans begins then.",
+      "picatrix_reference": "Book IV, Chapter 9 (Operation of Mercury)"
+    },
+    {
+      "category": "seasonal_seasonal_operations",
+      "operation": "They would begin this work when the Sun entered the first degree of Capricorn. Each day they would g",
+      "rating": "neutral",
+      "description": "They would begin this work when the Sun entered the first degree of Capricorn. Each day they would give them crumbled wheat bread soaked in milk to eat, as much as they wanted. At the end of those 24 days the sow, having the greatest desire to couple with the boar, would be moved by so great a motion that from her flowed a great quantity of female seed.",
+      "picatrix_reference": "Book IV, Chapter 9 (Great Wonder)"
+    },
+    {
+      "category": "seasonal_seasonal_operations",
+      "operation": "The wise of India begin journeys and take medicines when the Moon is in this Mansion [Alnath, beginn",
+      "rating": "neutral",
+      "description": "The wise of India begin journeys and take medicines when the Moon is in this Mansion [Alnath, beginning at 0° Aries].",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "seasonal_seasonal_operations",
+      "operation": "The fifth mansion is called Almices... do this when the Moon is rising in a humane sign, safe from S",
+      "rating": "neutral",
+      "description": "The fifth mansion is called Almices... do this when the Moon is rising in a humane sign, safe from Saturn and Mars and the combustion of the Sun.",
+      "picatrix_reference": "Book IV, Chapter 4 (Moon Mansions)"
+    },
+    {
+      "category": "seasonal_seasonal_plant_operations",
+      "operation": "Do this at the end of winter when the trees begin to fruit. [Operation of Mars]",
+      "rating": "neutral",
+      "description": "Do this at the end of winter when the trees begin to fruit. [Operation of Mars]",
+      "picatrix_reference": "Book IV, Chapter 7"
+    },
+    {
+      "category": "seasonal_seasonal_plant_operations",
+      "operation": "A certain herb grows in the springtime; and the cattle of that island eat that herb.",
+      "rating": "neutral",
+      "description": "A certain herb grows in the springtime; and the cattle of that island eat that herb.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "seasonal_seasonal_plant_operations",
+      "operation": "In the same place is said to be another tree from which, in spring and fall, honey distills.",
+      "rating": "neutral",
+      "description": "In the same place is said to be another tree from which, in spring and fall, honey distills.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    },
+    {
+      "category": "seasonal_seasonal_plant_operations",
+      "operation": "Women alike, on the first night of the month of March used to put in their houses branches of myrtle",
+      "rating": "neutral",
+      "description": "Women alike, on the first night of the month of March used to put in their houses branches of myrtle and olive for prosperity.",
+      "picatrix_reference": "Book IV, Chapter 4"
+    }
+  ],
+  "spirit": {
+    "name": "Deharayuz",
+    "arabic": "Dagdijus داجداس",
+    "angel": "Graphiel"
+  }
+}

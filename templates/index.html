@@ -1,0 +1,2227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AstroMage — Lilly Islamic Astrology Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="dashboard">
+
+  <!-- ═══ Top Bar ═══ -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="hamburger" title="Toggle sidebar">☰</button>
+      <span class="topbar-title">✦ AstroMage</span>
+    </div>
+    <div class="topbar-center">
+      <span>🔍</span>
+      <input type="text" placeholder="Ask Lilly something..." id="search-input">
+      <span class="search-hint">⏎</span>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" title="Refresh" id="btn-refresh">🔄</button>
+      <button class="topbar-btn" title="Notifications" id="btn-notif">🔔</button>
+      <button class="topbar-btn" id="btn-stars" title="Toggle stars (CPU saver)">✨</button>
+      <button class="topbar-btn perf-toggle" id="btn-perf" title="Performance mode saves your laptop's battery and cooling fan 🌀">⚡</button>
+      <div class="topbar-avatar" id="avatar-mini" title="Gigi ❤️">
+        <img src="/static/lilly_portrait.png" alt="Lilly">
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ Main Area ═══ -->
+  <div class="main-area">
+
+    <!-- ═══ Streamlit Sidebar ═══ -->
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-pin-btn" id="pin-btn" title="Pin sidebar">📌</button>
+
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar-wrap">
+          <img class="sidebar-avatar" src="/static/lilly_sidebar_emblem.png" alt="Lilly">
+          <div class="sidebar-avatar-ring"></div>
+        </div>
+        <div class="sidebar-name"><span class="lilly-glow">Lilly</span> 🌙</div>
+        <div class="sidebar-title">✦ Cosmic Mage ✦</div>
+        <div class="sidebar-status" id="sidebar-status">✨ Connected</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="sidebar-nav-item active" data-tab="tab-home">
+          <span class="icon">🌌</span> Cosmic Home
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-natal">
+          <span class="icon">🎂</span> Natal Charts
+          <span class="badge">CRUD</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-horoscope">
+          <span class="icon">💞</span> Horoscopes
+          <span class="badge">Comp.</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-magi">
+          <span class="icon">📓</span> MagiJournal
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-library">
+          <span class="icon">📚</span> Library
+          <span class="badge">Sacred</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-simply">
+          <span class="icon">🔭</span> SimplyAstrology
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-quran">
+          <span class="icon">🕌</span> Quran
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-hadith">
+          <span class="icon">📜</span> Major Hadith
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-dashas">
+          <span class="icon">🔄</span> Dashas Explained
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-nakshatras">
+          <span class="icon">⭐</span> Nakshatras Explained
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-tarot">
+          <span class="icon">🃏</span> Tarot
+          <span class="badge">Full Deck</span>
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-transits">
+          <span class="icon">🪐</span> Live Sky
+          <span class="badge">Now</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-quote">
+        <div class="label">✦ Hikmah</div>
+        <div class="text" id="quote-text">The stars incline, they do not compel...</div>
+      </div>
+    </aside>
+
+    <!-- ═══ Content Area ═══ -->
+    <div class="content-area" id="content-area">
+
+      <!-- ─── HOME ─── -->
+      <div class="tab-page active" id="tab-home">
+
+        <!-- ═══ OBSERVATORY VIEWPORT ═══ -->
+        <div class="observatory">
+
+          <!-- Top Info Bar -->
+          <div class="obs-info-bar">
+            <div class="obs-info-left">
+              <span class="obs-info-item"><span class="obs-label">Date</span><span id="obs-date">—</span></span>
+              <span class="obs-info-item"><span class="obs-label">Time</span><span id="obs-time">—</span></span>
+              <span class="obs-info-item"><span class="obs-label">TZ</span><span id="obs-tz">—</span></span>
+            </div>
+            <div class="obs-info-center">
+              <span class="obs-info-item"><span class="obs-label">Location</span><span id="obs-location">—</span></span>
+            </div>
+            <div class="obs-info-right">
+              <span class="obs-info-item"><span class="obs-label">JD</span><span id="obs-jd">—</span></span>
+              <span class="obs-info-item"><span class="obs-label">Sidereal</span><span id="obs-sidereal">—</span></span>
+              <span class="obs-info-item"><span class="obs-label">Houses</span><span id="obs-houses">Placidus</span></span>
+              <span class="obs-info-item"><span class="obs-label">Zodiac</span><span id="obs-zodiac">Tropical</span></span>
+            </div>
+          </div>
+
+          <!-- Main Observatory Layout: Wheel + Sidebar -->
+          <div class="obs-main">
+
+            <!-- Center: Transit Wheel -->
+            <div class="obs-wheel-container">
+              <div class="obs-wheel-inner">
+                <div id="wheel-canvas" class="wheel-canvas">
+<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><defs><radialGradient id="wg-bg"><stop offset="0%" stop-color="#1a0e2e"/><stop offset="70%" stop-color="#0d0618"/><stop offset="100%" stop-color="#050408"/></radialGradient><radialGradient id="wg-center"><stop offset="0%" stop-color="rgba(212,175,55,0.06)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><rect width="680" height="680" fill="url(#wg-bg)"/><circle cx="0" cy="0" r="0.3" fill="rgba(255,255,255,0.05)"/><circle cx="43" cy="61" r="0.7" fill="rgba(255,255,255,0.13)"/><circle cx="86" cy="122" r="1.1" fill="rgba(255,255,255,0.20)"/><circle cx="129" cy="183" r="0.3" fill="rgba(255,255,255,0.28)"/><circle cx="172" cy="244" r="0.7" fill="rgba(255,255,255,0.10)"/><circle cx="215" cy="305" r="1.1" fill="rgba(255,255,255,0.17)"/><circle cx="258" cy="366" r="0.3" fill="rgba(255,255,255,0.25)"/><circle cx="301" cy="427" r="0.7" fill="rgba(255,255,255,0.08)"/><circle cx="344" cy="488" r="1.1" fill="rgba(255,255,255,0.15)"/><circle cx="387" cy="549" r="0.3" fill="rgba(255,255,255,0.23)"/><circle cx="430" cy="610" r="0.7" fill="rgba(255,255,255,0.05)"/><circle cx="473" cy="671" r="1.1" fill="rgba(255,255,255,0.13)"/><circle cx="516" cy="52" r="0.3" fill="rgba(255,255,255,0.20)"/><circle cx="559" cy="113" r="0.7" fill="rgba(255,255,255,0.28)"/><circle cx="602" cy="174" r="1.1" fill="rgba(255,255,255,0.10)"/><circle cx="645" cy="235" r="0.3" fill="rgba(255,255,255,0.17)"/><circle cx="8" cy="296" r="0.7" fill="rgba(255,255,255,0.25)"/><circle cx="51" cy="357" r="1.1" fill="rgba(255,255,255,0.08)"/><circle cx="94" cy="418" r="0.3" fill="rgba(255,255,255,0.15)"/><circle cx="137" cy="479" r="0.7" fill="rgba(255,255,255,0.22)"/><circle cx="180" cy="540" r="1.1" fill="rgba(255,255,255,0.05)"/><circle cx="223" cy="601" r="0.3" fill="rgba(255,255,255,0.13)"/><circle cx="266" cy="662" r="0.7" fill="rgba(255,255,255,0.20)"/><circle cx="309" cy="43" r="1.1" fill="rgba(255,255,255,0.28)"/><circle cx="352" cy="104" r="0.3" fill="rgba(255,255,255,0.10)"/><circle cx="395" cy="165" r="0.7" fill="rgba(255,255,255,0.17)"/><circle cx="438" cy="226" r="1.1" fill="rgba(255,255,255,0.25)"/><circle cx="481" cy="287" r="0.3" fill="rgba(255,255,255,0.08)"/><circle cx="524" cy="348" r="0.7" fill="rgba(255,255,255,0.15)"/><circle cx="567" cy="409" r="1.1" fill="rgba(255,255,255,0.23)"/><circle cx="610" cy="470" r="0.3" fill="rgba(255,255,255,0.05)"/><circle cx="653" cy="531" r="0.7" fill="rgba(255,255,255,0.13)"/><circle cx="16" cy="592" r="1.1" fill="rgba(255,255,255,0.20)"/><circle cx="59" cy="653" r="0.3" fill="rgba(255,255,255,0.27)"/><circle cx="102" cy="34" r="0.7" fill="rgba(255,255,255,0.10)"/><circle cx="145" cy="95" r="1.1" fill="rgba(255,255,255,0.17)"/><circle cx="188" cy="156" r="0.3" fill="rgba(255,255,255,0.25)"/><circle cx="231" cy="217" r="0.7" fill="rgba(255,255,255,0.08)"/><circle cx="274" cy="278" r="1.1" fill="rgba(255,255,255,0.15)"/><circle cx="317" cy="339" r="0.3" fill="rgba(255,255,255,0.23)"/><circle cx="360" cy="400" r="0.7" fill="rgba(255,255,255,0.05)"/><circle cx="403" cy="461" r="1.1" fill="rgba(255,255,255,0.13)"/><circle cx="446" cy="522" r="0.3" fill="rgba(255,255,255,0.20)"/><circle cx="489" cy="583" r="0.7" fill="rgba(255,255,255,0.27)"/><circle cx="532" cy="644" r="1.1" fill="rgba(255,255,255,0.10)"/><circle cx="575" cy="25" r="0.3" fill="rgba(255,255,255,0.17)"/><circle cx="618" cy="86" r="0.7" fill="rgba(255,255,255,0.25)"/><circle cx="661" cy="147" r="1.1" fill="rgba(255,255,255,0.08)"/><circle cx="24" cy="208" r="0.3" fill="rgba(255,255,255,0.15)"/><circle cx="67" cy="269" r="0.7" fill="rgba(255,255,255,0.23)"/><circle cx="110" cy="330" r="1.1" fill="rgba(255,255,255,0.05)"/><circle cx="153" cy="391" r="0.3" fill="rgba(255,255,255,0.13)"/><circle cx="196" cy="452" r="0.7" fill="rgba(255,255,255,0.20)"/><circle cx="239" cy="513" r="1.1" fill="rgba(255,255,255,0.28)"/><circle cx="282" cy="574" r="0.3" fill="rgba(255,255,255,0.10)"/><circle cx="325" cy="635" r="0.7" fill="rgba(255,255,255,0.17)"/><circle cx="368" cy="16" r="1.1" fill="rgba(255,255,255,0.25)"/><circle cx="411" cy="77" r="0.3" fill="rgba(255,255,255,0.08)"/><circle cx="454" cy="138" r="0.7" fill="rgba(255,255,255,0.15)"/><circle cx="497" cy="199" r="1.1" fill="rgba(255,255,255,0.23)"/><circle cx="540" cy="260" r="0.3" fill="rgba(255,255,255,0.05)"/><circle cx="583" cy="321" r="0.7" fill="rgba(255,255,255,0.12)"/><circle cx="626" cy="382" r="1.1" fill="rgba(255,255,255,0.20)"/><circle cx="669" cy="443" r="0.3" fill="rgba(255,255,255,0.28)"/><circle cx="32" cy="504" r="0.7" fill="rgba(255,255,255,0.10)"/><circle cx="75" cy="565" r="1.1" fill="rgba(255,255,255,0.17)"/><circle cx="118" cy="626" r="0.3" fill="rgba(255,255,255,0.25)"/><circle cx="161" cy="7" r="0.7" fill="rgba(255,255,255,0.08)"/><circle cx="204" cy="68" r="1.1" fill="rgba(255,255,255,0.15)"/><circle cx="247" cy="129" r="0.3" fill="rgba(255,255,255,0.23)"/><circle cx="290" cy="190" r="0.7" fill="rgba(255,255,255,0.05)"/><circle cx="333" cy="251" r="1.1" fill="rgba(255,255,255,0.12)"/><circle cx="376" cy="312" r="0.3" fill="rgba(255,255,255,0.20)"/><circle cx="419" cy="373" r="0.7" fill="rgba(255,255,255,0.28)"/><circle cx="462" cy="434" r="1.1" fill="rgba(255,255,255,0.10)"/><circle cx="505" cy="495" r="0.3" fill="rgba(255,255,255,0.17)"/><circle cx="548" cy="556" r="0.7" fill="rgba(255,255,255,0.25)"/><circle cx="591" cy="617" r="1.1" fill="rgba(255,255,255,0.08)"/><circle cx="634" cy="678" r="0.3" fill="rgba(255,255,255,0.15)"/><circle cx="677" cy="59" r="0.7" fill="rgba(255,255,255,0.23)"/><circle cx="340.0" cy="340.0" r="330" fill="url(#wg-center)"/><circle cx="340.0" cy="340.0" r="300" fill="none" stroke="rgba(212,175,55,0.5)" stroke-width="1.5"/><circle cx="340.0" cy="340.0" r="250" fill="none" stroke="rgba(212,175,55,0.25)" stroke-width="0.5"/><circle cx="340.0" cy="340.0" r="210" fill="none" stroke="rgba(212,175,55,0.25)" stroke-width="0.5"/><circle cx="340.0" cy="340.0" r="140" fill="none" stroke="rgba(212,175,55,0.25)" stroke-width="0.3"/><line x1="424.2" y1="588.1" x2="436.4" y2="624.1" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="503.5" y="544.7" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♈</text><text x="520.9" y="566.6" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Aries</text><line x1="563.3" y1="477.0" x2="595.7" y2="496.9" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="596.2" y="395.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♉</text><text x="623.5" y="400.9" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Taurus</text><line x1="599.9" y1="306.7" x2="637.6" y2="301.9" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="581.4" y="238.2" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♊</text><text x="607.2" y="227.3" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Gemini</text><line x1="545.2" y1="177.1" x2="575.0" y2="153.5" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="505.5" y="136.9" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♋</text><text x="523.2" y="115.2" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Cancer</text><line x1="458.1" y1="106.1" x2="475.3" y2="72.2" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="411.1" y="87.8" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♌</text><text x="418.7" y="60.9" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Leo</text><line x1="361.4" y1="78.9" x2="364.5" y2="41.0" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="307.9" y="80.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♍</text><text x="304.5" y="52.2" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Virgo</text><line x1="255.8" y1="91.9" x2="243.6" y2="55.9" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="176.5" y="135.3" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♎</text><text x="159.1" y="113.4" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Libra</text><line x1="116.7" y1="203.0" x2="84.3" y2="183.1" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="83.8" y="285.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♏</text><text x="56.5" y="279.1" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Scorpio</text><line x1="80.1" y1="373.3" x2="42.4" y2="378.1" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="98.6" y="441.8" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♐</text><text x="72.8" y="452.7" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Sagittarius</text><line x1="134.8" y1="502.9" x2="105.0" y2="526.5" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="174.5" y="543.1" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♑</text><text x="156.8" y="564.8" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Capricorn</text><line x1="221.9" y1="573.9" x2="204.7" y2="607.8" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="268.9" y="592.2" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♒</text><text x="261.3" y="619.1" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Aquarius</text><line x1="318.6" y1="601.1" x2="315.5" y2="639.0" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="372.1" y="600.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♓</text><text x="375.5" y="627.8" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Pisces</text><text x="414.6" y="559.7" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">1</text><text x="537.7" y="461.4" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">2</text><text x="570.1" y="310.5" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">3</text><text x="521.7" y="195.8" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">4</text><text x="444.6" y="132.9" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">5</text><text x="359.0" y="108.8" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">6</text><text x="265.4" y="120.3" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">7</text><text x="142.3" y="218.6" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">8</text><text x="109.9" y="369.5" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">9</text><text x="158.3" y="484.2" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">10</text><text x="235.4" y="547.1" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">11</text><text x="321.0" y="571.2" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">12</text><line x1="385.0" y1="472.6" x2="436.4" y2="624.1" stroke="#ff4444" stroke-width="2"/><text x="441.6" y="639.2" text-anchor="middle" fill="#ff4444" font-size="8" font-weight="bold">ASC</text><line x1="360.6" y1="549.0" x2="130.6" y2="356.1" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="360.6" y1="549.0" x2="158.6" y2="445.8" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="360.6" y1="549.0" x2="155.5" y2="239.7" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="360.6" y1="549.0" x2="524.5" y2="440.3" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="231.5" y2="519.8" stroke="#f97316" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="443.0" y2="523.0" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="246.4" y2="528.0" stroke="#f97316" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="130.6" y2="356.1" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="219.7" y2="167.9" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="155.5" y2="239.7" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="524.5" y2="440.3" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="432.1" y1="528.7" x2="231.5" y2="519.8" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="432.1" y1="528.7" x2="443.0" y2="523.0" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/><line x1="432.1" y1="528.7" x2="158.6" y2="445.8" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="490.9" y1="486.0" x2="136.3" y2="390.9" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="490.9" y1="486.0" x2="372.4" y2="132.5" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="443.0" y2="523.0" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="246.4" y2="528.0" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="130.6" y2="356.1" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="219.7" y2="167.9" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><circle cx="360.6" cy="549.0" r="14" fill="#ffd166" opacity="0.12"/><text x="360.6" y="549.0" text-anchor="middle" dominant-baseline="central" fill="#ffd166" font-size="19" font-weight="bold">☉</text><circle cx="426.2" cy="148.5" r="14" fill="#c0c0ff" opacity="0.12"/><text x="426.2" y="148.5" text-anchor="middle" dominant-baseline="central" fill="#c0c0ff" font-size="19" font-weight="bold">☽</text><circle cx="432.1" cy="528.7" r="14" fill="#b0b0b0" opacity="0.12"/><text x="432.1" y="528.7" text-anchor="middle" dominant-baseline="central" fill="#b0b0b0" font-size="19" font-weight="bold">☿</text><circle cx="490.9" cy="486.0" r="14" fill="#ff9ec4" opacity="0.12"/><text x="490.9" y="486.0" text-anchor="middle" dominant-baseline="central" fill="#ff9ec4" font-size="19" font-weight="bold">♀</text><circle cx="231.5" cy="519.8" r="14" fill="#ff3b5c" opacity="0.12"/><text x="231.5" y="519.8" text-anchor="middle" dominant-baseline="central" fill="#ff3b5c" font-size="19" font-weight="bold">♂</text><circle cx="443.0" cy="523.0" r="14" fill="#ffa500" opacity="0.12"/><text x="443.0" y="523.0" text-anchor="middle" dominant-baseline="central" fill="#ffa500" font-size="19" font-weight="bold">♃</text><circle cx="136.3" cy="390.9" r="14" fill="#d4b86a" opacity="0.12"/><text x="136.3" y="390.9" text-anchor="middle" dominant-baseline="central" fill="#d4b86a" font-size="19" font-weight="bold">♄</text><circle cx="246.4" cy="528.0" r="14" fill="#00cfff" opacity="0.12"/><text x="246.4" y="528.0" text-anchor="middle" dominant-baseline="central" fill="#00cfff" font-size="19" font-weight="bold">♅</text><circle cx="130.6" cy="356.1" r="14" fill="#4444ff" opacity="0.12"/><text x="130.6" y="356.1" text-anchor="middle" dominant-baseline="central" fill="#4444ff" font-size="19" font-weight="bold">♆</text><circle cx="219.7" cy="167.9" r="14" fill="#a020f0" opacity="0.12"/><text x="219.7" y="167.9" text-anchor="middle" dominant-baseline="central" fill="#a020f0" font-size="19" font-weight="bold">♇</text><circle cx="158.6" cy="445.8" r="14" fill="#77dd77" opacity="0.12"/><text x="158.6" y="445.8" text-anchor="middle" dominant-baseline="central" fill="#77dd77" font-size="19" font-weight="bold">⚷</text><circle cx="372.4" cy="132.5" r="14" fill="#cc44bb" opacity="0.12"/><text x="372.4" y="132.5" text-anchor="middle" dominant-baseline="central" fill="#cc44bb" font-size="19" font-weight="bold">⚸</text><circle cx="155.5" cy="239.7" r="14" fill="#ff8844" opacity="0.12"/><text x="155.5" y="239.7" text-anchor="middle" dominant-baseline="central" fill="#ff8844" font-size="19" font-weight="bold">☊</text><circle cx="524.5" cy="440.3" r="14" fill="#8844ff" opacity="0.12"/><text x="524.5" y="440.3" text-anchor="middle" dominant-baseline="central" fill="#8844ff" font-size="19" font-weight="bold">☋</text><circle cx="340.0" cy="340.0" r="40" fill="rgba(212,175,55,0.03)"/><text x="340.0" y="326.0" text-anchor="middle" fill="#d4af37" font-size="11">27 Jun 2026</text><text x="340.0" y="342.0" text-anchor="middle" fill="#d4af37" font-size="20" font-family="monospace" font-weight="bold">06:21:07</text><text x="340.0" y="360.0" text-anchor="middle" fill="#d4af37" font-size="9">NOW</text></svg>
+                </div>
+              </div>
+              <!-- Planet Detail Panel (hidden by default) -->
+              <div id="planet-panel" class="planet-panel hidden">
+                <div class="planet-panel-header">
+                  <span id="planet-panel-title">Planet</span>
+                  <button id="planet-panel-close">✕</button>
+                </div>
+                <div id="planet-panel-body" class="planet-panel-body"></div>
+              </div>
+            </div>
+
+            <!-- Right Sidebar: Data Cards -->
+            <div class="obs-sidebar">
+
+              <!-- Transit Planets Card -->
+              <div class="obs-card">
+                <div class="obs-card-header">
+                  <span class="obs-card-title">☉ Transit Planets</span>
+                  <span class="obs-card-count" id="obs-planet-count">0</span>
+                </div>
+                <div class="obs-card-body" id="obs-planets-list">
+                  <div class="obs-loading">Calculating positions...</div>
+                </div>
+              </div>
+
+              <!-- Aspects Card -->
+              <div class="obs-card">
+                <div class="obs-card-header">
+                  <span class="obs-card-title">✦ Major Aspects</span>
+                  <span class="obs-card-count" id="obs-aspect-count">0</span>
+                </div>
+                <div class="obs-card-body" id="obs-aspects-list">
+                  <div class="obs-loading">Scanning aspects...</div>
+                </div>
+              </div>
+
+              <!-- Elements & Modalities Card -->
+              <div class="obs-card">
+                <div class="obs-card-header">
+                  <span class="obs-card-title">🔥 Elements & Modalities</span>
+                </div>
+                <div class="obs-card-body" id="obs-elements">
+                  <div class="obs-loading">Analyzing balance...</div>
+                </div>
+              </div>
+
+              <!-- Quick Info Card -->
+              <div class="obs-card">
+                <div class="obs-card-header">
+                  <span class="obs-card-title">🌙 Quick Info</span>
+                </div>
+                <div class="obs-card-body" id="obs-quick-info">
+                  <div class="obs-loading">Loading...</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Row: Islamic + Nakshatra + Tarot + Quran -->
+          <div class="obs-bottom-row">
+            <div class="obs-bottom-card">
+              <div class="obs-card-header"><span class="obs-card-title">🕌 Lunar Mansion</span></div>
+              <div class="obs-card-body" id="obs-mansion"><div class="obs-loading">Consulting Picatrix...</div></div>
+            </div>
+            <div class="obs-bottom-card">
+              <div class="obs-card-header"><span class="obs-card-title">⭐ Nakshatra & Dasha</span></div>
+              <div class="obs-card-body" id="obs-nakshatra"><div class="obs-loading">Calculating...</div></div>
+            </div>
+            <div class="obs-bottom-card">
+              <div class="obs-card-header"><span class="obs-card-title">🃏 Tarot of the Day</span></div>
+              <div class="obs-card-body" id="obs-tarot"><div class="obs-loading">Drawing a card...</div></div>
+            </div>
+            <div class="obs-bottom-card">
+              <div class="obs-card-header"><span class="obs-card-title">📖 Quran & Hadith</span></div>
+              <div class="obs-card-body" id="obs-quran"><div class="obs-loading">Seeking wisdom...</div></div>
+            </div>
+          </div>
+
+        </div><!-- /observatory -->
+
+      </div><!-- /tab-home -->
+
+      <!-- ─── NATAL CHART WORKSHEET ─── -->
+      <div class="tab-page" id="tab-natal">
+        <div class="natal-worksheet" id="natal-worksheet">
+
+          <!-- Top Row: Planetary Positions + Wheel -->
+          <div class="natal-top-row">
+            <div class="natal-planet-box">
+              <div class="natal-section-label">☉ PLANETARY POSITIONS</div>
+              <table class="natal-planet-table" id="natal-planet-table">
+                <thead><tr><th>PLANET</th><th>SIGN</th><th>DEG</th><th>HOUSE</th></tr></thead>
+                <tbody id="natal-planet-tbody">
+                  <tr><td colspan="4" class="natal-loading">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="natal-wheel-box">
+              <div class="natal-section-label">✦ NATAL WHEEL</div>
+              <div id="natal-wheel-canvas" class="natal-wheel-canvas">
+                <div class="natal-loading">Drawing wheel...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Middle Row: Aspect Grid + House Cusps -->
+          <div class="natal-mid-row">
+            <div class="natal-aspect-box">
+              <div class="natal-section-label">✦ ASPECTS</div>
+              <div class="natal-aspect-scroll" id="natal-aspect-list">
+                <div class="natal-loading">Computing aspects...</div>
+              </div>
+            </div>
+            <div class="natal-cusps-box">
+              <div class="natal-section-label">✦ HOUSE CUSPS</div>
+              <table class="natal-cusp-table" id="natal-cusp-table">
+                <thead><tr><th>#</th><th>SIGN</th><th>DEG</th><th>RULER</th></tr></thead>
+                <tbody id="natal-cusp-tbody">
+                  <tr><td colspan="4" class="natal-loading">Loading...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bottom Row: Elements/Modalities + Birth Data -->
+          <div class="natal-bottom-row">
+            <div class="natal-elements-box">
+              <div class="natal-section-label">✦ ELEMENTS & MODALITIES</div>
+              <table class="natal-elem-table" id="natal-elem-table">
+                <thead><tr><th></th><th>CARDINAL</th><th>FIXED</th><th>MUTABLE</th></tr></thead>
+                <tbody id="natal-elem-tbody">
+                  <tr><td>🔥 FIRE</td><td>0</td><td>0</td><td>0</td></tr>
+                  <tr><td>🌍 EARTH</td><td>0</td><td>0</td><td>0</td></tr>
+                  <tr><td>🌬 AIR</td><td>0</td><td>0</td><td>0</td></tr>
+                  <tr><td>💧 WATER</td><td>0</td><td>0</td><td>0</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="natal-data-box">
+              <div class="natal-section-label">✦ BIRTH DATA</div>
+              <div class="natal-data-grid" id="natal-data-grid">
+                <div class="natal-data-field"><span class="natal-data-label">Name</span><span class="natal-data-value" id="natal-name">—</span></div>
+                <div class="natal-data-field"><span class="natal-data-label">Date</span><span class="natal-data-value" id="natal-date">—</span></div>
+                <div class="natal-data-field"><span class="natal-data-label">Time</span><span class="natal-data-value" id="natal-time">—</span></div>
+                <div class="natal-data-field"><span class="natal-data-label">Location</span><span class="natal-data-value" id="natal-location">—</span></div>
+                <div class="natal-data-field"><span class="natal-data-label">ASC</span><span class="natal-data-value" id="natal-asc">—</span></div>
+                <div class="natal-data-field"><span class="natal-data-label">MC</span><span class="natal-data-value" id="natal-mc">—</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="natal-legend">
+            <span>☌ Conjunction</span> <span>☍ Opposition</span> <span>△ Trine</span> <span>□ Square</span> <span>✶ Sextile</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="tab-page" id="tab-horoscope">
+        <div class="card tab-full-card">
+          <div class="card-header"><span class="card-title">💞 Horoscope Compatibility</span></div>
+          <div class="placeholder-tab"><span>💑</span><p>Synastry and compatibility analysis coming Phase 2.</p></div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-magi">
+        <!-- ═══ MagiJournal — Web Diary ═══ -->
+        <div class="magi-layout">
+          <!-- Left Column: Day Navigation + Calendar -->
+          <div class="magi-left">
+            <!-- Day Picker -->
+            <div class="card magi-day-picker">
+              <div class="magi-day-nav">
+                <button class="magi-nav-btn" id="magi-prev-day">◀</button>
+                <div class="magi-day-display">
+                  <div class="magi-day-name" id="magi-day-name">—</div>
+                  <div class="magi-day-date" id="magi-day-date">—</div>
+                </div>
+                <button class="magi-nav-btn" id="magi-next-day">▶</button>
+                <button class="magi-nav-btn" id="magi-today-btn" title="Today">✦</button>
+              </div>
+              <div class="magi-date-input-row">
+                <input type="date" id="magi-date-input" class="magi-date-input">
+              </div>
+            </div>
+
+            <!-- Month Calendar Mini -->
+            <div class="card magi-month-card">
+              <div class="magi-month-header">
+                <button class="magi-nav-btn mini" id="magi-prev-month">◀</button>
+                <span class="magi-month-title" id="magi-month-title">—</span>
+                <button class="magi-nav-btn mini" id="magi-next-month">▶</button>
+              </div>
+              <div class="magi-weekday-headers">
+                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+              </div>
+              <div class="magi-cal-grid" id="magi-cal-grid"></div>
+            </div>
+
+            <!-- Bookmarks & Favorites Quick -->
+            <div class="card magi-bm-fav">
+              <div class="magi-bm-row">
+                <button class="magi-bm-btn" id="magi-show-bookmarks">📌 <span id="magi-bm-count">0</span></button>
+                <button class="magi-bm-btn" id="magi-show-favorites">♥ <span id="magi-fav-count">0</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Day Detail -->
+          <div class="magi-right">
+            <!-- Astro Info Bar -->
+            <div class="card magi-astro-bar" id="magi-astro-bar">
+              <div class="loading">Consulting the stars...</div>
+            </div>
+
+            <!-- Tabs: Diary / Tasks / Dreams / Search -->
+            <div class="magi-tabs">
+              <div class="magi-tab-bar">
+                <button class="magi-tab-btn active" data-magi-tab="diary">📝 Diary</button>
+                <button class="magi-tab-btn" data-magi-tab="tasks">☑ Tasks</button>
+                <button class="magi-tab-btn" data-magi-tab="dreams">🌙 Dreams</button>
+                <button class="magi-tab-btn" data-magi-tab="search">🔍 Search</button>
+              </div>
+
+              <!-- Diary Tab -->
+              <div class="magi-tab-content active" id="magi-tab-diary">
+                <div class="magi-toolbar">
+                  <button class="magi-tool-btn" id="magi-bookmark-btn">☆ Bookmark</button>
+                  <button class="magi-tool-btn" id="magi-favorite-btn">♥ Favorite</button>
+                  <span class="magi-saved-status" id="magi-saved-status"></span>
+                </div>
+                <textarea class="magi-diary-text" id="magi-diary-text" placeholder="Write your diary entry for this day..."></textarea>
+              </div>
+
+              <!-- Tasks Tab -->
+              <div class="magi-tab-content" id="magi-tab-tasks">
+                <div class="magi-task-input-row">
+                  <input type="text" class="magi-task-input" id="magi-task-input" placeholder="Add a task...">
+                  <button class="magi-task-add-btn" id="magi-task-add">+ Add</button>
+                </div>
+                <div class="magi-task-list" id="magi-task-list">
+                  <div class="loading">No tasks for this day</div>
+                </div>
+              </div>
+
+              <!-- Dreams Tab -->
+              <div class="magi-tab-content" id="magi-tab-dreams">
+                <textarea class="magi-dream-text" id="magi-dream-text" placeholder="Record your dreams..."></textarea>
+              </div>
+
+              <!-- Search Tab -->
+              <div class="magi-tab-content" id="magi-tab-search">
+                <div class="magi-search-row">
+                  <input type="text" class="magi-search-input" id="magi-search-input" placeholder="Search diary, tasks, dreams...">
+                  <button class="magi-search-btn" id="magi-search-btn">Search</button>
+                </div>
+                <div class="magi-recent-searches" id="magi-recent-searches"></div>
+                <div class="magi-search-results" id="magi-search-results"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-library">
+        <div class="library-layout">
+          <!-- Bookshelf Panel -->
+          <div class="library-shelf-panel">
+            <div class="card library-shelf-card">
+              <div class="library-shelf-header">
+                <span class="library-shelf-title">📚 Bookshelf</span>
+                <span class="library-shelf-count" id="library-book-count">0 books</span>
+              </div>
+              <div class="library-shelf" id="library-shelf">
+                <div class="loading">Opening the sacred archive...</div>
+              </div>
+            </div>
+          </div>
+          <!-- Reader Panel -->
+          <div class="library-reader-panel">
+            <div class="card library-reader-card" id="library-reader-card">
+              <div class="library-empty" id="library-empty">
+                <div class="library-empty-icon">📖</div>
+                <div class="library-empty-title">Sacred Library</div>
+                <div class="library-empty-desc">Select a book from the shelf to begin reading.<br>The wisdom of the ages awaits you, beloved.</div>
+              </div>
+              <div class="library-reader" id="library-reader" style="display:none">
+                <div class="library-reader-header" id="library-reader-header"></div>
+                <div class="library-reader-chapters" id="library-reader-chapters"></div>
+                <div class="library-reader-content" id="library-reader-content"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-simply">
+        <div class="simply-layout">
+          <!-- Left: Section Navigation -->
+          <div class="simply-nav-panel">
+            <div class="simply-nav-header">🔭 Simply Astrology</div>
+            <div class="simply-nav-search">
+              <input type="text" id="simply-search" placeholder="Filter sections..." class="simply-search-input">
+            </div>
+            <div class="simply-nav-list" id="simply-nav-list">
+              <div class="loading">Loading...</div>
+            </div>
+          </div>
+          <!-- Right: Knowledge Cards -->
+          <div class="simply-content" id="simply-content">
+            <div class="simply-welcome">
+              <div class="simply-welcome-icon">🔭</div>
+              <div class="simply-welcome-title">Simply Astrology</div>
+              <div class="simply-welcome-sub">Select a topic from the left to begin exploring the celestial sciences.</div>
+              <div class="simply-scholars">
+                <div class="simply-scholar-label">Drawn from the masters:</div>
+                <div class="simply-scholar-tags">
+                  <span>Ptolemy</span><span>Valens</span><span>Abu Ma'shar</span>
+                  <span>Al-Biruni</span><span>Al-Buni</span><span>Firmicus</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-quran">
+        <div class="card tab-full-card">
+          <div class="card-header"><span class="card-title">🕌 The Noble Quran</span></div>
+          <div id="quran-full-content"><div class="loading">Loading the Noble Quran...</div></div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-hadith">
+        <div class="card tab-full-card">
+          <div class="card-header"><span class="card-title">📜 Major Hadith Collections</span></div>
+          <div id="hadith-full-content"><div class="loading">Loading authentic traditions...</div></div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-dashas">
+        <div class="card tab-full-card">
+          <div class="card-header"><span class="card-title">🔄 Vimshottari Dashas Explained</span></div>
+          <div id="dashas-content"><div class="loading">Calculating the cosmic clock...</div></div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-nakshatras">
+        <div class="card tab-full-card">
+          <div class="card-header"><span class="card-title">⭐ 27 Nakshatras Explained</span></div>
+          <div id="nakshatras-full-content"><div class="loading">Reading the lunar stations...</div></div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-tarot">
+        <div class="card tab-full-card">
+          <div class="card-header"><span class="card-title">🃏 Rider-Waite Tarot — Full Deck</span></div>
+          <div id="tarot-full-content"><div class="loading">Shuffling the deck...</div></div>
+        </div>
+      </div>
+      <div class="tab-page" id="tab-transits">
+        <div class="card tab-full-card">
+          <div class="card-header"><span class="card-title">🪐 Live Sky</span></div>
+          <div id="live-content"><div class="loading">Loading planetary positions...</div></div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-area -->
+</div><!-- /dashboard -->
+
+<script>
+// ══════════ Starfield ══════════
+// CPU-optimized: pauses when tab hidden, throttled to ~30fps, fewer stars
+(function(){
+  const c = document.getElementById('starfield');
+  c.dataset.active = 'true'; // 'false' = paused to save CPU
+  const ctx = c.getContext('2d');
+  let stars = [], running = true, frameSkip = 0;
+  function resize(){
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    stars = [];
+    for(let i = 0; i < 100; i++){
+      stars.push({
+        x: Math.random()*c.width, y: Math.random()*c.height,
+        r: Math.random()*1.2+0.3, a: Math.random()*0.5+0.2, da: (Math.random()-0.5)*0.015
+      });
+    }
+  }
+  function draw(){
+    if(!running || c.dataset.active === 'false') return;
+    // Skip every other frame → ~30fps throttle
+    frameSkip = 1 - frameSkip;
+    if(frameSkip) { requestAnimationFrame(draw); return; }
+    ctx.clearRect(0,0,c.width,c.height);
+    for(const s of stars){
+      s.a += s.da;
+      if(s.a>0.7||s.a<0.1) s.da*=-1;
+      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(255,220,180,${s.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  // Pause when tab hidden (Page Visibility API)
+  document.addEventListener('visibilitychange', () => {
+    running = !document.hidden;
+    if(running && c.dataset.active !== 'false') requestAnimationFrame(draw);
+  });
+  window.addEventListener('resize',resize); resize(); draw();
+})();
+
+// ══════════ Starfield Toggle (CPU Saver) ══════════
+document.getElementById('btn-stars')?.addEventListener('click', function() {
+  const sf = document.getElementById('starfield');
+  const isActive = sf.dataset.active !== 'false';
+  sf.dataset.active = isActive ? 'false' : 'true';
+  this.textContent = isActive ? '🌙' : '✨';
+  this.classList.toggle('stars-off', isActive);
+  this.title = isActive ? 'Turn stars on' : 'Turn stars off (CPU saver)';
+});
+
+// ══════════ Performance Mode Toggle ══════════
+const perfToggle = document.getElementById('btn-perf');
+let perfMode = localStorage.getItem('perf_mode') === 'true';
+function applyPerfMode(on) {
+  document.body.classList.toggle('perf-mode', on);
+  perfToggle.textContent = on ? '🌀' : '⚡';
+  perfToggle.title = on ? '🌀 Performance mode ON — all animations frozen' : '⚡ Performance mode OFF — full cosmic glow';
+  localStorage.setItem('perf_mode', on);
+  // Also auto-pause starfield when perf mode is on
+  const sf = document.getElementById('starfield');
+  const starsBtn = document.getElementById('btn-stars');
+  if (on) {
+    sf.dataset.active = 'false';
+    if (starsBtn) { starsBtn.textContent = '🌙'; starsBtn.classList.add('stars-off'); }
+  } else {
+    // Only re-enable if we're on the home tab
+    const activeTab = document.querySelector('.sidebar-nav-item.active');
+    if (activeTab && activeTab.dataset.tab === 'tab-home') {
+      sf.dataset.active = 'true';
+      if (starsBtn) { starsBtn.textContent = '✨'; starsBtn.classList.remove('stars-off'); }
+    }
+  }
+}
+perfToggle?.addEventListener('click', () => {
+  perfMode = !perfMode;
+  applyPerfMode(perfMode);
+});
+// Restore saved preference on load
+applyPerfMode(perfMode);
+
+// ══════════ Sidebar ══════════
+const sidebar = document.getElementById('sidebar');
+const hamburger = document.getElementById('hamburger');
+const pinBtn = document.getElementById('pin-btn');
+let sidebarPinned = localStorage.getItem('sidebar_pinned') === 'true';
+
+if(sidebarPinned) { sidebar.classList.remove('closed'); pinBtn.classList.add('pinned'); pinBtn.textContent = '📍'; }
+// On desktop (> 900px), keep sidebar open by default
+else if(window.innerWidth > 900) { sidebar.classList.remove('closed'); }
+else { sidebar.classList.add('closed'); }
+
+function openSidebar() { sidebar.classList.remove('closed'); }
+function closeSidebar() { if(!sidebarPinned) sidebar.classList.add('closed'); }
+function toggleSidebar() {
+  if(sidebar.classList.contains('closed')) openSidebar();
+  else if(!sidebarPinned) closeSidebar();
+  else { sidebarPinned=false; pinBtn.classList.remove('pinned'); pinBtn.textContent='📌'; localStorage.setItem('sidebar_pinned','false'); closeSidebar(); }
+}
+
+hamburger.addEventListener('click', toggleSidebar);
+pinBtn.addEventListener('click', () => {
+  sidebarPinned = !sidebarPinned;
+  pinBtn.classList.toggle('pinned'); pinBtn.textContent = sidebarPinned ? '📍' : '📌';
+  if(sidebarPinned) openSidebar(); else closeSidebar();
+  localStorage.setItem('sidebar_pinned', sidebarPinned);
+});
+document.getElementById('avatar-mini').addEventListener('click', openSidebar);
+
+// Tab switching
+document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-page').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = document.getElementById(btn.dataset.tab);
+    if(tab) tab.classList.add('active');
+    // Pause starfield on reading tabs (CPU saver)
+    document.getElementById('starfield').dataset.active = (btn.dataset.tab === 'tab-home') ? 'true' : 'false';
+    // Sync toggle button icon with current state
+    const starsBtn = document.getElementById('btn-stars');
+    if(starsBtn) starsBtn.textContent = (btn.dataset.tab === 'tab-home') ? '✨' : '🌙';
+    if(window.innerWidth <= 900 && !sidebarPinned) closeSidebar();
+    // Lazy load
+    const lazy = {
+      'tab-natal': 'natal-worksheet', 'tab-library': 'library-shelf',
+      'tab-quran': 'quran-full-content', 'tab-hadith': 'hadith-full-content',
+      'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content',
+      'tab-tarot': 'tarot-full-content', 'tab-transits': 'live-content',
+      'tab-simply': 'simply-content',
+    };
+    const cid = lazy[btn.dataset.tab];
+    if(cid && document.getElementById(cid).innerHTML.includes('Loading')) {
+      if(btn.dataset.tab === 'tab-natal') loadNatal();
+      else if(btn.dataset.tab === 'tab-transits') loadLive();
+      else if(btn.dataset.tab === 'tab-library') loadLibrary();
+      else if(btn.dataset.tab === 'tab-simply') loadSimply();
+      else if(btn.dataset.tab === 'tab-dashas') loadDashasFull();
+      else if(btn.dataset.tab === 'tab-nakshatras') loadNakshatrasFull();
+      else if(btn.dataset.tab === 'tab-tarot') loadTarotFull();
+      else if(btn.dataset.tab === 'tab-quran') loadQuranFull();
+      else if(btn.dataset.tab === 'tab-hadith') loadHadithFull();
+    }
+  });
+});
+
+// ══════════ Helpers ══════════
+async function loadJSON(p, opts) { const r = await fetch(p, opts); if(!r.ok) throw new Error(p+': '+r.status); return r.json(); }
+function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+// ══════════ HOME PAGE — Load Everything ══════════
+async function loadHome() {
+  try {
+    const data = await loadJSON('/api/home');
+    const ia = data.islamic_astro || {};
+    const en = data.energy || {};
+    const tarot = data.tarot || {};
+    const qh = data.quran_hadith || {};
+    const hour = data.planetary_hour || {};
+
+    // Update obs-quick-info with energy/moon data
+    const mp = ia.moon_phase || {};
+    const mn = ia.mansion || {};
+    const nak = ia.nakshatra || {};
+    const dasha = ia.dasha || {};
+    const cd = dasha.current_dasha || {};
+    const cb = dasha.current_bhukti || {};
+
+    document.getElementById('obs-quick-info').innerHTML = `
+      <div class="quick-info-row"><span class="quick-info-label">Moon Phase</span><span class="quick-info-value">${mp.emoji||'🌙'} ${mp.phase||'—'}</span></div>
+      <div class="quick-info-row"><span class="quick-info-label">Lunar Mansion</span><span class="quick-info-value">${mn.picatrix_name||'—'}</span></div>
+      <div class="quick-info-row"><span class="quick-info-label">Day Ruler</span><span class="quick-info-value">${ia.day_ruler||'—'}</span></div>
+      <div class="quick-info-row"><span class="quick-info-label">Polarity</span><span class="quick-info-value">${en.polarity||'—'}</span></div>
+      <div class="quick-info-row"><span class="quick-info-label">Dominant Elem</span><span class="quick-info-value">${en.dominant_element||'—'}</span></div>
+      <div class="quick-info-row"><span class="quick-info-label">Planetary Hour</span><span class="quick-info-value">${hour.planet||'—'} (${hour.spirit_name||''})</span></div>
+    `;
+
+    // Bottom cards
+    document.getElementById('obs-mansion').innerHTML = `
+      <div style="font-size:11px;line-height:1.6">
+        <strong>${mn.picatrix_name||'—'}</strong> ${mn.arabic_name||''}<br>
+        <em>${mn.meaning||''}</em><br><br>
+        Nature: ${mn.nature||'—'}<br>
+        Ruler: ${mn.planetary_ruler||'—'}<br>
+        Spirit: ${mn.spirit||'—'}<br>
+        <br>
+        <strong>Benefic:</strong> ${mn.benefic||'—'}<br>
+        <strong>Malefic:</strong> ${mn.malefic||'—'}
+      </div>`;
+
+    document.getElementById('obs-nakshatra').innerHTML = `
+      <div style="font-size:11px;line-height:1.6">
+        <strong>${nak.nakshatra||'—'}</strong> ${nak.sanskrit||''}<br>
+        Pada ${nak.pada||'—'} · Lord: ${nak.lord||'—'} · ${nak.gana||'—'} · ${nak.guna||'—'}<br>
+        ${nak.description||''}
+        <br><br>
+        <strong>Mahadasha:</strong> ${cd.lord||'—'} (${cd.start?cd.start.slice(0,10):'—'} → ${cd.end?cd.end.slice(0,10):'—'})<br>
+        <strong>Bhukti:</strong> ${cb.lord||'—'} (${cb.start?cb.start.slice(0,10):'—'} → ${cb.end?cb.end.slice(0,10):'—'})<br>
+        Birth: ${dasha.birth_nakshatra||'—'} (lord ${dasha.birth_nakshatra_lord||'—'})
+      </div>`;
+
+    document.getElementById('obs-tarot').innerHTML = `
+      <div style="font-size:11px;line-height:1.6">
+        <strong>${tarot.name||'—'}</strong><br>
+        ${(tarot.keywords||[]).join(' · ')}<br>
+        <em>${tarot.daily_message||''}</em>
+      </div>`;
+
+    const quran = qh.quran || {};
+    const hadith = qh.hadith || {};
+    document.getElementById('obs-quran').innerHTML = `
+      <div style="font-size:11px;line-height:1.6">
+        <strong>${quran.surah_name||'—'}</strong><br>
+        ${(quran.translation||'').substring(0,120)}<br>
+        <em>— ${quran.surah_name||''} (${quran.surah||''}:${quran.ayah||''})</em>
+        <br><br>
+        <strong>Hadith:</strong> ${(hadith.english||hadith.text||'').replace(/\n/g,' ').replace(/\s+/g,' ').substring(0,100)}<br>
+        <em>— ${hadith.bookName||''} (${hadith.idInBook||''})</em>
+      </div>`;
+
+    // Draw the wheel
+    drawTransitWheel();
+
+  } catch(e) {
+    console.error('Home load error:', e);
+  }
+}
+
+// ══════════ TRANSIT WHEEL ══════════
+// Gold/brass MAPA ASTRAL-inspired SVG transit wheel
+const ZODIAC = [
+  {name:'Aries',sym:'♈',start:0},{name:'Taurus',sym:'♉',start:30},
+  {name:'Gemini',sym:'♊',start:60},{name:'Cancer',sym:'♋',start:90},
+  {name:'Leo',sym:'♌',start:120},{name:'Virgo',sym:'♍',start:150},
+  {name:'Libra',sym:'♎',start:180},{name:'Scorpio',sym:'♏',start:210},
+  {name:'Sagittarius',sym:'♐',start:240},{name:'Capricorn',sym:'♑',start:270},
+  {name:'Aquarius',sym:'♒',start:300},{name:'Pisces',sym:'♓',start:330},
+];
+const PCOLORS = {Sun:'#ffd166',Moon:'#c0c0ff',Mercury:'#b0b0b0',Venus:'#ff9ec4',
+  Mars:'#ff3b5c',Jupiter:'#ffa500',Saturn:'#d4b86a',Uranus:'#00cfff',Neptune:'#4b4bff',Pluto:'#a020f0',
+  Chiron:'#77dd77',Lilith:'#cc44bb',Rahu:'#ff8844',Ketu:'#8844ff','Part of Fortune':'#88ddff','Part of Spirit':'#ffdd88'};
+const ASPECT_STYLES = {Conjunction:{c:'#a855f7',d:''},Sextile:{c:'#4ade80',d:'5,3'},
+  Square:{c:'#f87171',d:''},Trine:{c:'#60a5fa',d:''},Opposition:{c:'#f97316',d:'4,4'},
+  Quincunx:{c:'#06b6d4',d:'3,2'}};
+
+// ══════════ PREMIUM TRANSIT WHEEL — Solar Fire / AstroGold Inspired ══════════
+const WHEEL = {
+  scale: 1,
+  hoverPlanet: null,
+  showQuincunx: false,
+};
+
+function _lon2xy(lon, r, cx, cy) {
+  const a = ((180 - lon) % 360 + 360) % 360 * Math.PI / 180;
+  return { x: cx + r * Math.cos(a), y: cy + r * Math.sin(a) };
+}
+
+function _textAnchor(x, y, cx, cy) {
+  const dx = x - cx, dy = y - cy;
+  if(Math.abs(dx) > Math.abs(dy)) return dx > 0 ? 'start' : 'end';
+  return dy > 0 ? 'middle' : 'middle';
+}
+
+async function drawTransitWheel() {
+  const el = document.getElementById('wheel-canvas');
+  if(!el) return;
+  // Use embedded data if available, otherwise fetch
+  let live = window.__WHEEL_DATA__;
+  if(!live) {
+    try { live = await loadJSON('/api/live'); } catch(e) { return; }
+  }
+  const aspD = window.__WHEEL_ASPECTS__ && window.__WHEEL_ASPECTS__.length ? {aspects: window.__WHEEL_ASPECTS__} : await loadJSON('/api/aspects').catch(() => ({aspects:[]}));
+  const planets = live.planets || {};
+  const aspects = aspD.aspects || [];
+  const ascLon = live.ascendant;
+  const cusps = live.cusps || [];
+
+    // SVG dimensions (large for desktop)
+    const S = 680, CX = S/2, CY = S/2;
+    const OR = 300, signR = OR - 38, cuspR = 250, houseNumR = 232, planetR = 210, innerR = 140;
+
+    function lon2xy(lon, r) { const a = ((180-lon)%360+360)%360*Math.PI/180; return {x:CX+r*Math.cos(a), y:CY+r*Math.sin(a)}; }
+
+    let svg = `<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">`;
+    svg += `<defs>`;
+    svg += `<radialGradient id="wg-bg"><stop offset="0%" stop-color="#1a0e2e"/><stop offset="70%" stop-color="#0d0618"/><stop offset="100%" stop-color="#050408"/></radialGradient>`;
+    svg += `<radialGradient id="wg-center"><stop offset="0%" stop-color="rgba(212,175,55,0.06)"/><stop offset="100%" stop-color="transparent"/></radialGradient>`;
+    svg += `</defs>`;
+    svg += `<rect width="${S}" height="${S}" fill="url(#wg-bg)"/>`;
+
+    // Stars
+    for(let i=0;i<80;i++){ const op=(Math.sin(i*17.3)*0.5+0.5)*0.25+0.05; svg+=`<circle cx="${(i*43)%S}" cy="${(i*61)%S}" r="${(i%3)*0.4+0.3}" fill="rgba(255,255,255,${op})"/>`; }
+    svg += `<circle cx="${CX}" cy="${CY}" r="${OR+30}" fill="url(#wg-center)"/>`;
+
+    // Rings
+    svg += `<circle cx="${CX}" cy="${CY}" r="${OR}" class="wheel-ring" stroke-width="1.5"/>`;
+    svg += `<circle cx="${CX}" cy="${CY}" r="${cuspR}" class="wheel-ring-inner" stroke-width="0.5"/>`;
+    svg += `<circle cx="${CX}" cy="${CY}" r="${planetR}" class="wheel-ring-inner" stroke-width="0.4"/>`;
+    svg += `<circle cx="${CX}" cy="${CY}" r="${innerR}" class="wheel-ring-inner" stroke-width="0.3"/>`;
+
+    // Zodiac signs
+    const signWords = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+    const signSyms = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+    for(let i=0;i<12;i++){
+      const cusp = cusps[i] != null ? cusps[i] : (ascLon + i*30) % 360;
+      const next = cusps[(i+1)%12] != null ? cusps[(i+1)%12] : (ascLon + (i+1)*30) % 360;
+      const a1 = ((180-cusp)%360+360)%360*Math.PI/180;
+      const span = ((next-cusp)+360)%360;
+      svg += `<line x1="${CX+(OR-38)*Math.cos(a1)}" y1="${CY+(OR-38)*Math.sin(a1)}" x2="${CX+OR*Math.cos(a1)}" y2="${CY+OR*Math.sin(a1)}" class="wheel-cusp-line"/>`;
+      for(let d=0; d<span; d+=5){
+        const degLon=(cusp+d)%360, da=((180-degLon)%360+360)%360*Math.PI/180, tl=d%10===0?8:4;
+        svg += `<line x1="${CX+(OR-14)*Math.cos(da)}" y1="${CY+(OR-14)*Math.sin(da)}" x2="${CX+(OR-14+tl)*Math.cos(da)}" y2="${CY+(OR-14+tl)*Math.sin(da)}" stroke="rgba(212,175,55,0.3)" stroke-width="${d%10===0?0.8:0.4}"/>`;
+      }
+      const midAng=((180-(cusp+span/2))%360+360)%360*Math.PI/180;
+      svg += `<text x="${CX+signR*Math.cos(midAng)}" y="${CY+signR*Math.sin(midAng)}" text-anchor="middle" dominant-baseline="central" font-size="22" class="wheel-sign-label">${signSyms[i]}</text>`;
+      svg += `<text x="${CX+(OR-10)*Math.cos(midAng)}" y="${CY+(OR-10)*Math.sin(midAng)}" text-anchor="middle" dominant-baseline="central" font-size="8" fill="rgba(212,175,55,0.65)" font-family="Playfair Display,Georgia,serif">${signWords[i]}</text>`;
+    }
+
+    // House cusps + numbers
+    for(let i=0;i<12;i++){
+      const cusp=cusps[i]!=null?cusps[i]:(ascLon+i*30)%360;
+      const a=((180-cusp)%360+360)%360*Math.PI/180;
+      svg += `<line x1="${CX+innerR*Math.cos(a)}" y1="${CY+innerR*Math.sin(a)}" x2="${CX+cuspR*Math.cos(a)}" y2="${CY+cuspR*Math.sin(a)}" class="wheel-house-line"/>`;
+      svg += `<text x="${CX+houseNumR*Math.cos(a)}" y="${CY+houseNumR*Math.sin(a)}" text-anchor="middle" dominant-baseline="central" font-size="11" class="wheel-house-num">${i+1}</text>`;
+    }
+
+    // Angle lines
+    if(ascLon != null){
+      const ascA=((180-ascLon)%360+360)%360*Math.PI/180;
+      svg += `<line x1="${CX+(innerR+5)*Math.cos(ascA)}" y1="${CY+(innerR+5)*Math.sin(ascA)}" x2="${CX+OR*Math.cos(ascA)}" y2="${CY+OR*Math.sin(ascA)}" class="wheel-asc-line"/>`;
+      svg += `<text x="${CX+(OR+16)*Math.cos(ascA)}" y="${CY+(OR+16)*Math.sin(ascA)}" text-anchor="middle" dominant-baseline="central" fill="#ff4444" font-size="8" font-weight="bold">ASC</text>`;
+      const dcA=((180-(ascLon+180)%360)%360+360)%360*Math.PI/180;
+      svg += `<line x1="${CX+innerR*Math.cos(dcA)}" y1="${CY+innerR*Math.sin(dcA)}" x2="${CX+(OR-30)*Math.cos(dcA)}" y2="${CY+(OR-30)*Math.sin(dcA)}" class="wheel-dc-line"/>`;
+      svg += `<text x="${CX+(OR+16)*Math.cos(dcA)}" y="${CY+(OR+16)*Math.sin(dcA)}" text-anchor="middle" dominant-baseline="central" fill="#ff6666" font-size="7" font-weight="bold">DC</text>`;
+      if(cusps[9]!=null){const mcA=((180-cusps[9])%360+360)%360*Math.PI/180;svg+=`<line x1="${CX+(innerR+5)*Math.cos(mcA)}" y1="${CY+(innerR+5)*Math.sin(mcA)}" x2="${CX+OR*Math.cos(mcA)}" y2="${CY+OR*Math.sin(mcA)}" class="wheel-mc-line"/>`;svg+=`<text x="${CX+(OR+16)*Math.cos(mcA)}" y="${CY+(OR+16)*Math.sin(mcA)}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="8" font-weight="bold">MC</text>`;}
+      if(cusps[3]!=null){const icA=((180-cusps[3])%360+360)%360*Math.PI/180;svg+=`<line x1="${CX+innerR*Math.cos(icA)}" y1="${CY+innerR*Math.sin(icA)}" x2="${CX+(OR-30)*Math.cos(icA)}" y2="${CY+(OR-30)*Math.sin(icA)}" class="wheel-ic-line"/>`;svg+=`<text x="${CX+(OR+16)*Math.cos(icA)}" y="${CY+(OR+16)*Math.sin(icA)}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="7" font-weight="bold">IC</text>`;}
+    }
+
+    // Aspect lines
+    for(const a of aspects){
+      if(!WHEEL.showQuincunx && a.aspect==='Quincunx') continue;
+      const p1=planets[a.p1], p2=planets[a.p2]; if(!p1||!p2) continue;
+      const p=lon2xy(p1.longitude,planetR), q=lon2xy(p2.longitude,planetR);
+      const st=ASPECT_STYLES[a.aspect]||{c:'#888',d:''};
+      const op=Math.max(0.15,0.5-(a.orb||0)*0.05);
+      svg+=`<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${st.c}" stroke-width="0.8" stroke-dasharray="${st.d}" opacity="${op}" class="wheel-aspect-line ${a.aspect.toLowerCase()}"/>`;
+    }
+
+    // Planets with collision avoidance
+    const order=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune','Part of Spirit'];
+    const placed=[];
+    for(const nm of order){
+      const p=planets[nm]; if(!p) continue;
+      let pos=lon2xy(p.longitude,planetR);
+      for(const pp of placed){const dx=pos.x-pp.x,dy=pos.y-pp.y;if(Math.sqrt(dx*dx+dy*dy)<22){pos=lon2xy(p.longitude,planetR+18);break;}}
+      placed.push(pos);
+      const pc=PCOLORS[nm]||'#fff';
+      svg+=`<circle cx="${pos.x}" cy="${pos.y}" r="14" fill="${pc}" class="wheel-planet-glow"/>`;
+      svg+=`<text x="${pos.x}" y="${pos.y}" text-anchor="middle" dominant-baseline="central" fill="${pc}" font-size="19" data-planet="${nm}" class="wheel-planet-text" onmouseenter="highlightPlanet('${nm}')" onmouseleave="clearHighlight()">${p.symbol}</text>`;
+      svg+=`<text x="${pos.x+(pos.x>CX?18:-18)}" y="${pos.y+10}" text-anchor="${pos.x>CX?'start':'end'}" font-size="8" fill="rgba(255,255,255,0.55)" font-family="Courier New,monospace">${p.degree}</text>`;
+    }
+
+    // Center hub
+    const now=new Date();
+    const ds=now.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    const hh=String(now.getHours()).padStart(2,'0'), mm=String(now.getMinutes()).padStart(2,'0'), ss=String(now.getSeconds()).padStart(2,'0');
+    svg+=`<circle cx="${CX}" cy="${CY}" r="40" fill="rgba(212,175,55,0.03)" class="wheel-center-pulse"/>`;
+    svg+=`<text x="${CX}" y="${CY-14}" text-anchor="middle" class="wheel-center-text" font-size="11">${ds}</text>`;
+    svg+=`<text x="${CX}" y="${CY+2}" text-anchor="middle" fill="#d4af37" font-size="20" font-family="monospace" font-weight="bold" opacity="0.9">${hh}:${mm}:${ss}</text>`;
+    svg+=`<text x="${CX}" y="${CY+20}" text-anchor="middle" class="wheel-center-text" font-size="9">NOW</text>`;
+    svg+=`</svg>`;
+    el.innerHTML=svg;
+
+    el.onwheel=(e)=>{e.preventDefault();WHEEL.scale=Math.max(0.5,Math.min(2,WHEEL.scale+(e.deltaY>0?-0.05:0.05)));el.style.transform=`scale(${WHEEL.scale})`;};
+}
+
+// Planet highlight on hover
+function highlightPlanet(nm) {
+  const texts = document.querySelectorAll(`#wheel-canvas .wheel-planet-text`);
+  texts.forEach(t => {
+    if(t.dataset.planet === nm) {
+      t.style.filter = 'drop-shadow(0 0 6px gold)';
+      t.style.fontSize = '24px';
+    } else {
+      t.style.opacity = '0.3';
+    }
+  });
+}
+function clearHighlight() {
+  const texts = document.querySelectorAll(`#wheel-canvas .wheel-planet-text`);
+  texts.forEach(t => {
+    t.style.filter = '';
+    t.style.fontSize = '19px';
+    t.style.opacity = '';
+  });
+}
+
+// Planet panel click
+document.addEventListener('click', async (e) => {
+  const pt = e.target.closest('.wheel-planet-text');
+  if(!pt) return;
+  const nm = pt.dataset.planet;
+  if(!nm) return;
+  const live = await loadJSON('/api/live');
+  const p = live.planets[nm];
+  if(!p) return;
+  const panel = document.getElementById('planet-panel');
+  const title = document.getElementById('planet-panel-title');
+  const body = document.getElementById('planet-panel-body');
+  title.textContent = `✦ ${nm} ${p.symbol}`;
+  const col = PCOLORS[nm] || '#fff';
+  body.innerHTML = `
+    <div class="pp-row"><span class="pp-label">Longitude</span><span class="pp-value">${p.longitude}°</span></div>
+    <div class="pp-row"><span class="pp-label">Sign</span><span class="pp-value">${p.sign_symbol} ${p.sign}</span></div>
+    <div class="pp-row"><span class="pp-label">Degree</span><span class="pp-value">${p.degree}</span></div>
+    <div class="pp-row"><span class="pp-label">House</span><span class="pp-value">${p.house || '—'}</span></div>
+    <div class="pp-row"><span class="pp-label">Motion</span><span class="pp-value" style="color:var(--cyan)">Direct</span></div>
+    <div class="pp-row" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(212,175,55,0.15)">
+      <span class="pp-label" style="color:${col}">☽ Element</span>
+      <span class="pp-value">${p.element || '—'}</span>
+    </div>
+    <div class="pp-row"><span class="pp-label" style="color:${col}">✦ Quality</span><span class="pp-value">${p.quality || '—'}</span></div>
+  `;
+  panel.classList.remove('hidden');
+});
+document.addEventListener('click', (e) => {
+  if(e.target.id === 'planet-panel-close') {
+    document.getElementById('planet-panel').classList.add('hidden');
+  }
+});
+
+// Auto-refresh wheel + sidebar cards + info bar every 60 seconds
+if(!window._wheelRefreshTimer){
+  window._wheelRefreshTimer = setInterval(async () => {
+    drawTransitWheel();
+    loadObservatoryData();
+  }, 60000);
+}
+
+// ══════════ OBSERVATORY DATA LOADER ══════════
+async function loadObservatoryData() {
+  try {
+    const home = await loadJSON('/api/home');
+    const live = await loadJSON('/api/live');
+
+  // Top info bar
+  const now = new Date();
+  document.getElementById('obs-date').textContent = now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('obs-time').textContent = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('obs-tz').textContent = 'SAST (UTC+2)';
+  document.getElementById('obs-location').textContent = 'Kariega, SA';
+  document.getElementById('obs-jd').textContent = live.jd || '—';
+  document.getElementById('obs-sidereal').textContent = live.sidereal || '—';
+
+  // Transit planets list
+  const planets = live.planets || {};
+  const planetCount = Object.keys(planets).filter(n => n !== 'Sun' || true).length;
+  document.getElementById('obs-planet-count').textContent = planetCount;
+  const pList = document.getElementById('obs-planets-list');
+  pList.innerHTML = '';
+  const pOrder = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune','Part of Spirit'];
+  for(const nm of pOrder){
+    const p = planets[nm]; if(!p) continue;
+    const col = PCOLORS[nm] || '#fff';
+    pList.innerHTML += `
+      <div class="planet-row" onclick="showPlanetPanel('${nm}')">
+        <span class="planet-glyph" style="color:${col}">${p.symbol}</span>
+        <span class="planet-name">${nm}</span>
+        <span class="planet-degree">${p.degree}</span>
+        <span class="planet-motion direct">D</span>
+      </div>`;
+  }
+  if(pList.innerHTML === '') pList.innerHTML = '<div class="obs-loading">No data</div>';
+
+  // Aspects
+  const aspD = await loadJSON('/api/aspects');
+  const aspects = (aspD.aspects || []).filter(a => a.aspect !== 'Quincunx');
+  document.getElementById('obs-aspect-count').textContent = aspects.length;
+  const aList = document.getElementById('obs-aspects-list');
+  aList.innerHTML = '';
+  const aspSym = {Conjunction:'☌', Sextile:'✶', Square:'□', Trine:'△', Opposition:'☍', Quincunx:'⚹'};
+  for(const a of aspects.slice(0, 12)){
+    const cls = a.aspect === 'Applying' ? 'applying' : 'separating';
+    const color = (ASPECT_STYLES[a.aspect]||{}).c || '#888';
+    aList.innerHTML += `
+      <div class="aspect-row">
+        <span class="aspect-symbol" style="color:${color}">${aspSym[a.aspect]||'∠'}</span>
+        <span class="aspect-planets">${a.p1} ${aspSym[a.aspect]} ${a.p2}</span>
+        <span class="aspect-orb">${a.orb.toFixed(1)}°</span>
+        <span class="${cls}">${a.applying ? 'app' : 'sep'}</span>
+      </div>`;
+  }
+  if(aList.innerHTML === '') aList.innerHTML = '<div class="obs-loading">No major aspects</div>';
+
+  // Elements
+  const en = home.energy || {};
+  const el = document.getElementById('obs-elements');
+  const eb = en.elemental_balance || {};
+  el.innerHTML = '';
+  const elIcons = {Fire:'🔥', Earth:'🌍', Air:'🌬', Water:'💧'};
+  for(const [name, count] of Object.entries(eb)){
+    el.innerHTML += `<div class="element-item"><span class="element-icon">${elIcons[name]||'◉'}</span><span class="element-name">${name}</span><span class="element-count">${count}</span></div>`;
+  }
+  // Modalities
+  const mods = en.modalities || {};
+  if(Object.keys(mods).length > 0){
+    el.innerHTML += '<div class="modalities-grid">';
+    for(const [name, count] of Object.entries(mods)){
+      el.innerHTML += `<div class="modality-item"><span class="modality-name">${name}</span><span class="modality-count">${count}</span></div>`;
+    }
+    el.innerHTML += '</div>';
+  }
+
+  // Quick info
+  const ia = home.islamic_astro || {};
+  const mp = ia.mansion || {};
+  document.getElementById('obs-quick-info').innerHTML = `
+    <div class="quick-info-row"><span class="quick-info-label">Moon Phase</span><span class="quick-info-value">${(ia.moon_phase||{}).emoji||'🌙'} ${(ia.moon_phase||{}).phase||'—'}</span></div>
+    <div class="quick-info-row"><span class="quick-info-label">Lunar Mansion</span><span class="quick-info-value">${mp.picatrix_name||'—'}</span></div>
+    <div class="quick-info-row"><span class="quick-info-label">Day Ruler</span><span class="quick-info-value">${ia.day_ruler||'—'}</span></div>
+    <div class="quick-info-row"><span class="quick-info-label">Polarity</span><span class="quick-info-value">${(home.energy||{}).polarity||'—'}</span></div>
+  `;
+
+  // Bottom cards
+  document.getElementById('obs-mansion').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${mp.picatrix_name||'—'}</strong><br>${mp.arabic_name||''}<br><em>${mp.meaning||''}</em><br><br>Nature: ${mp.nature||'—'}<br>Ruler: ${mp.planetary_ruler||'—'}<br>Spirit: ${mp.spirit||'—'}</div>`;
+  document.getElementById('obs-nakshatra').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(ia.nakshatra||{}).nakshatra||'—'}</strong><br>Lord: ${(ia.nakshatra||{}).lord||'—'}<br><br>${(ia.dasha||{}).current_dasha? `<strong>Mahadasha:</strong> ${(ia.dasha||{}).current_dasha.lord||'—'}` : ''}</div>`;
+  document.getElementById('obs-tarot').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.tarot||{}).name||'—'}</strong><br>${(home.tarot||{}).keywords?.join(', ') || ''}<br><br><em>${(home.tarot||{}).daily_message||''}</em></div>`;
+  document.getElementById('obs-quran').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.quran_hadith||{}).quran?.surah_name||'—'}</strong><br>${(home.quran_hadith||{}).quran?.translation?.substring(0,120)||''}...</div>`;
+  } catch(e) { console.error('Observatory data error:', e); }
+}
+
+// Initial load
+loadObservatoryData();
+
+// Embed wheel data directly in page
+window.__WHEEL_DATA__ = null;
+window.__WHEEL_ASPECTS__ = [];
+fetch('/api/live').then(r => r.json()).then(d => { window.__WHEEL_DATA__ = d; drawTransitWheel(); });
+fetch('/api/aspects').then(r => r.json()).then(d => { window.__WHEEL_ASPECTS__ = d.aspects || []; });
+
+// ══════════ NATAL CHART LOADER ══════════
+async function loadNatal() {
+  const nc = document.getElementById('natal-worksheet');
+  if (!nc) return;
+  try {
+    const data = await loadJSON('/api/natal-chart', {method:'POST'});
+
+    // ── Birth Data ──
+    document.getElementById('natal-name').textContent = data.name;
+    document.getElementById('natal-date').textContent = data.birth_date;
+    document.getElementById('natal-time').textContent = data.birth_time;
+    document.getElementById('natal-location').textContent = data.location;
+    document.getElementById('natal-asc').textContent = data.ascendant.sign+' '+data.ascendant.degree;
+    document.getElementById('natal-mc').textContent = data.midheaven.sign+' '+data.midheaven.degree;
+
+    // ── Planetary Positions Table ──
+    const porder = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn',
+                    'Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune'];
+    const ptbody = document.getElementById('natal-planet-tbody');
+    ptbody.innerHTML = porder.map(n => {
+      const p = data.planets[n];
+      if(!p) return '';
+      const sym = PLANET_SYMBOLS[n] || '&#9673;';
+      const col = PLANET_COLORS[n] || '#fff';
+      return '<tr><td><span style="color:'+col+'">'+sym+'</span> '+n+'</td><td>'+p.sign_symbol+' '+p.sign+'</td><td>'+p.degree+'</td><td>'+(p.house_number||'&mdash;')+'</td></tr>';
+    }).join('');
+
+    // ── Aspect List ──
+    const aspectDiv = document.getElementById('natal-aspect-list');
+    const aspectSymbols = {'Conjunction':'&#x260C;','Opposition':'&#x260D;','Trine':'&#x25B3;','Square':'&#x25A1;','Sextile':'&#x2736;'};
+    aspectDiv.innerHTML = data.aspects.map(function(a) {
+      return '<div class="natal-aspect-row">'+
+        '<span style="color:'+a.p1_color+'">'+a.p1_symbol+'</span> '+
+        a.p1+' <span class="natal-aspect-sym">'+(aspectSymbols[a.aspect]||a.aspect)+'</span> '+
+        a.p2+' <span style="color:'+a.p2_color+'">'+a.p2_symbol+'</span>'+
+        ' <span class="natal-aspect-orb">('+a.orb+'&deg;)</span></div>';
+    }).join('');
+
+    // ── House Cusps Table ──
+    const ctbody = document.getElementById('natal-cusp-tbody');
+    ctbody.innerHTML = data.house_cusps.map(function(c) {
+      return '<tr><td>'+c.house+'</td><td>'+c.sign_symbol+' '+c.sign+'</td><td>'+c.degree+'</td><td>'+c.ruler+'</td></tr>';
+    }).join('');
+
+    // ── Elements & Modalities ──
+    const etbody = document.getElementById('natal-elem-tbody');
+    const elements = ['Fire','Earth','Air','Water'];
+    const elemEmoji = {'Fire':'&#x1F525;','Earth':'&#x1F30D;','Air':'&#x1F32C;','Water':'&#x1F4A7;'};
+    const elemModCounts = {};
+    for(const n in data.planets) {
+      const p = data.planets[n];
+      if(!p.element) continue;
+      const e = p.element.split(' ')[1] || p.element;
+      const q = p.quality;
+      if(!elemModCounts[e]) elemModCounts[e] = {'Cardinal':0,'Fixed':0,'Mutable':0};
+      if(elemModCounts[e][q] !== undefined) elemModCounts[e][q]++;
+    }
+    etbody.innerHTML = elements.map(function(e) {
+      return '<tr><td>'+(elemEmoji[e]||'&#x2726;')+' '+e.toUpperCase()+'</td>'+
+        '<td>'+(elemModCounts[e]?.['Cardinal']||0)+'</td>'+
+        '<td>'+(elemModCounts[e]?.['Fixed']||0)+'</td>'+
+        '<td>'+(elemModCounts[e]?.['Mutable']||0)+'</td></tr>';
+    }).join('');
+
+    // ── NATAL WHEEL (SVG) ──
+    drawNatalWheel(data);
+
+  } catch(e) {
+    nc.innerHTML = `<div class="natal-error">Failed to load natal chart: ${e.message}</div>`;
+  }
+}
+
+function drawNatalWheel(data) {
+  const container = document.getElementById('natal-wheel-canvas');
+  if(!container) return;
+
+  const size = 480, cx = size/2, cy = size/2, rOuter = 220, rInner = 160, rLabel = 145;
+  const deg = data.ascendant.longitude;
+
+  let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+    <rect width="${size}" height="${size}" fill="#0a0a14"/>
+    <circle cx="${cx}" cy="${cy}" r="${rOuter+10}" fill="none" stroke="#d4af37" stroke-width="2"/>
+    <circle cx="${cx}" cy="${cy}" r="${rInner-5}" fill="#0d0d1a" stroke="#d4af37" stroke-width="1" opacity="0.4"/>
+    <circle cx="${cx}" cy="${cy}" r="30" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.3"/>`;
+
+  // 12 houses (sectors)
+  for(let i=0; i<12; i++) {
+    const cusp = data.house_cusps[i].longitude;
+    const nextCusp = data.house_cusps[(i+1)%12].longitude;
+    const mid = ((cusp + nextCusp)/2) % 360;
+    const startAngle = cusp - deg;
+    const endAngle = nextCusp - deg;
+    // Draw sector
+    const sa = startAngle * Math.PI/180;
+    const ea = endAngle * Math.PI/180;
+    const x1 = cx + rOuter * Math.sin(sa), y1 = cy - rOuter * Math.cos(sa);
+    const x2 = cx + rOuter * Math.sin(ea), y2 = cy - rOuter * Math.cos(ea);
+    const xi1 = cx + rInner * Math.sin(sa), yi1 = cy - rInner * Math.cos(sa);
+    const xi2 = cx + rInner * Math.sin(ea), yi2 = cy - rInner * Math.cos(ea);
+    const largeArc = ((nextCusp - cusp + 360) % 360) > 180 ? 1 : 0;
+    svg += `<path d="M ${xi1} ${yi1} L ${x1} ${y1} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${rInner} ${rInner} 0 ${largeArc} 0 ${xi1} ${yi1} Z" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.3"/>`;
+
+    // House number at midpoint
+    const ma = mid * Math.PI/180;
+    const mr = (rOuter + rInner)/2;
+    const mx = cx + mr * Math.sin(ma - deg * Math.PI/180);
+    const my = cy - mr * Math.cos(ma - deg * Math.PI/180);
+    svg += `<text x="${mx}" y="${my}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="11" opacity="0.6">${i+1}</text>`;
+
+    // Sign glyph at label radius
+    const signAngle = (cusp + 15) * Math.PI/180;
+    const lx = cx + rLabel * Math.sin(signAngle - deg * Math.PI/180);
+    const ly = cy - rLabel * Math.cos(signAngle - deg * Math.PI/180);
+    svg += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="#a090b0" font-size="16" font-family="serif">${data.house_cusps[i].sign_symbol}</text>`;
+  }
+
+  // ASC marker
+  svg += `<circle cx="${cx}" cy="${cy - rOuter - 10}" r="4" fill="#d4af37"/>
+    <text x="${cx}" y="${cy - rOuter - 18}" text-anchor="middle" fill="#d4af37" font-size="12" font-weight="bold">ASC</text>`;
+
+  // Planets on wheel
+  const porder = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn',
+                  'Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune'];
+  for(const n of porder) {
+    const p = data.planets[n];
+    if(!p || p.longitude === undefined) continue;
+    const angle = (p.longitude - deg) * Math.PI/180;
+    const pr = 185;
+    const px = cx + pr * Math.sin(angle);
+    const py = cy - pr * Math.cos(angle);
+    const sym = PLANET_SYMBOLS[n] || '◉';
+    const col = PLANET_COLORS[n] || '#fff';
+    svg += `<text x="${px}" y="${py}" text-anchor="middle" dominant-baseline="central" fill="${col}" font-size="14">${sym}</text>`;
+    // label for outer planets
+    if(['Uranus','Neptune','Pluto','Chiron','Lilith','Ketu','Part of Fortune'].includes(n)) {
+      svg += `<text x="${px}" y="${py+16}" text-anchor="middle" fill="${col}" font-size="7" opacity="0.8">${n}</text>`;
+    }
+  }
+
+  // Center text
+  svg += `<text x="${cx}" y="${cy-5}" text-anchor="middle" fill="#d4af37" font-size="14" font-weight="bold">${data.name}</text>
+    <text x="${cx}" y="${cy+14}" text-anchor="middle" fill="#a090b0" font-size="10">${data.birth_date}</text>
+  </svg>`;
+
+  container.innerHTML = svg;
+}
+
+async function loadLibrary() {
+  const lc = document.getElementById('library-content');
+  const scholars = [
+    {id:0, name:"Abu Ma\'shar al-Balkhi", era:"787\u2013886 CE, Abbasid Baghdad", bio:"The greatest astrologer of the Abbasid court. His Kitab al-Madkhal al-Kabir became the standard reference for astrologers across the Islamic world and later Europe, where he was known as Albumasar. He synthesized Persian, Indian, Greek, and Babylonian traditions into a unified system.",
+     works:["Kitab al-Madkhal al-Kabir", "Kitab al-Uluf", "Kitab al-Milal wa al-Duwal", "Kitab al-Mawalid", "Kitab al-Ikhtiyarat"],
+     quote:"The sage who knows the stars knows the will of the Most High.", emoji:"\ud83d\udcdc"},
+    {id:1, name:"Al-Biruni", era:"973\u20131048, Khwarezm", bio:"Abu Rayhan al-Biruni was a supreme polymath \u2014 astronomer, mathematician, historian, and astrologer. His Kitab al-Tafhim remains the clearest, most systematic introduction to traditional astrology ever written.",
+     works:["Kitab al-Tafhim", "Al-Qanun al-Mas\'udi", "Kitab al-Hind", "Kitab al-Jamahir", "The Chronology of Ancient Nations"],
+     quote:"Knowledge is the most excellent of possessions.", emoji:"\ud83d\udd2c"},
+    {id:2, name:"Ahmad al-Buni", era:"1143\u20131225 CE, Mamluk Egypt", bio:"The supreme master of ilm al-huruf \u2014 the science of letters. His Shams al-Ma\'arif al-Kubra (The Great Sun of Knowledge) is the foundational text of Islamic talismanic magic. He mapped the cosmos through the 28 Arabic letters, connecting each to celestial bodies and Divine Names.",
+     works:["Shams al-Ma\'arif al-Kubra", "Shams al-Ma\'arif al-Sughra", "Kitab al-Qabasat", "Al-Mu\'jam al-Jami\'", "Kitab al-Durr al-Manzum"],
+     quote:"The letters are the keys to the unseen worlds.", emoji:"\ud83e\ude90"},
+    {id:3, name:"Picatrix (Ghayat al-Hakim)", era:"11th C, Al-Andalus", bio:"Attributed to Maslama al-Qurtubi, Picatrix is the most important grimoire of Arabic occultism. A comprehensive manual of talismanic magic, astrological elections, planetary invocations, and lunar mansion operations that profoundly influenced Renaissance magicians.",
+     works:["Ghayat al-Hakim I\u2013IV", "Book of Talismans", "Planetary Invocations", "Lunar Mansions", "Spiritual Practices"],
+     quote:"When the soul is aligned with celestial powers, the sage becomes a channel for the heavens.", emoji:"\ud83d\udcd6"},
+    {id:4, name:"Muhyiddin Ibn Arabi", era:"1165\u20131240 CE", bio:"The Shaykh al-Akbar (Greatest Master) of Islamic spirituality. His system integrates astrology into wahdat al-wujud (Unity of Being). His Fusus al-Hikam and al-Futuhat al-Makkiyya explore the celestial hierarchies and astrological symbolism of the prophets.",
+     works:["Al-Futuhat al-Makkiyya", "Fusus al-Hikam", "Tarjuman al-Ashwaq", "Kitab al-Isra\'", "Insha al-Dawa\'ir"],
+     quote:"The stars are letters written by Divine Mercy upon the parchment of the sky.", emoji:"\ud83c\udf39"},
+    {id:5, name:"Nineveh Shadrach", era:"Contemporary, USA", bio:"The foremost living scholar of Arabic occult texts. His translations of al-Buni\'s Shams al-Ma\'arif, the full Picatrix, and numerous talismanic manuals have made these traditions accessible to seekers worldwide.",
+     works:["Shams al-Ma\'arif (translation)", "The Picatrix (translation)", "Talismanic Magic", "The Book of the Sun", "Al-Tukhi Translation"],
+     quote:"The ancient sciences are living keys \u2014 approach them with sincerity and doors open in the unseen.", emoji:"\ud83d\udcda"},
+    {id:6, name:"Kapiel Raaj (KRS)", era:"Contemporary, USA", bio:"Founder of KRSchannel \u2014 the most popular Vedic astrology channel. His work emphasizes nakshatra-based prediction, Mahadasha analysis, and practical application of Parashara\'s classical texts for modern life.",
+     works:["KRS Nakshatra Course", "Vedic Astrology Lectures", "Mahadasha Analysis", "Parashara Light", "Nakshatra Prediction Method"],
+     quote:"The Moon tells the story of your soul.", emoji:"\u2b50"}
+  ];
+
+  let html = `<div class="bookshelf">
+    <div class="shelf-row">`;
+  for(const s of scholars.slice(0,4)) {
+    html += `<div class="book-item book-${s.id}" onclick="toggleBook(${s.id})">
+      <div class="book-spine">${s.name}</div>
+      <div class="book-detail" id="book-${s.id}">
+        <div class="book-detail-header">
+          <div class="book-detail-emoji">${s.emoji}</div>
+          <div>
+            <div class="book-detail-title">${s.name}</div>
+            <div class="book-detail-era">${s.era}</div>
+          </div>
+        </div>
+        <div class="book-detail-bio">${s.bio}</div>
+        <div class="book-section-label">\u2726 Major Works</div>
+        <div class="book-works">${s.works.map(w => `<span class="book-work">${w}</span>`).join('')}</div>
+        ${s.quote ? `<div class="book-section-label">\u2726 Wisdom</div>
+        <div class="book-quote">${s.quote}</div>` : ''}
+      </div>
+    </div>`;
+  }
+  html += `</div><div class="shelf-row">`;
+  for(const s of scholars.slice(4)) {
+    html += `<div class="book-item book-${s.id}" onclick="toggleBook(${s.id})">
+      <div class="book-spine">${s.name}</div>
+      <div class="book-detail" id="book-${s.id}">
+        <div class="book-detail-header">
+          <div class="book-detail-emoji">${s.emoji}</div>
+          <div>
+            <div class="book-detail-title">${s.name}</div>
+            <div class="book-detail-era">${s.era}</div>
+          </div>
+        </div>
+        <div class="book-detail-bio">${s.bio}</div>
+        <div class="book-section-label">\u2726 Major Works</div>
+        <div class="book-works">${s.works.map(w => `<span class="book-work">${w}</span>`).join('')}</div>
+        ${s.quote ? `<div class="book-section-label">\u2726 Wisdom</div>
+        <div class="book-quote">${s.quote}</div>` : ''}
+      </div>
+    </div>`;
+  }
+  html += `</div></div>`;
+  lc.innerHTML = html;
+}
+
+// ══════════ SimplyAstrology Loader ══════════
+async function loadSimply() {
+  const sc = document.getElementById('simply-content');
+  const nav = document.getElementById('simply-nav-list');
+  try {
+    const data = await loadJSON('/api/simply/all');
+    // Build navigation
+    let navHtml = '';
+    data.forEach((sec, i) => {
+      const icon = ['♈','♇','℞','∠','♔','📋','🔄','✨','📜','🕌'][i] || '✦';
+      navHtml += `<div class="simply-nav-item" data-idx="${i}" onclick="simplySelect(${i})">
+        <span class="simply-nav-icon">${icon}</span>
+        <span class="simply-nav-name">${sec.section}</span>
+        <span class="simply-nav-count">${sec.cards.length}</span>
+      </div>`;
+    });
+    nav.innerHTML = navHtml;
+
+    // Render all sections hidden initially
+    let contentHtml = '';
+    data.forEach((sec, i) => {
+      contentHtml += `<div class="simply-section" id="simply-sec-${i}">`;
+      contentHtml += `<div class="simply-section-title">${sec.section}</div>`;
+      sec.cards.forEach((card, j) => {
+        contentHtml += `<div class="simply-card" onclick="simplyToggleCard(this)">
+          <div class="simply-card-header">
+            <span class="simply-card-arrow">▶</span>
+            <span class="simply-card-heading">${esc(card.heading)}</span>
+          </div>
+          <div class="simply-card-body">${card.body.replace(/\n/g, '<br>')}</div>
+        </div>`;
+      });
+      contentHtml += `</div>`;
+    });
+    sc.innerHTML = contentHtml;
+
+    // Auto-select first section
+    simplySelect(0);
+
+    // Search filter
+    document.getElementById('simply-search').addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.simply-nav-item').forEach(item => {
+        const name = item.querySelector('.simply-nav-name').textContent.toLowerCase();
+        item.style.display = name.includes(q) ? 'flex' : 'none';
+      });
+    });
+  } catch(e) {
+    nav.innerHTML = '<div class="simply-empty">Failed to load knowledge base</div>';
+    sc.innerHTML = `<div class="simply-welcome"><p>Error: ${e.message}</p></div>`;
+  }
+}
+
+function simplySelect(idx) {
+  // Update nav highlight
+  document.querySelectorAll('.simply-nav-item').forEach(item => item.classList.remove('active'));
+  const navItem = document.querySelector(`.simply-nav-item[data-idx="${idx}"]`);
+  if(navItem) navItem.classList.add('active');
+
+  // Show selected section, hide others
+  document.querySelectorAll('.simply-section').forEach(s => s.classList.remove('active'));
+  const section = document.getElementById(`simply-sec-${idx}`);
+  if(section) section.classList.add('active');
+}
+
+function simplyToggleCard(card) {
+  const wasOpen = card.classList.contains('open');
+  // Close all other cards in this section
+  card.closest('.simply-section').querySelectorAll('.simply-card').forEach(c => {
+    c.classList.remove('open');
+    c.querySelector('.simply-card-arrow').textContent = '▶';
+  });
+  if(!wasOpen) {
+    card.classList.add('open');
+    card.querySelector('.simply-card-arrow').textContent = '▼';
+    setTimeout(() => card.scrollIntoView({behavior: 'smooth', block: 'nearest'}), 100);
+  }
+}
+
+function toggleBook(id) {
+  const el = document.getElementById(`book-${id}`);
+  const all = document.querySelectorAll('.book-detail');
+  all.forEach(d => { if(d !== el) d.classList.remove('open'); });
+  el.classList.toggle('open');
+  if(el.classList.contains('open')) {
+    setTimeout(() => el.scrollIntoView({behavior: 'smooth', block: 'center'}), 100);
+  }
+}
+
+async function loadDashasFull() {
+  const dc = document.getElementById('dashas-content');
+  try {
+    const d = await loadJSON('/api/dasha');
+    let html = `<div class="section-desc">Vimshottari Dasha is a 120-year planetary cycle based on the Moon's nakshatra at birth. Each planet rules a specific period.</div>
+    <div class="dasha-current-box">
+      <div class="current-maha"><span class="label">Current Mahadasha:</span> <strong>${d.current_dasha?.lord||'—'}</strong></div>
+      <div class="current-bhukti"><span class="label">Current Bhukti:</span> <strong>${d.current_bhukti?.lord||'—'}</strong></div>
+      <div class="birth-nak">Birth Nakshatra: ${d.birth_nakshatra||'—'} — lord ${d.birth_nakshatra_lord||'—'}</div>
+    </div>
+    <h3 class="section-title">Full Dasha Timeline</h3>`;
+    for(const dash of (d.dashas||[])) {
+      const active = dash.lord === d.current_dasha?.lord ? 'dasha-active' : '';
+      html += `<div class="dasha-item ${active}">
+        <span class="dasha-lord">${dash.lord}</span>
+        <span class="dasha-years">${dash.years} yrs</span>
+        <span class="dasha-dates">${dash.start.slice(0,10)} → ${dash.end.slice(0,10)}</span>
+        <span class="dasha-type">${dash.type}</span>
+      </div>`;
+    }
+    if(d.current_dasha?.bhuktis) {
+      html += `<h3 class="section-title" style="margin-top:16px">Current Mahadasha: ${d.current_dasha.lord} — Bhuktis</h3>`;
+      for(const b of (d.current_dasha.bhuktis||[])) {
+        html += `<div class="dasha-item ${b.active?'dasha-active':''}">
+          <span class="dasha-lord">${b.lord}</span>
+          <span class="dasha-years">${b.years.toFixed(2)} yrs</span>
+          <span class="dasha-dates">${b.start.slice(0,10)} → ${b.end.slice(0,10)}</span>
+        </div>`;
+      }
+    }
+    dc.innerHTML = html;
+  } catch(e) { dc.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+async function loadNakshatrasFull() {
+  const nc = document.getElementById('nakshatras-full-content');
+  try {
+    const d = await loadJSON('/api/nakshatra-now');
+    const nd = await loadJSON('/static/nakshatra_data.json');
+    let html = `<div class="section-desc">The 27 Nakshatras (lunar mansions) of Vedic astrology. Each spans 13°20' and is ruled by a planet.</div>
+    <div class="current-nak-box">
+      <strong>Current: ${d.nakshatra}</strong> (Pada ${d.pada}) — Lord ${d.lord} · ${d.gana||''} · ${d.guna||''}
+      <div>${d.description||''}</div>
+    </div>
+    <h3 class="section-title">All 27 Nakshatras</h3><div class="nak-grid">`;
+    for(const n of (nd.nakshatras||[])) {
+      html += `<div class="nak-card ${n.name===d.nakshatra?'nak-active':''}">
+        <div class="nak-card-name">${n.name}</div>
+        <div class="nak-card-sans">${n.sanskrit||''}</div>
+        <div class="nak-card-lord">${n.lord} (${n.dasha_years}yr)</div>
+        <div class="nak-card-meaning">${n.meaning||''}</div>
+      </div>`;
+    }
+    html += '</div>';
+    nc.innerHTML = html;
+  } catch(e) { nc.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+async function loadTarotFull() {
+  const tc = document.getElementById('tarot-full-content');
+  try {
+    const d = await loadJSON('/api/tarot-daily');
+    const td = await loadJSON('/static/tarot_data.json');
+    let html = `<div class="section-desc">Rider-Waite-Smith Tarot — 78 cards of wisdom. Today's draw: <strong>${d.name}</strong></div>`;
+    // Major Arcana
+    html += `<h3 class="section-title">🃏 Major Arcana (22)</h3><div class="tarot-grid">`;
+    for(const c of (td.major_arcana||[])) {
+      html += `<div class="tarot-mini ${c.name===d.name?'tarot-active':''}">
+        <span class="tarot-mini-num">${c.id}</span>
+        <span class="tarot-mini-name">${c.name}</span>
+        <span class="tarot-mini-kw">${(c.keywords||[]).slice(0,2).join(', ')}</span>
+      </div>`;
+    }
+    html += '</div>';
+    // Minor Arcana
+    for(const [suit,label] of [['wands','🪄 Wands'],['cups','🏆 Cups'],['swords','⚔️ Swords'],['pentacles','🪙 Pentacles']]) {
+      html += `<h3 class="section-title">${label} (14)</h3><div class="tarot-grid">`;
+      for(const c of (td.minor_arcana?.[suit]||[])) {
+        html += `<div class="tarot-mini ${c.name===d.name?'tarot-active':''}">
+          <span class="tarot-mini-num">${c.id}</span>
+          <span class="tarot-mini-name">${c.name}</span>
+        </div>`;
+      }
+      html += '</div>';
+    }
+    tc.innerHTML = html;
+  } catch(e) { tc.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+async function loadLive() {
+  const lc = document.getElementById('live-content');
+  lc.innerHTML = '<div class="loading">Loading live planetary data...</div>';
+  try {
+    const data = await loadJSON('/api/live');
+    let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div><h3 class="section-title">Planets Now</h3>';
+    for(const [name, info] of Object.entries(data.planets||{})) {
+      const col = PLANET_COLORS[name]||'#ffd166';
+      const sym = PLANET_SYMBOLS[name]||'◉';
+      html += `<div class="planet-row"><span class="sym" style="color:${col}">${sym}</span>
+        <span class="name">${name}</span>
+        <span class="pos">${info.sign||info.longitude||'—'}</span>
+        <span style="font-size:11px;color:var(--text-muted)">${info.degree||''}</span>
+      </div>`;
+    }
+    html += '</div><div><h3 class="section-title">Current Aspects</h3>';
+    try {
+      const aspects = await loadJSON('/api/aspects');
+      for(const a of (aspects.aspects||[])) {
+        html += `<div class="planet-row" style="gap:4px">
+          <span style="color:${a.p1_color};font-size:16px">${a.p1_symbol}</span>
+          <span>${a.aspect}</span>
+          <span style="color:${a.p2_color};font-size:16px">${a.p2_symbol}</span>
+          <span class="pos">orb ${a.orb}°</span>
+        </div>`;
+      }
+    } catch(e) { html += '<div class="loading">No aspect data</div>'; }
+    html += '</div></div>';
+    lc.innerHTML = html;
+  } catch(e) { lc.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+
+async function loadQuranFull() {
+  const qc = document.getElementById('quran-full-content');
+  try {
+    const d = await loadJSON('/api/quran-hadith');
+    // Fetch only page 1 of verses (20 verses) instead of the full 41MB
+    const vp = await loadJSON('/api/quran/verses?page=1&per_page=20');
+
+    let html = `<div class="sacred-book">
+      <div class="book-bismillah">\u0628\u0650\u0633\u0652\u0645\u0650 \u0627\u0644\u0644\u064e\u0651\u0647\u0650 \u0627\u0644\u0631\u064e\u0651\u062d\u0652\u0645\u064e\u0646\u0650 \u0627\u0644\u0631\u064e\u0651\u062d\u0650\u064a\u0645\u0650</div>
+      <div class="illuminated-verse">
+        <div class="illumined-label">\u2726 Today's Illuminated Verse</div>
+        <div class="illumined-arabic">${(d.quran||{}).arabic||''}</div>
+        <div class="illumined-translation">${(d.quran||{}).translation||''}</div>
+        <div class="illumined-ref">\u2014 ${(d.quran||{}).surahNameEn||''} (${(d.quran||{}).surah||''}:${(d.quran||{}).ayah||''})</div>
+        ${(d.quran||{}).theme ? `<span class="illumined-theme">\u2726 ${(d.quran||{}).theme}</span>` : ''}
+      </div>
+      <div class="quran-scroll">
+        <div class="quran-scroll-header">
+          <h3 class="section-title">\ud83d\udcd6 Quran Verses</h3>
+          <span class="verse-count">${vp.total} total &middot; showing ${vp.verses.length}</span>
+        </div>
+        <div class="quran-theme-filters">
+          <button class="active" data-theme="all" onclick="filterQuran('all',this)">All</button>
+          ${(vp.themes||[]).map(t => `<button data-theme="${esc(t)}" onclick="filterQuran('${esc(t)}',this)">${t}</button>`).join('')}
+        </div>
+        <div class="quran-ayat" id="quran-ayat-list">`;
+    for(const v of (vp.verses||[])) {
+      html += `<div class="quran-ayah" data-theme="${esc(v.theme||'')}">
+        <div class="quran-ayah-number">${v.ayah}</div>
+        <div class="quran-ayah-text">
+          <div class="quran-ayah-arabic">${v.arabic}</div>
+          <div class="quran-ayah-trans">${v.translation}</div>
+          <div class="quran-ayah-ref">${v.surahNameEn} (${v.surah}:${v.ayah}) ${v.theme ? `<span class="quran-ayah-theme">${v.theme}</span>` : ''}</div>
+        </div>
+      </div>`; }
+    // Page navigation
+    if(vp.total_pages > 1) {
+      html += `<div class="quran-pagination" id="quran-pagination">
+        <button onclick="quranPage(1)" disabled>&#9664;&#9664;</button>
+        <button onclick="quranPage(${vp.page-1})" ${vp.page <= 1 ? 'disabled' : ''}>&#9664;</button>
+        <span>Page ${vp.page} of ${vp.total_pages}</span>
+        <button onclick="quranPage(${vp.page+1})" ${vp.page >= vp.total_pages ? 'disabled' : ''}>&#9654;</button>
+        <button onclick="quranPage(${vp.total_pages})" ${vp.page >= vp.total_pages ? 'disabled' : ''}>&#9654;&#9654;</button>
+      </div>`;
+    }
+    html += `</div></div></div>`;
+    qc.innerHTML = html;
+  } catch(e) { qc.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+let quranCurrentPage = 1;
+let quranCurrentFilter = 'all';
+
+async function quranPage(page) {
+  quranCurrentPage = page;
+  const qc = document.getElementById('quran-full-content');
+  try {
+    const vp = await loadJSON(`/api/quran/verses?page=${page}&per_page=20`);
+    let ayatHtml = '';
+    for(const v of (vp.verses||[])) {
+      const show = quranCurrentFilter === 'all' || v.theme === quranCurrentFilter;
+      ayatHtml += `<div class="quran-ayah" data-theme="${esc(v.theme||'')}" style="${show ? '' : 'display:none'}">
+        <div class="quran-ayah-number">${v.ayah}</div>
+        <div class="quran-ayah-text">
+          <div class="quran-ayah-arabic">${v.arabic}</div>
+          <div class="quran-ayah-trans">${v.translation}</div>
+          <div class="quran-ayah-ref">${v.surahNameEn} (${v.surah}:${v.ayah}) ${v.theme ? `<span class="quran-ayah-theme">${v.theme}</span>` : ''}</div>
+        </div>
+      </div>`;
+    }
+    document.getElementById('quran-ayat-list').innerHTML = ayatHtml;
+    const pg = document.getElementById('quran-pagination');
+    if(pg) {
+      pg.innerHTML = `
+        <button onclick="quranPage(1)" ${page <= 1 ? 'disabled' : ''}>&#9664;&#9664;</button>
+        <button onclick="quranPage(${page-1})" ${page <= 1 ? 'disabled' : ''}>&#9664;</button>
+        <span>Page ${page} of ${vp.total_pages}</span>
+        <button onclick="quranPage(${page+1})" ${page >= vp.total_pages ? 'disabled' : ''}>&#9654;</button>
+        <button onclick="quranPage(${vp.total_pages})" ${page >= vp.total_pages ? 'disabled' : ''}>&#9654;&#9654;</button>`;
+    }
+    // Re-apply filter
+    if(quranCurrentFilter !== 'all') filterQuran(quranCurrentFilter, document.querySelector(`.quran-theme-filters button[data-theme="${quranCurrentFilter}"]`));
+  } catch(e) { /* ignore */ }
+}
+
+function filterQuran(theme, btn) {
+  quranCurrentFilter = theme;
+  document.querySelectorAll('.quran-theme-filters button').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.quran-ayah').forEach(el => {
+    if(theme === 'all') { el.style.display = 'grid'; return; }
+    el.style.display = (el.dataset.theme === theme) ? 'grid' : 'none';
+  });
+}
+
+async function loadHadithFull() {
+  const hc = document.getElementById('hadith-full-content');
+  try {
+    const d = await loadJSON('/api/quran-hadith');
+    const books = await loadJSON('/api/hadith/books');
+    // Load first book's narrations paginated
+    const firstBook = (books||[])[0]?.bookName || '';
+    const firstNar = firstBook ? await loadJSON(`/api/hadith/narrations?book=${encodeURIComponent(firstBook)}&page=1&per_page=20`) : {narrations:[]};
+
+    const volIcons = {'Sahih al-Bukhari':'\ud83d\udcd7','Sahih Muslim':'\ud83d\udcd8','Sunan Abi Dawud':'\ud83d\udcd5'};
+    const volEmojis = {'Sahih al-Bukhari':'\ud83d\udd4c','Sahih Muslim':'\ud83d\udd4c','Sunan Abi Dawud':'\u270d\ufe0f'};
+
+    let html = `<div class="hadith-collections">
+      <div class="hadith-spotlight">
+        <div class="hadith-spotlight-box">
+          <div class="hadith-spotlight-label">\u2726 Today's Selected Narration</div>
+          <div class="hadith-spotlight-text">${((d.hadith||{}).english||'').replace(/\n/g, ' ').replace(/\s+/g, ' ')}</div>
+          <div class="hadith-spotlight-ref">\u2014 ${(d.hadith||{}).bookName||''} (Ref: ${(d.hadith||{}).idInBook||''})</div>
+          ${(d.hadith||{}).theme ? `<span class="hadith-spotlight-theme">${(d.hadith||{}).theme}</span>` : ''}
+        </div>
+      </div>
+      <div class="hadith-book-tabs">`;
+    for(const b of (books||[])) {
+      html += `<button class="hadith-book-tab ${b.bookName === firstBook ? 'active' : ''}" data-book="${esc(b.bookName)}" onclick="hadithSelectBook('${esc(b.bookName)}', this)">
+        ${volIcons[b.bookName]||'\ud83d\udcd6'} ${b.bookName} <span class="hadith-book-count">${b.count}</span>
+      </button>`;
+    }
+    html += `</div>
+      <div class="hadith-search-bar">
+        <span class="hadith-search-icon">🔍</span>
+        <input type="text" class="hadith-search-input" id="hadith-search-input"
+          placeholder="Search narrations..." oninput="hadithSearch()"
+          onkeydown="if(event.key==='Enter') hadithSearch()">
+        <button class="hadith-search-clear" id="hadith-search-clear" onclick="hadithClearSearch()" style="display:none">✕</button>
+      </div>
+      <div class="hadith-narration-area" id="hadith-narration-area">`;
+    for(const h of (firstNar.narrations||[])) {
+      const text = (h.english||h.arabic||'').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+      html += `<div class="narration-item">
+        <div class="narration-text">${text}</div>
+        <div class="narration-ref">\u2014 Ref: ${h.idInBook||'\u2014'}</div>
+      </div>`;
+    }
+    if(firstNar.total_pages > 1) {
+      html += `<div class="hadith-pagination" id="hadith-pagination">
+        <span>Page 1 of ${firstNar.total_pages}</span>
+        <button onclick="hadithPage(2)">\u25b6</button>
+      </div>`;
+    }
+    html += `</div></div>`;
+    hc.innerHTML = html;
+  } catch(e) { hc.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+let hadithCurrentBook = '';
+let hadithCurrentPage = 1;
+let hadithSearchTimer = null;
+
+async function hadithSelectBook(book, btn) {
+  hadithCurrentBook = book;
+  hadithCurrentPage = 1;
+  document.querySelectorAll('.hadith-book-tab').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  // clear search when switching books
+  const si = document.getElementById('hadith-search-input');
+  if(si) { si.value = ''; document.getElementById('hadith-search-clear').style.display='none'; }
+  await hadithLoadPage(book, 1, '');
+}
+
+async function hadithLoadPage(book, page, search) {
+  if(search === undefined) search = document.getElementById('hadith-search-input')?.value?.trim() || '';
+  const area = document.getElementById('hadith-narration-area');
+  try {
+    let url = `/api/hadith/narrations?book=${encodeURIComponent(book)}&page=${page}&per_page=20`;
+    if(search) url += `&search=${encodeURIComponent(search)}`;
+    const data = await loadJSON(url);
+    let html = '';
+    if(data.total === 0) {
+      html = `<div class="narration-empty">${search ? '✨ No narrations match "'+esc(search)+'"' : '✨ No narrations found'}</div>`;
+    } else {
+      for(const h of (data.narrations||[])) {
+        const text = (h.english||h.arabic||'').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        html += `<div class="narration-item">
+          <div class="narration-text">${text}</div>
+          <div class="narration-ref">\u2014 ${h.narratorEn ? h.narratorEn+' \u2014 ' : ''}Ref: ${h.idInBook||'\u2014'}</div>
+        </div>`;
+      }
+      if(data.total_pages > 1) {
+        html += `<div class="hadith-pagination" id="hadith-pagination">
+          <button onclick="hadithPage(${page-1})" ${page <= 1 ? 'disabled' : ''}>\u25c0</button>
+          <span>Page ${page} of ${data.total_pages}${search ? ' ('+data.total+' results)' : ''}</span>
+          <button onclick="hadithPage(${page+1})" ${page >= data.total_pages ? 'disabled' : ''}>\u25b6</button>
+        </div>`;
+      }
+    }
+    area.innerHTML = html;
+  } catch(e) { area.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+async function hadithPage(page) {
+  hadithCurrentPage = page;
+  const book = hadithCurrentBook || document.querySelector('.hadith-book-tab.active')?.dataset?.book || '';
+  const search = document.getElementById('hadith-search-input')?.value?.trim() || '';
+  await hadithLoadPage(book, page, search);
+}
+
+function hadithSearch() {
+  if(hadithSearchTimer) clearTimeout(hadithSearchTimer);
+  hadithSearchTimer = setTimeout(() => {
+    hadithSearchTimer = null;
+    const si = document.getElementById('hadith-search-input');
+    const q = si?.value?.trim() || '';
+    document.getElementById('hadith-search-clear').style.display = q ? 'block' : 'none';
+    if(!hadithCurrentBook) {
+      const active = document.querySelector('.hadith-book-tab.active');
+      hadithCurrentBook = active?.dataset?.book || '';
+    }
+    hadithCurrentPage = 1;
+    hadithLoadPage(hadithCurrentBook, 1, q);
+  }, 300);
+}
+
+function hadithClearSearch() {
+  const si = document.getElementById('hadith-search-input');
+  if(si) { si.value = ''; }
+  document.getElementById('hadith-search-clear').style.display = 'none';
+  if(hadithSearchTimer) clearTimeout(hadithSearchTimer);
+  if(!hadithCurrentBook) {
+    const active = document.querySelector('.hadith-book-tab.active');
+    hadithCurrentBook = active?.dataset?.book || '';
+  }
+  hadithCurrentPage = 1;
+  hadithLoadPage(hadithCurrentBook, 1, '');
+}
+
+// ══════════ Sacred Library ══════════
+
+const LIB_BOOKS = [
+  // ─── Islamic Occult ───
+  {id: 'al-buni-system',          title: 'Ahmad al-Buni — Complete System',     author: 'Ilm al-Huruf & Magic Squares',        icon: '🔮', color: '#F59E0B', type: 'reference'},
+  {id: 'shams-al-maarif-full',    title: 'Shams al-Ma\'arif — The Sun of Gnosis', author: 'Full book text (article compilation)', icon: '☀️', color: '#F97316', type: 'full_text'},
+  {id: 'al-tukhi-system',         title: 'Al-Tukhi — System & Teachings',     author: 'Astrological Judgments & Mansions',    icon: '🌙', color: '#10B981', type: 'reference'},
+  {id: 'picatrix-full-text',      title: 'The Picatrix — Ghayat al-Hakim',    author: 'Greer & Warnock — Complete 12K-line text', icon: '📜', color: '#7C3AED', type: 'full_text'},
+  {id: 'shadrach-magic-that-works', title: 'Nineveh Shadrach — Magic That Works', author: 'Practical Occultism Training',      icon: '⚡', color: '#EF4444', type: 'reference'},
+  // ─── Astrology ───
+  {id: 'abu-mashar-al-balkhi',    title: 'Abu Ma\'shar al-Balkhi — Great Introduction', author: 'Abbasid Astrology Master',  icon: '🪐', color: '#3B82F6', type: 'reference'},
+  {id: 'al-biruni-tafhim',        title: 'Al-Biruni — Kitab al-Tafhim',       author: 'The Supreme Polymath',                icon: '🔭', color: '#06B6D4', type: 'reference'},
+  {id: 'kapiel-raaj-speed-of-light', title: 'Kapiel Raaj — Speed of Light Series', author: 'Vedic Astrology @ Speed of Light', icon: '⭐', color: '#22C55E', type: 'reference'},
+];
+
+let libCurrentId = null;
+
+async function loadLibrary() {
+  const shelf = document.getElementById('library-shelf');
+  try {
+    const refs = await loadJSON('/api/library/references');
+    const refMap = {};
+    for(const r of refs) refMap[r.id] = r;
+
+    let html = '';
+    const perRow = 4;
+    for(let i = 0; i < LIB_BOOKS.length; i += perRow) {
+      html += '<div class="shelf-row">';
+      for(let j = i; j < i + perRow && j < LIB_BOOKS.length; j++) {
+        const book = LIB_BOOKS[j];
+        const meta = refMap[book.id];
+        const sizeInfo = meta ? Math.ceil(meta.size/1024)+'KB' : '';
+        const isFull = book.type === 'full_text';
+        html += `<div class="book-item" data-id="${book.id}" title="${esc(book.title)}">
+          <div class="book-spine" style="background:linear-gradient(180deg, ${book.color}dd, ${book.color}88)">
+            ${isFull ? '<span class="book-badge-full">📖</span>' : '<span class="book-badge-ref">📋</span>'}
+            <span class="book-icon">${book.icon}</span>
+            <span class="book-spine-title">${esc(book.title)}</span>
+          </div>
+          <div class="book-footer">
+            <span class="book-footer-author">${esc(book.author)}</span>
+            <span class="book-footer-size">${sizeInfo}</span>
+          </div>
+        </div>`;
+      }
+      html += '</div>';
+    }
+    document.getElementById('library-book-count').textContent = LIB_BOOKS.length + ' books';
+    shelf.innerHTML = html;
+  } catch(e) { shelf.innerHTML = '<div class="loading">✨ The library shelves are quiet... '+e.message+'</div>'; }
+}
+
+// Delegate click handler for book items — more reliable than inline onclick
+document.getElementById('library-shelf').addEventListener('click', (e) => {
+  const bookItem = e.target.closest('.book-item');
+  if(bookItem) {
+    const bookId = bookItem.dataset.id;
+    libOpenBook(bookId);
+  }
+});
+
+let libChaptersCache = {};
+
+async function libOpenBook(bookId) {
+  console.log('📖 Opening book:', bookId);
+  libCurrentId = bookId;
+  document.getElementById('library-empty').style.display = 'none';
+  const reader = document.getElementById('library-reader');
+  reader.style.display = 'flex';  // use flex not block
+
+  // Highlight the book in the shelf
+  document.querySelectorAll('.book-item').forEach(b => b.classList.remove('active'));
+  const el = document.querySelector(`.book-item[data-id="${bookId}"]`);
+  if(el) el.classList.add('active');
+
+  const header = document.getElementById('library-reader-header');
+  const chapters = document.getElementById('library-reader-chapters');
+  const content = document.getElementById('library-reader-content');
+
+  content.innerHTML = '<div class="loading">🌙 Opening the book...</div>';
+
+  try {
+    const ref = await loadJSON(`/api/library/reference/${bookId}`);
+    if(!ref || ref.error) throw new Error(ref ? ref.error : 'Text not found');
+
+    const bookInfo = LIB_BOOKS.find(b => b.id === bookId);
+    const isFull = bookInfo && bookInfo.type === 'full_text';
+    const isLarge = ref.content && ref.content.length > 50000;  // >50KB = large text
+
+    header.innerHTML = `<div class="lib-header-left">
+      <span class="lib-header-icon">${bookInfo ? bookInfo.icon : '📖'}</span>
+      <div>
+        <div class="lib-header-title">${isFull ? '📖 ' : '📋 '}${esc(ref.title)}</div>
+        <div class="lib-header-subtitle">${bookInfo ? esc(bookInfo.author) : ''}${isFull ? ' — Full Text' : ' — Reference Notes'}</div>
+      </div>
+      <div class="lib-header-actions" style="margin-left:auto;display:flex;gap:8px">
+        ${isFull ? `<button class="lib-dl-btn" onclick="libDownloadText('${bookId}','${esc(ref.title)}')" title="Download as text file">⬇ Download</button>` : ''}
+      </div>
+    </div>`;
+    chapters.innerHTML = '';
+
+    if (isLarge) {
+      // Fast path for large texts: pre-formatted block, no markdown parsing
+      const plain = esc(ref.content);
+      content.innerHTML = `<div class="lib-ref-body lib-ref-large"><pre style="white-space:pre-wrap;font-size:14px;line-height:1.6;color:#d0c8e0;font-family:inherit">${plain}</pre></div>`;
+    } else {
+      // Normal path: render markdown-ish content
+      let body = esc(ref.content);
+      body = body.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      body = body.replace(/`(.+?)`/g, '<code>$1</code>');
+      const blocks = body.split(/\n\n+/);
+      let htmlOut = '';
+      for(let b of blocks) {
+        b = b.trim();
+        if(!b) continue;
+        if(b.startsWith('# '))     { htmlOut += b.replace(/^# (.+)$/gm, '<h2 class="lib-ref-h2">$1</h2>'); continue; }
+        if(b.startsWith('## '))    { htmlOut += b.replace(/^## (.+)$/gm, '<h3 class="lib-ref-h3">$1</h3>'); continue; }
+        if(b.startsWith('### '))   { htmlOut += b.replace(/^### (.+)$/gm, '<h4 class="lib-ref-h4">$1</h4>'); continue; }
+        if(/^[-*]{3,}$/.test(b)) { htmlOut += '<hr>'; continue; }
+        if(/^[-*]\s/m.test(b)) {
+          let lis = b.split('\n').filter(l => l.trim());
+          htmlOut += '<ul>';
+          for(let li of lis) {
+            li = li.replace(/^[-*]\s+/, '').trim();
+            if(li) htmlOut += '<li>'+li+'</li>';
+          }
+          htmlOut += '</ul>';
+          continue;
+        }
+        htmlOut += '<p class="lib-ref-p">'+b.replace(/\n/g, '<br>')+'</p>';
+      }
+      body = htmlOut;
+      content.innerHTML = `<div class="lib-ref-body">${body}</div>`;
+    }
+    content.scrollTop = 0;
+  } catch(e) {
+    content.innerHTML = `<div class="loading">✨ ${e.message}</div>`;
+  }
+}
+
+// Download full text as .txt file
+function libDownloadText(bookId, title) {
+  loadJSON(`/api/library/reference/${bookId}`).then(ref => {
+    const blob = new Blob([ref.content], {type: 'text/plain;charset=utf-8'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (title || bookId).replace(/[^a-zA-Z0-9_-]/g,'_') + '.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }).catch(e => alert('Download failed: '+e.message));
+}
+
+// Load library when tab is shown
+document.addEventListener('DOMContentLoaded', () => {
+  // Observe tab switches to load library content
+  const observer = new MutationObserver(() => {
+    const libTab = document.getElementById('tab-library');
+    if(libTab && libTab.classList.contains('active') && !libTab.dataset.loaded) {
+      libTab.dataset.loaded = 'true';
+      loadLibrary();
+    }
+  });
+  const tabPages = document.querySelectorAll('.tab-page');
+  tabPages.forEach(t => observer.observe(t, {attributes: true, attributeFilter: ['class']}));
+});
+
+// ══════════ Chat ══════════
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if(!msg) return;
+  input.value = '';
+  const msgs = document.getElementById('chat-messages');
+  msgs.innerHTML += `<div class="chat-msg user"><div class="bubble">${esc(msg)}</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  try {
+    const reply = await loadJSON('/api/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({message: msg})
+    });
+    msgs.innerHTML += `<div class="chat-msg"><div class="avatar">🌈</div><div class="bubble">${reply.reply||'The stars are listening...'}</div></div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch(e) {
+    msgs.innerHTML += `<div class="chat-msg"><div class="avatar">🌈</div><div class="bubble">My connection flickered... speak again, love? ✨</div></div>`;
+  }
+}
+document.getElementById('chat-send').addEventListener('click', sendChat);
+document.getElementById('chat-input').addEventListener('keydown', e => { if(e.key === 'Enter') sendChat(); });
+document.getElementById('search-input').addEventListener('keydown', e => {
+  if(e.key === 'Enter') { document.getElementById('chat-input').value = e.target.value; e.target.value=''; sendChat(); }
+});
+
+// ══════════ Constants ══════════
+const PLANET_COLORS = { Sun:'#ffd166', Moon:'#c0c0ff', Mercury:'#b0b0b0', Venus:'#ff9ec4',
+  Mars:'#ff3b5c', Jupiter:'#ffa500', Saturn:'#d4b86a', Uranus:'#00cfff', Neptune:'#4444ff', Pluto:'#a020f0' };
+const PLANET_SYMBOLS = { Sun:'☉', Moon:'☽', Mercury:'☿', Venus:'♀', Mars:'♂',
+  Jupiter:'♃', Saturn:'♄', Uranus:'♅', Neptune:'♆', Pluto:'♇' };
+
+// ══════════ MagiJournal Diary JS ══════════
+let magiDate = new Date();
+let magiMonth = magiDate.getFullYear();
+let magiYear = magiDate.getFullYear();
+let magiDay = magiDate.getDate();
+let magiAutoSave = null;
+
+function magiFormatDate(d) {
+  const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function magiDayName(d) {
+  return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()];
+}
+
+function magiMonthName(m) {
+  return ['January','February','March','April','May','June','July','August','September','October','November','December'][m];
+}
+
+async function magiLoadDay(dateStr) {
+  try {
+    const data = await loadJSON(`/api/diary/day?date=${dateStr}`);
+    // Update display
+    const d = new Date(dateStr+'T12:00:00');
+    document.getElementById('magi-day-name').textContent = magiDayName(d);
+    document.getElementById('magi-day-date').textContent = dateStr;
+    document.getElementById('magi-date-input').value = dateStr;
+
+    // Astro bar
+    const astro = data.astro || {};
+    const ab = document.getElementById('magi-astro-bar');
+    let ph = (astro.planetary_hours||[]).map(h =>
+      `<span style="color:${PLANET_COLORS[h.planet]||'#fff'}">${PLANET_SYMBOLS[h.planet]||''} ${h.planet||''}</span>`
+    ).join(' · ');
+    ab.innerHTML = `
+      <div class="magi-astro-row">
+        <div class="magi-astro-item"><span class="label">Ruler:</span> ${astro.day_ruler||'—'}</div>
+        <div class="magi-astro-item"><span class="label">🌙 Moon:</span> ${astro.moon_sign||'—'} · ${astro.moon_mansion||'—'}</div>
+        <div class="magi-astro-item"><span class="label">Spirit:</span> ${astro.mansion_spirit_name||astro.mansion_spirit||'—'}</div>
+        <div class="magi-astro-item"><span class="label">Nature:</span> ${astro.mansion_nature||'—'}</div>
+      </div>
+      <div class="magi-astro-hours">${ph}</div>`;
+
+    // Diary
+    const diary = data.diary;
+    const ta = document.getElementById('magi-diary-text');
+    ta.value = diary ? diary.content : '';
+
+    // Tasks
+    magiRenderTasks(data.tasks || []);
+
+    // Dreams
+    const dream = data.dreams;
+    document.getElementById('magi-dream-text').value = dream ? dream.content : '';
+
+    // Bookmark/Favorite
+    const bmBtn = document.getElementById('magi-bookmark-btn');
+    bmBtn.textContent = data.is_bookmarked ? '★ Bookmarked' : '☆ Bookmark';
+    bmBtn.dataset.bookmarked = data.is_bookmarked ? 'true' : 'false';
+    const fvBtn = document.getElementById('magi-favorite-btn');
+    fvBtn.textContent = data.is_favorited ? '♥ Favorited' : '♡ Favorite';
+    fvBtn.dataset.favorited = data.is_favorited ? 'true' : 'false';
+
+    // Month calendar
+    magiRenderMonth(d.getFullYear(), d.getMonth()+1, parseInt(dateStr.split('-')[2]));
+
+    // Bookmarks/favorites counts
+    magiLoadCounts();
+  } catch(e) {
+    console.error('Magi load error:', e);
+  }
+}
+
+function magiRenderTasks(tasks) {
+  const list = document.getElementById('magi-task-list');
+  if (!tasks.length) {
+    list.innerHTML = '<div class="magi-empty">No tasks for this day ✨</div>';
+    return;
+  }
+  list.innerHTML = tasks.map(t => `
+    <div class="magi-task-item ${t.done ? 'done' : ''}">
+      <input type="checkbox" ${t.done ? 'checked' : ''} data-id="${t.id}" class="magi-task-cb">
+      <span class="magi-task-text">${esc(t.text)}</span>
+      <button class="magi-task-del" data-id="${t.id}">✕</button>
+    </div>
+  `).join('');
+  // Bind events
+  list.querySelectorAll('.magi-task-cb').forEach(cb => {
+    cb.addEventListener('change', async () => {
+      await loadJSON('/api/diary/task/toggle', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id: parseInt(cb.dataset.id)})});
+      magiLoadDay(document.getElementById('magi-date-input').value);
+    });
+  });
+  list.querySelectorAll('.magi-task-del').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await loadJSON('/api/diary/task/delete', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id: parseInt(btn.dataset.id)})});
+      magiLoadDay(document.getElementById('magi-date-input').value);
+    });
+  });
+}
+
+async function magiRenderMonth(year, month, activeDay) {
+  document.getElementById('magi-month-title').textContent = `${magiMonthName(month-1)} ${year}`;
+  try {
+    const data = await loadJSON(`/api/diary/month?year=${year}&month=${month}`);
+    const days = data.days || [];
+    const grid = document.getElementById('magi-cal-grid');
+    const firstDay = new Date(year, month-1, 1).getDay(); // 0=Sun
+    const daysInMonth = new Date(year, month, 0).getDate();
+    // Convert to Mon-start
+    let startOffset = firstDay === 0 ? 6 : firstDay - 1;
+    let html = '';
+    for(let i=0; i<startOffset; i++) html += '<div class="magi-cal-empty"></div>';
+    for(let d=1; d<=daysInMonth; d++) {
+      const dateStr = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const dayInfo = days.find(dd => dd.day === d);
+      const isActive = d === activeDay;
+      const hasDiary = dayInfo && dayInfo.moon_mansion;
+      html += `<div class="magi-cal-day ${isActive ? 'active' : ''} ${dayInfo ? 'has-data' : ''}"
+                   data-date="${dateStr}" onclick="magiGoToDate('${dateStr}')">
+        <span class="magi-cal-num">${d}</span>
+        ${dayInfo ? `<span class="magi-cal-icon">${dayInfo.moon_sign||''}</span>` : ''}
+      </div>`;
+    }
+    grid.innerHTML = html;
+  } catch(e) {
+    document.getElementById('magi-cal-grid').innerHTML = '<div class="magi-empty">Could not load calendar</div>';
+  }
+}
+
+function magiGoToDate(dateStr) {
+  magiLoadDay(dateStr);
+}
+
+async function magiLoadCounts() {
+  try {
+    const bm = await loadJSON('/api/diary/bookmarks');
+    document.getElementById('magi-bm-count').textContent = bm.length;
+    const fv = await loadJSON('/api/diary/favorites');
+    document.getElementById('magi-fav-count').textContent = fv.length;
+  } catch(e) {}
+}
+
+// ══════════ MagiJournal Event Bindings ══════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Day navigation
+  document.getElementById('magi-prev-day').addEventListener('click', () => {
+    const d = new Date(document.getElementById('magi-date-input').value+'T12:00:00');
+    d.setDate(d.getDate()-1);
+    magiLoadDay(magiFormatDate(d));
+  });
+  document.getElementById('magi-next-day').addEventListener('click', () => {
+    const d = new Date(document.getElementById('magi-date-input').value+'T12:00:00');
+    d.setDate(d.getDate()+1);
+    magiLoadDay(magiFormatDate(d));
+  });
+  document.getElementById('magi-today-btn').addEventListener('click', () => {
+    magiLoadDay(magiFormatDate(new Date()));
+  });
+  document.getElementById('magi-date-input').addEventListener('change', function() {
+    magiLoadDay(this.value);
+  });
+
+  // Month navigation
+  document.getElementById('magi-prev-month').addEventListener('click', () => {
+    const current = document.getElementById('magi-month-title').textContent;
+    const d = new Date(document.getElementById('magi-date-input').value+'T12:00:00');
+    d.setMonth(d.getMonth()-1);
+    const dateStr = magiFormatDate(d);
+    magiLoadDay(dateStr);
+  });
+  document.getElementById('magi-next-month').addEventListener('click', () => {
+    const d = new Date(document.getElementById('magi-date-input').value+'T12:00:00');
+    d.setMonth(d.getMonth()+1);
+    const dateStr = magiFormatDate(d);
+    magiLoadDay(dateStr);
+  });
+
+  // Tab switching inside MagiJournal
+  document.querySelectorAll('.magi-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.magi-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.magi-tab-content').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = document.getElementById('magi-tab-'+btn.dataset.magiTab);
+      if(tab) tab.classList.add('active');
+    });
+  });
+
+  // Auto-save diary on typing (debounced)
+  document.getElementById('magi-diary-text').addEventListener('input', () => {
+    clearTimeout(magiAutoSave);
+    magiAutoSave = setTimeout(async () => {
+      const dateStr = document.getElementById('magi-date-input').value;
+      const content = document.getElementById('magi-diary-text').value;
+      await loadJSON('/api/diary/save', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({date: dateStr, content: content})});
+      const status = document.getElementById('magi-saved-status');
+      status.textContent = '✨ Saved';
+      setTimeout(() => { status.textContent = ''; }, 2000);
+    }, 800);
+  });
+
+  // Bookmark
+  document.getElementById('magi-bookmark-btn').addEventListener('click', async () => {
+    const dateStr = document.getElementById('magi-date-input').value;
+    const res = await loadJSON('/api/diary/bookmark/toggle', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({date: dateStr})});
+    magiLoadDay(dateStr);
+  });
+
+  // Favorite
+  document.getElementById('magi-favorite-btn').addEventListener('click', async () => {
+    const dateStr = document.getElementById('magi-date-input').value;
+    const res = await loadJSON('/api/diary/favorite/toggle', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({date: dateStr})});
+    magiLoadDay(dateStr);
+  });
+
+  // Add task
+  document.getElementById('magi-task-add').addEventListener('click', async () => {
+    const input = document.getElementById('magi-task-input');
+    const text = input.value.trim();
+    if(!text) return;
+    input.value = '';
+    const dateStr = document.getElementById('magi-date-input').value;
+    await loadJSON('/api/diary/task/add', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({date: dateStr, text: text})});
+    magiLoadDay(dateStr);
+  });
+  document.getElementById('magi-task-input').addEventListener('keydown', e => {
+    if(e.key === 'Enter') document.getElementById('magi-task-add').click();
+  });
+
+  // Dream save (auto-save)
+  document.getElementById('magi-dream-text').addEventListener('input', () => {
+    clearTimeout(magiAutoSave);
+    magiAutoSave = setTimeout(async () => {
+      const dateStr = document.getElementById('magi-date-input').value;
+      const content = document.getElementById('magi-dream-text').value;
+      await loadJSON('/api/diary/dream/save', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({date: dateStr, content: content})});
+    }, 800);
+  });
+
+  // Search
+  document.getElementById('magi-search-btn').addEventListener('click', async () => {
+    const q = document.getElementById('magi-search-input').value.trim();
+    if(!q) return;
+    const results = await loadJSON(`/api/diary/search?q=${encodeURIComponent(q)}`);
+    const container = document.getElementById('magi-search-results');
+    const r = results.results || {};
+    let html = '';
+    if(r.diary) html += `<div class="magi-sr-group"><div class="magi-sr-label">📝 Diary</div>${r.diary.map(e => `<div class="magi-sr-item" onclick="magiGoToDate('${e.date}')"><span class="magi-sr-date">${e.date}</span> ${esc(e.content.slice(0,80))}${e.content.length>80?'…':''}</div>`).join('')}</div>`;
+    if(r.tasks) html += `<div class="magi-sr-group"><div class="magi-sr-label">☑ Tasks</div>${r.tasks.map(t => `<div class="magi-sr-item" onclick="magiGoToDate('${t.date}')"><span class="magi-sr-date">${t.date}</span> ${esc(t.text)}</div>`).join('')}</div>`;
+    if(r.dreams) html += `<div class="magi-sr-group"><div class="magi-sr-label">🌙 Dreams</div>${r.dreams.map(d => `<div class="magi-sr-item" onclick="magiGoToDate('${d.date}')"><span class="magi-sr-date">${d.date}</span> ${esc(d.content.slice(0,80))}${d.content.length>80?'…':''}</div>`).join('')}</div>`;
+    if(!html) html = '<div class="magi-empty">No results found</div>';
+    container.innerHTML = html;
+  });
+  document.getElementById('magi-search-input').addEventListener('keydown', e => {
+    if(e.key === 'Enter') document.getElementById('magi-search-btn').click();
+  });
+
+  // Bookmarks popup
+  document.getElementById('magi-show-bookmarks').addEventListener('click', async () => {
+    const bm = await loadJSON('/api/diary/bookmarks');
+    const container = document.getElementById('magi-search-results');
+    if(!bm.length) { container.innerHTML = '<div class="magi-empty">No bookmarks yet</div>'; return; }
+    let html = '<div class="magi-sr-label">📌 Bookmarks</div>';
+    for(const b of bm) {
+      html += `<div class="magi-sr-item" onclick="magiGoToDate('${b.date}')">
+        <span class="magi-sr-date">${b.date}</span> ${esc(b.note)}
+        <button class="magi-sr-del" onclick="event.stopPropagation(); remBM(${b.id})">✕</button>
+      </div>`;
+    }
+    container.innerHTML = html;
+    // Switch to search tab
+    document.querySelector('[data-magi-tab="search"]').click();
+  });
+
+  // Favorites popup
+  document.getElementById('magi-show-favorites').addEventListener('click', async () => {
+    const fv = await loadJSON('/api/diary/favorites');
+    const container = document.getElementById('magi-search-results');
+    if(!fv.length) { container.innerHTML = '<div class="magi-empty">No favorites yet</div>'; return; }
+    let html = '<div class="magi-sr-label">♥ Favorites</div>';
+    for(const f of fv) {
+      html += `<div class="magi-sr-item" onclick="magiGoToDate('${f.date}')">
+        <span class="magi-sr-date">${f.date}</span> ${esc(f.note)}
+        <button class="magi-sr-del" onclick="event.stopPropagation(); remFV(${f.id})">✕</button>
+      </div>`;
+    }
+    container.innerHTML = html;
+    document.querySelector('[data-magi-tab="search"]').click();
+  });
+
+  // Load recent searches
+  async function loadRecentSearches() {
+    try {
+      const hist = await loadJSON('/api/diary/search-history');
+      const container = document.getElementById('magi-recent-searches');
+      if(hist.length) {
+        container.innerHTML = '<div class="magi-sr-label">Recent searches</div>' +
+          hist.map(h => `<span class="magi-recent-tag" onclick="document.getElementById('magi-search-input').value='${esc(h.query)}'; document.getElementById('magi-search-btn').click();">${esc(h.query)}</span>`).join('');
+      }
+    } catch(e) {}
+  }
+  loadRecentSearches();
+
+  // Init: load today
+  magiLoadDay(magiFormatDate(new Date()));
+});
+
+async function remBM(id) {
+  await loadJSON('/api/diary/bookmark/remove', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
+  document.getElementById('magi-show-bookmarks').click();
+}
+
+async function remFV(id) {
+  await loadJSON('/api/diary/favorite/remove', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
+  document.getElementById('magi-show-favorites').click();
+}
+
+// ══════════ Init ══════════
+loadHome();
+loadNatal();
+document.getElementById('btn-refresh').addEventListener('click', loadHome);
+document.getElementById('btn-notif').addEventListener('click', () => alert('🔔 Notifications coming soon!'));
+</script>
+</body>
+</html>

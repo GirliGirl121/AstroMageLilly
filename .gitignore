@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+*.egg-info/
+
+# Virtual env
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# AstroMage
+*.db
+*.db-journal
+magi_alert_state.json
+magi_journal.db
+picatrix_calendar.db
+
+# Logs
+*.log
+
+# State files (regenerated each run)
+*.state.json

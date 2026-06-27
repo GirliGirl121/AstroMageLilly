@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=MagiJournal
+Comment=Astrological Calendar, Diary & Journal
+Exec=/home/ladylefey/AstroMage/MagiJournal/MagiJournal.sh
+Icon=/home/ladylefey/Desktop/PicatrixDiary/picatrix.png
+Terminal=false
+Categories=Office;Calendar;
+Keywords=astrology;picatrix;diary;calendar;occult;magijournal;
+StartupNotify=true

@@ -1,0 +1,987 @@
+[
+  {
+    "index": 0,
+    "number": 1,
+    "picatrix_name": "Alnath",
+    "arabic_name": "الشّرَطَيْن",
+    "transliteration": "Al-Sharatain",
+    "meaning": "The Two Signals",
+    "zodiac_sign": "Aries",
+    "start_degrees": "0° 0' 0\" Aries",
+    "end_degrees": "12° 51' 26\" Aries",
+    "planetary_ruler": "Mars/Aries (by sign); traditionally ruled by Mars in lunar mansion cycles",
+    "lord_of_mansion_spirit": "Geriz (Book IV, Chapter 9)",
+    "nature": "Hot and dry (Mars)",
+    "recommended_works": [
+      "Begin journeys (safe travel and return)",
+      "Take medicines",
+      "Travel safely and return in good health",
+      "Root for any image involving journeying",
+      "Place discord and enmity between husband and wife",
+      "Sow discord between two allies",
+      "Cause servants to flee"
+    ],
+    "forbidden_works": "None explicitly forbidden; however evil works (discord, enmity) are done when Moon is combust or with Saturn/Mars",
+    "pliny_image": {
+      "description": "Image of a black man with his hair wrapped and encircled, standing on his feet, having in his right hand a spear in the manner of a warrior",
+      "material": "Iron ring",
+      "suffumigation": "Liquid storax",
+      "seal": "Black wax",
+      "incantation": "You, Geriz, kill N son of N, or N wife of N, quickly and speedily and destroy them",
+      "spirit_name": "Geriz",
+      "purpose": "Destruction and depopulation",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5",
+      "secondary": "Book IV, Chapter 9 (as 'Alnath' per Pliny)"
+    },
+    "notes": "The wise of India begin journeys and take medicines when the Moon is in this Mansion."
+  },
+  {
+    "index": 1,
+    "number": 2,
+    "picatrix_name": "Albotain",
+    "arabic_name": "البُطَين",
+    "transliteration": "Al-Butain",
+    "meaning": "The Little Belly (diminutive of 'the belly')",
+    "zodiac_sign": "Aries",
+    "start_degrees": "12° 51' 26\" Aries",
+    "end_degrees": "25° 42' 52\" Aries",
+    "planetary_ruler": "Venus/Taurus (approaching); traditionally Mercury in some systems",
+    "lord_of_mansion_spirit": "Enedil (Book IV, Chapter 9)",
+    "nature": "Cold and moist",
+    "recommended_works": [
+      "Dig for streams and wells",
+      "Find hidden treasures",
+      "Plant large amounts of wheat",
+      "Destroy buildings before they are completed",
+      "Enrage one man against another",
+      "Strengthen and firm the incarceration of captives"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Form of a crowned king made from white wax and mastic",
+      "material": "White wax and mastic",
+      "suffumigation": "Lignum aloes",
+      "incantation": "You, Enedil, drive away this anger from me, and let me be reconciled with him, and let my petition be satisfactory to him",
+      "spirit_name": "Enedil",
+      "purpose": "Removal of anger",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5",
+      "secondary": "Book IV, Chapter 9 (as 'Albotayn' per Pliny)"
+    },
+    "notes": "Associated with water-finding and treasure hunting."
+  },
+  {
+    "index": 2,
+    "number": 3,
+    "picatrix_name": "Azoraya",
+    "arabic_name": "الثُّرَيّا",
+    "transliteration": "Al-Thuraiya",
+    "meaning": "The Pleiades / The Many Little Ones",
+    "zodiac_sign": "Aries/Taurus",
+    "start_degrees": "25° 42' 52\" Aries",
+    "end_degrees": "8° 34' 2\" Taurus",
+    "planetary_ruler": "Moon/Taurus (approaching); traditionally the Moon",
+    "lord_of_mansion_spirit": "Annuncia (Book IV, Chapter 9)",
+    "nature": "Cold and moist (Lunar)",
+    "recommended_works": [
+      "Sail safely on the sea and return safely",
+      "Firmly incarcerate captives",
+      "Complete works of alchemy",
+      "All works done by fire",
+      "Hunt in the country",
+      "Cause love between man and wife"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Figure of a seated woman with her right hand over her head, wrapped in cloth",
+      "material": "Silver ring with square table",
+      "suffumigation": "Musk, camphor, mastic, and aromatic oils",
+      "incantation": "You, Annuncia, make it so",
+      "spirit_name": "Annuncia",
+      "purpose": "Acquisition of all good things",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5",
+      "secondary": "Book IV, Chapter 9 (as 'Azoraye/Pleiades' per Pliny)"
+    },
+    "notes": "Corresponds to the Pleiades star cluster. Safe voyages and alchemy."
+  },
+  {
+    "index": 3,
+    "number": 4,
+    "picatrix_name": "Aldebaran",
+    "arabic_name": "الدَّبَران",
+    "transliteration": "Al-Dabaran",
+    "meaning": "The Follower (follows the Pleiades)",
+    "zodiac_sign": "Taurus",
+    "start_degrees": "8° 34' 2\" Taurus",
+    "end_degrees": "21° 25' 44\" Taurus",
+    "planetary_ruler": "Venus/Taurus",
+    "lord_of_mansion_spirit": "Cabil (Book IV, Chapter 9)",
+    "nature": "Cold and dry",
+    "recommended_works": [
+      "Destroy cities and villages",
+      "Destroy any building you wish not to endure",
+      "Make a lord despise his servant",
+      "Place discord between man and wife",
+      "Destroy fountains, streams, and underground treasure-seekers",
+      "Kill and bind all reptiles and venomous animals"
+    ],
+    "forbidden_works": "None explicitly listed (this is a malefic mansion)",
+    "pliny_image": {
+      "description": "Knight riding on a horse, holding a serpent in his right hand",
+      "material": "Red wax",
+      "suffumigation": "Red myrrh and storax",
+      "incantation": "You, Assarez, make it so and fulfill my request",
+      "spirit_name": "Assarez",
+      "purpose": "Obtaining enmity",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5",
+      "secondary": "Book IV, Chapter 9 (as 'Aldebaran' per Pliny)"
+    },
+    "notes": "A primarily destructive mansion; used for demolition, discord, and destroying enemies."
+  },
+  {
+    "index": 4,
+    "number": 5,
+    "picatrix_name": "Almices",
+    "arabic_name": "الحَقَعَة",
+    "transliteration": "Al-Haqa",
+    "meaning": "The White Spot / Lozenge-shaped",
+    "zodiac_sign": "Taurus/Gemini",
+    "start_degrees": "21° 25' 44\" Taurus",
+    "end_degrees": "4° 17' 10\" Gemini",
+    "planetary_ruler": "Mercury/Gemini (approaching)",
+    "lord_of_mansion_spirit": "N/A",
+    "nature": "Air/Mercurial",
+    "recommended_works": [
+      "Youths to learn arts and occupations",
+      "Salvation of travelers and quick return",
+      "Sailors to travel safely",
+      "Improve buildings",
+      "Destroy friendship between two people",
+      "Favor between husband and wife (when Moon is in humane sign, safe from Saturn, Mars, and solar combustion)"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Fashion from silver a head without a body, above the head write the name of the lord of this mansion and your petition",
+      "material": "Silver",
+      "suffumigation": "Sandalwood",
+      "incantation": "You, Cabil, do such and such for me and let my petition be granted",
+      "spirit_name": "Cabil",
+      "purpose": "Receiving good from kings and high officials",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "The text gives 'Cabil' as the spirit name for this mansion in Chapter 9, but also shows 'Assarez' as lord in some MSS. Good for education and learning. Works should be done when Moon is rising in a humane sign (Gemini, Virgo, Libra, Sagittarius, Aquarius)."
+  },
+  {
+    "index": 5,
+    "number": 6,
+    "picatrix_name": "Athaya",
+    "arabic_name": "الحَنْعَة",
+    "transliteration": "Al-Hana",
+    "meaning": "The Bend / The Swooping",
+    "zodiac_sign": "Gemini",
+    "start_degrees": "4° 17' 10\" Gemini",
+    "end_degrees": "17° 8' 36\" Gemini",
+    "planetary_ruler": "Mercury/Gemini",
+    "lord_of_mansion_spirit": "Nedeyrahe (Book IV, Chapter 9)",
+    "nature": "Hot and moist",
+    "recommended_works": [
+      "Destroy cities and villages",
+      "Besiege cities with armies",
+      "King's enemies to exact vengeance",
+      "Destroy crops and trees",
+      "Cause friendship between two people",
+      "Improve hunting in the country",
+      "Destroy medicines so they do not work when taken"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Two images from white wax embracing each other, wrapped in white silk",
+      "material": "White wax",
+      "suffumigation": "Amber and lignum aloes",
+      "incantation": "You, Nedeyrahe, bring together so and so and so and so, and place between them friendship and love",
+      "spirit_name": "Nedeyrahe",
+      "purpose": "Putting love between two people",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Mixed nature - can be used for both destruction and friendship."
+  },
+  {
+    "index": 6,
+    "number": 7,
+    "picatrix_name": "Aldirah",
+    "arabic_name": "الذِّرَاع",
+    "transliteration": "Al-Dhira",
+    "meaning": "The Forearm / Forepaw (of the Lion)",
+    "zodiac_sign": "Gemini/Cancer",
+    "start_degrees": "17° 8' 36\" Gemini",
+    "end_degrees": "0° Cancer (end of Gemini)",
+    "planetary_ruler": "Moon/Cancer (approaching)",
+    "lord_of_mansion_spirit": "Selehe / Siely (Book IV, Chapter 9)",
+    "nature": "Cold and moist (Lunar)",
+    "recommended_works": [
+      "Increase merchandise and profit",
+      "Travel safely",
+      "Increase crops",
+      "Sail beneficially on water",
+      "Cause friendship between friends and allies",
+      "Expel flies from wherever you wish",
+      "Destroy officials",
+      "Go into presence of king or high nobles",
+      "Cause kings and lords to be benevolent"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Seal of silver with image of a man clothed in robes, hands extended to heaven in prayer/supplication; name of lord written in breast of image",
+      "material": "Silver",
+      "suffumigation": "Sweet-smelling things",
+      "incantation": "You, Siely, cause such and such to happen, and grant my petition",
+      "spirit_name": "Selehe",
+      "purpose": "Acquisition of all good things",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "A fortunate mansion for commerce, travel, and gaining favor."
+  },
+  {
+    "index": 7,
+    "number": 8,
+    "picatrix_name": "Annathra",
+    "arabic_name": "النَّثْرَة",
+    "transliteration": "Al-Nathrah",
+    "meaning": "The Gap / Nostril (of the Lion)",
+    "zodiac_sign": "Cancer",
+    "start_degrees": "0° 0' 0\" Cancer",
+    "end_degrees": "12° 51' 26\" Cancer",
+    "planetary_ruler": "Moon/Cancer",
+    "lord_of_mansion_spirit": "Annediex (Book IV, Chapter 9)",
+    "nature": "Cold and moist (Lunar)",
+    "recommended_works": [
+      "Love and friendship",
+      "Safe travel of those who travel in wagons through countryside",
+      "Cause friendship between allies",
+      "Make incarceration of captives firm",
+      "Destruction and affliction of captives",
+      "Expel mice and bugs from whatever place you wish"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of an eagle with the face of a man; name of lord inscribed on breast",
+      "material": "Tin",
+      "suffumigation": "Sulfur",
+      "incantation": "You, Annediex, do such and such for and grant my petition",
+      "spirit_name": "Annediex",
+      "purpose": "Gaining victory",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "A fortunate mansion for love, friendship, and victory."
+  },
+  {
+    "index": 8,
+    "number": 9,
+    "picatrix_name": "Atarf",
+    "arabic_name": "الطَّرْف",
+    "transliteration": "Al-Tarf",
+    "meaning": "The Glance / Eye (of the Lion)",
+    "zodiac_sign": "Cancer",
+    "start_degrees": "12° 51' 26\" Cancer",
+    "end_degrees": "25° 42' 51\" Cancer",
+    "planetary_ruler": "Mars/Leo (approaching)",
+    "lord_of_mansion_spirit": "Raubel (Book IV, Chapter 9)",
+    "nature": "Hot and dry",
+    "recommended_works": [
+      "Destroy crops",
+      "Make travelers on journeys unfortunate",
+      "Do evil to all men",
+      "Cause division and hatred between allies",
+      "Help a man defend himself from attack"
+    ],
+    "forbidden_works": "None explicitly listed (this is a malefic mansion)",
+    "pliny_image": {
+      "description": "Lead image of a eunuch holding his hands over his eyes; name of lord inscribed on neck",
+      "material": "Lead",
+      "suffumigation": "Pine resin",
+      "incantation": "You, Raubel, make N son of N die of sickness or N son of N's blood to flow",
+      "spirit_name": "Raubel",
+      "purpose": "Causing infirmity",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "A malefic mansion used for causing harm and destruction."
+  },
+  {
+    "index": 9,
+    "number": 10,
+    "picatrix_name": "Algebha",
+    "arabic_name": "الجَبْهَة",
+    "transliteration": "Al-Jabhah",
+    "meaning": "The Forehead (of the Lion)",
+    "zodiac_sign": "Cancer/Leo",
+    "start_degrees": "25° 42' 51\" Cancer",
+    "end_degrees": "8° 34' 18\" Leo",
+    "planetary_ruler": "Sun/Leo (approaching)",
+    "lord_of_mansion_spirit": "Aredafir (Book IV, Chapter 9)",
+    "nature": "Hot and dry (Solar)",
+    "recommended_works": [
+      "Love between man and wife",
+      "Destroy enemies",
+      "Make firm the incarceration of captives",
+      "Strengthen and complete buildings",
+      "Love of allies and mutual help"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Head of a lion in gold or brass; name of lord written above it",
+      "material": "Gold or brass",
+      "suffumigation": "Amber",
+      "incantation": "You, Aredafir, lift up sadness, slowness and infirmity from my heart and body",
+      "spirit_name": "Aredafir",
+      "purpose": "Cure of infirmities and making childbirth easy",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Fortunate for love, healing, and construction."
+  },
+  {
+    "index": 10,
+    "number": 11,
+    "picatrix_name": "Azobra",
+    "arabic_name": "الزُّبْرَة",
+    "transliteration": "Al-Zubrah",
+    "meaning": "The Mane / Tuft of Hair (of the Lion)",
+    "zodiac_sign": "Leo",
+    "start_degrees": "8° 34' 18\" Leo",
+    "end_degrees": "21° 25' 44\" Leo",
+    "planetary_ruler": "Sun/Leo",
+    "lord_of_mansion_spirit": "Necol (Book IV, Chapter 9)",
+    "nature": "Hot and dry (Solar)",
+    "recommended_works": [
+      "Rescue captives",
+      "Besiege cities and villages",
+      "Organize trade and profit from it",
+      "Travelers on roads to journey safe and unharmed",
+      "Strengthen buildings so that they are stable",
+      "Increase wealth of allies"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of a man riding a lion, holding a lance in right hand and holding the ear of the lion with left hand; name of lord written in front",
+      "material": "Gold table",
+      "suffumigation": "Not specified",
+      "incantation": "You, Necol, bring glory to me that I shall be feared by men, and so that their fear shall cause them to tremble when they behold me; and quiet the heart of the king and of lords and of men of high estate that they may grant me honors and dignities",
+      "spirit_name": "Necol",
+      "purpose": "Being feared and receiving good things",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Fortunate for commerce, military matters, and gaining power."
+  },
+  {
+    "index": 11,
+    "number": 12,
+    "picatrix_name": "Acarfa",
+    "arabic_name": "الصَّرْفَة",
+    "transliteration": "Al-Sarfah",
+    "meaning": "The Changer / The Turning",
+    "zodiac_sign": "Leo/Virgo",
+    "start_degrees": "21° 25' 44\" Leo",
+    "end_degrees": "4° 17' 6\" Virgo",
+    "planetary_ruler": "Mercury/Virgo (approaching)",
+    "lord_of_mansion_spirit": "Abdizu (Book IV, Chapter 9)",
+    "nature": "Cold and dry (Mercurial)",
+    "recommended_works": [
+      "Increase harvests and plants",
+      "Destroy riches and ships",
+      "Improve allies, officials, captives and servants to be steadfast and honest"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of a dragon fighting with a man; name of lord written in front",
+      "material": "Black lead",
+      "suffumigation": "Hair of a lion mixed with asafoetida",
+      "incantation": "You, Abdizu, break apart and separate such a one from such a one",
+      "spirit_name": "Abdizu",
+      "purpose": "Separation of two lovers",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Mixed nature - good for agriculture and improvement, but can be used for separation."
+  },
+  {
+    "index": 12,
+    "number": 13,
+    "picatrix_name": "Alahue",
+    "arabic_name": "الأَوَّلَة",
+    "transliteration": "Al-Awwa",
+    "meaning": "The First (or The Barking Dog)",
+    "zodiac_sign": "Virgo",
+    "start_degrees": "4° 17' 6\" Virgo",
+    "end_degrees": "17° 8' 36\" Virgo",
+    "planetary_ruler": "Mercury/Virgo",
+    "lord_of_mansion_spirit": "Azerut (Book IV, Chapter 9)",
+    "nature": "Cold and dry (Mercurial)",
+    "recommended_works": [
+      "Increase trade and profit",
+      "Increase harvests",
+      "Travelers to have good journeys on roads",
+      "Complete buildings",
+      "Freedom of captives",
+      "Binding of nobles to have good from them"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of an erect man (with erect penis) from red wax, and image of a woman from white wax, bound face to face, wrapped in white silk washed in rosewater",
+      "material": "Red and white wax",
+      "suffumigation": "Amber and lignum aloes",
+      "incantation": "Name of the one you desire written on image",
+      "spirit_name": "Azerut",
+      "purpose": "Liberation of men unable to come to women; putting love between men and women",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Fortunate for commerce, agriculture, and love matters."
+  },
+  {
+    "index": 13,
+    "number": 14,
+    "picatrix_name": "Azimech",
+    "arabic_name": "السِّمَاك",
+    "transliteration": "Al-Simak",
+    "meaning": "The Unarmed / Lofty One",
+    "zodiac_sign": "Virgo/Libra",
+    "start_degrees": "17° 8' 36\" Virgo",
+    "end_degrees": "0° Libra (end of Virgo)",
+    "planetary_ruler": "Venus/Libra (approaching)",
+    "lord_of_mansion_spirit": "Erdegel (Book IV, Chapter 9)",
+    "nature": "Cold and moist (Venusian)",
+    "recommended_works": [
+      "Love of man and wife",
+      "Heal the sick with physic and medicine",
+      "Destroy harvests and plants",
+      "Destroy lust",
+      "Destroy those who go by roads",
+      "Benefit of kings to have good and ascend to reign",
+      "Sailors to sail well and safely",
+      "Friendship of allies"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of a dog with his own tail held in his mouth",
+      "material": "Red wax",
+      "suffumigation": "Hair of a dog and hair of a cat",
+      "incantation": "You, Erdegel, break apart and divide such a one from such a woman through enmity and ill will",
+      "spirit_name": "Erdegel",
+      "purpose": "Separating of men from women",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Mixed nature - good for healing and love, but can be used for separation and destruction."
+  },
+  {
+    "index": 14,
+    "number": 15,
+    "picatrix_name": "Algarfa",
+    "arabic_name": "الغَافِر",
+    "transliteration": "Al-Ghafr",
+    "meaning": "The Coverer / The Forgiver",
+    "zodiac_sign": "Libra",
+    "start_degrees": "0° 0' 0\" Libra",
+    "end_degrees": "12° 51' 26\" Libra",
+    "planetary_ruler": "Venus/Libra",
+    "lord_of_mansion_spirit": "Achalich (Book IV, Chapter 9)",
+    "nature": "Hot and moist (Venusian)",
+    "recommended_works": [
+      "Dig wells",
+      "Seek underground treasure",
+      "Impede travelers so they cannot go on journeys",
+      "Separate husband and wife so they never join",
+      "Place discord between friends and allies",
+      "Scatter enemies from your area",
+      "Destroy the house of your enemies"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Figure of a seated man holding scrolls as if reading them",
+      "material": "Ink on paper",
+      "suffumigation": "Frankincense and nutmeg",
+      "incantation": "You, Achalich, do such and such for me, and accomplish my petition",
+      "spirit_name": "Achalich",
+      "purpose": "Acquisition of friendship and good will",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Mixed nature - good for finding treasure and friendship, but also used for separation and discord."
+  },
+  {
+    "index": 15,
+    "number": 16,
+    "picatrix_name": "Azubene",
+    "arabic_name": "الزُّبَانَى",
+    "transliteration": "Al-Zubana",
+    "meaning": "The Two Claws (of the Scorpion)",
+    "zodiac_sign": "Libra",
+    "start_degrees": "12° 51' 26\" Libra",
+    "end_degrees": "25° 42' 52\" Libra",
+    "planetary_ruler": "Mars/Scorpio (approaching)",
+    "lord_of_mansion_spirit": "Azeruch (Book IV, Chapter 9)",
+    "nature": "Hot and dry (Martian)",
+    "recommended_works": [
+      "Destroy merchandise, harvests and plants",
+      "Put discord between friends",
+      "Put discord between man and wife",
+      "Debauch a woman you desire",
+      "Impede those who journey so end of road is never reached",
+      "Cause hatred between friends",
+      "Liberate captives from incarceration"
+    ],
+    "forbidden_works": "None explicitly listed (this is a malefic mansion)",
+    "pliny_image": {
+      "description": "Figure of a man seated on a throne carrying a scale in his hands",
+      "material": "Silver plate",
+      "suffumigation": "Fine odors",
+      "incantation": "You, Azeruch, make such and such happen for me, and accomplish my request",
+      "spirit_name": "Azeruch",
+      "purpose": "Making of money (selling and buying)",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Primarily malefic - used for destruction, discord, and impeding."
+  },
+  {
+    "index": 16,
+    "number": 17,
+    "picatrix_name": "Alichil",
+    "arabic_name": "الإِكْلِيل",
+    "transliteration": "Al-Iklil",
+    "meaning": "The Crown / Diadem (of the Scorpion)",
+    "zodiac_sign": "Libra/Scorpio",
+    "start_degrees": "25° 42' 52\" Libra",
+    "end_degrees": "8° 36' 2\" Scorpio",
+    "planetary_ruler": "Mars/Scorpio",
+    "lord_of_mansion_spirit": "Adrieb (Book IV, Chapter 9)",
+    "nature": "Hot and dry (Martian)",
+    "recommended_works": [
+      "Improve deception that it is accomplished well",
+      "Besiege cities and villages",
+      "Make buildings more firm and stable",
+      "Save sailors upon the sea",
+      "Create durable friendship with a friend",
+      "All images for lasting love ought to be made in this mansion"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Figure of a monkey in an iron seal, holding his hands above his shoulders, wrapped in monkey skin",
+      "material": "Iron",
+      "suffumigation": "Hair of a monkey and hair of a female mouse",
+      "incantation": "You, Adrieb, guard all my things and everything that exists within this house, nor let it be entered by thieves",
+      "spirit_name": "Adrieb",
+      "purpose": "Preventing thieves from entering houses",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Particularly good for creating lasting love and durable friendship. Also used for protection of property."
+  },
+  {
+    "index": 17,
+    "number": 18,
+    "picatrix_name": "Alcalb",
+    "arabic_name": "القَلْب",
+    "transliteration": "Al-Qalb",
+    "meaning": "The Heart (of the Scorpion)",
+    "zodiac_sign": "Scorpio",
+    "start_degrees": "8° 36' 2\" Scorpio",
+    "end_degrees": "21° 25' 44\" Scorpio",
+    "planetary_ruler": "Mars/Scorpio",
+    "lord_of_mansion_spirit": "Egrebel / Egribel (Book IV, Chapter 9)",
+    "nature": "Hot and dry (Martian)",
+    "recommended_works": [
+      "Men to conspire against kings",
+      "Vengeance against enemies",
+      "Build buildings that will be strong",
+      "Free captives from incarceration",
+      "Separate friends"
+    ],
+    "forbidden_works": "None explicitly listed (this is a malefic mansion)",
+    "pliny_image": {
+      "description": "Image of an adder holding its tail above its head",
+      "material": "Wax",
+      "suffumigation": "Horn of a stag",
+      "incantation": "You, Egribel, guard this house of mine that no serpent may enter nor any other hurtful beast",
+      "spirit_name": "Egrebel",
+      "purpose": "Taking away fevers and infirmities of the belly",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Malefic for conspiracy and vengeance, but can be used for healing fevers and protecting property."
+  },
+  {
+    "index": 18,
+    "number": 19,
+    "picatrix_name": "Exaula",
+    "arabic_name": "الشَّوْلَة",
+    "transliteration": "Al-Shaulah",
+    "meaning": "The Sting / Raised Tail (of the Scorpion)",
+    "zodiac_sign": "Scorpio/Sagittarius",
+    "start_degrees": "21° 25' 44\" Scorpio",
+    "end_degrees": "4° 17' 10\" Sagittarius",
+    "planetary_ruler": "Jupiter/Sagittarius (approaching)",
+    "lord_of_mansion_spirit": "Annucel (Book IV, Chapter 9)",
+    "nature": "Hot and moist (Jovian)",
+    "recommended_works": [
+      "Besiege cities and villages and enter/take them",
+      "Destroy wealth of whomever you please",
+      "Expel men from a particular place",
+      "Improve lot of men traveling by wagons through countryside",
+      "Increase harvests",
+      "Cause captives to escape",
+      "Break and destroy ships",
+      "Separate and destroy riches of allies",
+      "Kill captives"
+    ],
+    "forbidden_works": "None explicitly listed (this is a malefic mansion)",
+    "pliny_image": {
+      "description": "Seal of bronze (hene) with image of a woman holding her hands before her face",
+      "material": "Bronze (hene)",
+      "suffumigation": "Liquid storax",
+      "incantation": "You, Annucel, cause the blood to flow from such and such a woman",
+      "spirit_name": "Annucel",
+      "purpose": "Bringing on menses in women; also for quick childbirth",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Primarily malefic - used for siege, destruction, and violence."
+  },
+  {
+    "index": 19,
+    "number": 20,
+    "picatrix_name": "Nahaym",
+    "arabic_name": "النَّعَائِم",
+    "transliteration": "Al-Naaim",
+    "meaning": "The Ostriches",
+    "zodiac_sign": "Sagittarius",
+    "start_degrees": "4° 17' 10\" Sagittarius",
+    "end_degrees": "17° 8' 46\" Sagittarius",
+    "planetary_ruler": "Jupiter/Sagittarius",
+    "lord_of_mansion_spirit": "Queyhuc (Book IV, Chapter 9)",
+    "nature": "Hot and moist (Jovian)",
+    "recommended_works": [
+      "Tame wild and disobedient beasts",
+      "Bring those traveling in wagons swiftly back",
+      "Bring men wherever you wish",
+      "Join good people together",
+      "Firmly incarcerate captives",
+      "Bring evil and destruction to riches of allies"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Figure having head and arms of a man, body of a horse with four feet and a tail, holding a bow (centaur with bow)",
+      "material": "Tin plate",
+      "suffumigation": "Hair of a wolf",
+      "incantation": "You, Queyhuc, cause me to take all I hunt in the world, and let them come to me swiftly",
+      "spirit_name": "Queyhuc",
+      "purpose": "Hunting on land",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5",
+      "footnote_reference": "Book III, Chapter 10 (footnote 296: 'The Arabic text specifies that the Moon should be in her 20th Mansion, which is between 4° 17' and 17° 8' of Sagittarius')"
+    },
+    "notes": "Referenced in Book III, Chapter 10 for a Jupiter invocation ritual. Mixed nature - good for taming and gathering, but can be used for incarceration."
+  },
+  {
+    "index": 20,
+    "number": 21,
+    "picatrix_name": "Elbelda",
+    "arabic_name": "البَلْدَة",
+    "transliteration": "Al-Baldah",
+    "meaning": "The City / The District / The Void",
+    "zodiac_sign": "Sagittarius/Capricorn",
+    "start_degrees": "17° 8' 46\" Sagittarius",
+    "end_degrees": "0° Capricorn (end of Sagittarius)",
+    "planetary_ruler": "Saturn/Capricorn (approaching)",
+    "lord_of_mansion_spirit": "Bectue (Book IV, Chapter 9)",
+    "nature": "Cold and dry (Saturnian)",
+    "recommended_works": [
+      "Strengthen buildings",
+      "Increase harvests",
+      "Make profit and firmly keep money",
+      "Go safely through countryside",
+      "Separate wives from their proper husbands"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of a man having two faces, one facing forward and one facing behind",
+      "material": "Not specified",
+      "suffumigation": "Sulfur and carob",
+      "incantation": "You, Bectue, depopulate such and such a place and destroy it",
+      "spirit_name": "Bectue",
+      "purpose": "Destruction",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Mixed nature - good for building and wealth, but can be used for destruction."
+  },
+  {
+    "index": 21,
+    "number": 22,
+    "picatrix_name": "Caadaldeba",
+    "arabic_name": "سَعْد الذَّابِح",
+    "transliteration": "Sa'd al-Dhabi",
+    "meaning": "Sa'd (Luck/fortune) of the Slaughterer",
+    "zodiac_sign": "Capricorn",
+    "start_degrees": "0° 0' 0\" Capricorn",
+    "end_degrees": "12° 51' 26\" Capricorn",
+    "planetary_ruler": "Saturn/Capricorn",
+    "lord_of_mansion_spirit": "Geliel (Book IV, Chapter 9)",
+    "nature": "Cold and dry (Saturnian)",
+    "recommended_works": [
+      "Cure illnesses",
+      "Put discord between two people",
+      "Make servants and captives flee",
+      "Cause goodwill between allies",
+      "Make captives escape"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Iron ring with figure of a man with winged feet wearing a helmet; also inscribed in iron for safety of fugitives",
+      "material": "Iron",
+      "suffumigation": "Mercury (herb)",
+      "incantation": "You, Geliel, bind these tongues so they cannot say bad things and make me secure and let N. escape safely from his enemies",
+      "spirit_name": "Geliel",
+      "purpose": "Binding tongues so they do not say bad about you; safety of fugitives",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Mixed nature - good for healing and protection, but can be used for discord and binding."
+  },
+  {
+    "index": 22,
+    "number": 23,
+    "picatrix_name": "Caaddebolach",
+    "arabic_name": "سَعْد بُلَع",
+    "transliteration": "Sa'd Bula",
+    "meaning": "Sa'd of the Swallower",
+    "zodiac_sign": "Capricorn",
+    "start_degrees": "12° 51' 26\" Capricorn",
+    "end_degrees": "25° 42' 52\" Capricorn",
+    "planetary_ruler": "Mars/Capricorn (traditionally); referenced for Mars exaltation",
+    "lord_of_mansion_spirit": "Zequebin (Book IV, Chapter 9)",
+    "nature": "Hot and dry (Martian)",
+    "recommended_works": [
+      "Heal illness",
+      "Join friends together",
+      "Divide husbands from their wives",
+      "Captives to escape and flee from prisons"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Seal of iron with image of a cat having a dog's head",
+      "material": "Iron",
+      "suffumigation": "Hair of a dog",
+      "incantation": "You, Zequebin, drive out everyone from such and such a place, and destroy and devastate it",
+      "spirit_name": "Zequebin",
+      "purpose": "Destruction and devastation",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5",
+      "footnote_reference": "Book III, Chapter 10 (footnote 303: 'This is Sa'ad al Bulah, 12° 51' to 25° 42' Capricorn')"
+    },
+    "notes": "Referenced in Book III, Chapter 10 for a Mars invocation ritual (the exaltation of Mars is in this mansion). Mixed nature - healing and friendship, but also destruction."
+  },
+  {
+    "index": 23,
+    "number": 24,
+    "picatrix_name": "Caadacohot",
+    "arabic_name": "سَعْد السُّعُود",
+    "transliteration": "Sa'd al-Su'ud",
+    "meaning": "Sa'd of Lucks/Happiness",
+    "zodiac_sign": "Capricorn/Aquarius",
+    "start_degrees": "25° 42' 52\" Capricorn",
+    "end_degrees": "8° 24' 28\" Aquarius",
+    "planetary_ruler": "Jupiter/Saturn (transitioning); traditionally Jupiter",
+    "lord_of_mansion_spirit": "Abrine (Book IV, Chapter 9)",
+    "nature": "Hot and moist",
+    "recommended_works": [
+      "Increase merchandise and make profit",
+      "Goodwill between husband and wife",
+      "Soldiers to report victory over enemies",
+      "Destroy money of allies",
+      "Prevent an official from fulfilling his duties"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Figure of a woman with her son in her arms, nursing (in horn of castrated ram)",
+      "material": "Horn of castrated ram (or bull for cattle)",
+      "suffumigation": "Scrapings from the horn",
+      "incantation": "You, Abrine, improve and guard this herd",
+      "spirit_name": "Abrine",
+      "purpose": "Increase of herds",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Fortunate for commerce and victory. The image is hung around the neck of a lead animal."
+  },
+  {
+    "index": 24,
+    "number": 25,
+    "picatrix_name": "Caaddalhacbia",
+    "arabic_name": "سَعْد الخَبِيئَة (سَعْد الأَخْبِيَة)",
+    "transliteration": "Sa'd al-Akhbiyah",
+    "meaning": "Sa'd of the Tents/Hidden Things",
+    "zodiac_sign": "Aquarius",
+    "start_degrees": "8° 24' 28\" Aquarius",
+    "end_degrees": "21° 25' 44\" Aquarius",
+    "planetary_ruler": "Saturn/Aquarius",
+    "lord_of_mansion_spirit": "Aziel (Book IV, Chapter 9)",
+    "nature": "Cold and dry (Saturnian)",
+    "recommended_works": [
+      "Besiege cities and villages",
+      "Take enemies captive and do evil to them",
+      "Make messengers convey messages and quickly return",
+      "Separate wives from their husbands",
+      "Destroy harvests",
+      "Bind man and wife so they cannot copulate",
+      "Bind whichever part of the human body you wish so it cannot function",
+      "Strengthen prison of captives",
+      "Secure buildings"
+    ],
+    "forbidden_works": "None explicitly listed (this is a malefic mansion)",
+    "pliny_image": {
+      "description": "Seal in fig wood with figure of a man planting trees",
+      "material": "Fig wood",
+      "suffumigation": "Flowers of the trees",
+      "incantation": "You, Aziel, guard my crops and my orchards that any destruction or ill fortune may not befall them",
+      "spirit_name": "Aziel",
+      "purpose": "Protection of orchards and crops from evil accidents",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Primarily malefic - used for siege, binding, and destruction. But the image can also be used for protection of crops."
+  },
+  {
+    "index": 25,
+    "number": 26,
+    "picatrix_name": "Almiquedam",
+    "arabic_name": "الفَرْق الأَوَّل (سَعْد الفَرْق)",
+    "transliteration": "Al-Farg al-Muqaddam (Al-Farg al-Awwal)",
+    "meaning": "The Former/First Division / The First Tear-drop",
+    "zodiac_sign": "Aquarius/Pisces",
+    "start_degrees": "21° 25' 44\" Aquarius",
+    "end_degrees": "4° 17' 10\" Pisces",
+    "planetary_ruler": "Jupiter/Pisces (approaching)",
+    "lord_of_mansion_spirit": "Tagriel (Book IV, Chapter 9)",
+    "nature": "Hot and moist (Jovian)",
+    "recommended_works": [
+      "Bind people in mutual love",
+      "Protect those who travel in wagons",
+      "Strengthen buildings",
+      "Make incarceration of captives firm",
+      "Cause evil to captives"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of a woman with her hair unbound, before her a vessel placed as if to receive her hair",
+      "material": "White wax and mastic",
+      "suffumigation": "Sweet-smelling odors",
+      "incantation": "You, Tagriel, bring me to the love and friendship of such and such a woman",
+      "spirit_name": "Tagriel",
+      "purpose": "Creation of love",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Fortunate for love, protection, and building. The 'Former' (Al-Muqaddam) as opposed to the 'Latter' (Al-Mu'akhkhar)."
+  },
+  {
+    "index": 26,
+    "number": 27,
+    "picatrix_name": "Algarf almuehar",
+    "arabic_name": "الفَرْق الآخِر",
+    "transliteration": "Al-Farg al-Mu'akhkhar (Al-Farg al-Akhir)",
+    "meaning": "The Latter Division / The Last Tear-drop",
+    "zodiac_sign": "Pisces",
+    "start_degrees": "4° 17' 10\" Pisces",
+    "end_degrees": "17° 8' 36\" Pisces",
+    "planetary_ruler": "Jupiter/Pisces",
+    "lord_of_mansion_spirit": "Abliemel (Book IV, Chapter 9)",
+    "nature": "Hot and moist (Jovian)",
+    "recommended_works": [
+      "Increase merchandise and acquire profit",
+      "Unite allies",
+      "Increase harvests",
+      "Heal illness",
+      "Destroy riches of whomever you wish",
+      "Impede building of buildings",
+      "Put travelers on sea in peril",
+      "Prolong incarceration of captives",
+      "Do evil to whomever you wish"
+    ],
+    "forbidden_works": "None explicitly listed",
+    "pliny_image": {
+      "description": "Image of a winged man holding a perforated dish in his hands, raising it to his mouth; made from red earth fired hard",
+      "material": "Red earth (fired)",
+      "suffumigation": "Asafoetida and liquid storax",
+      "incantation": "You, Abliemel, destroy such and such a spring of such and such a man",
+      "spirit_name": "Abliemel",
+      "purpose": "Destruction of springs and wells",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    },
+    "notes": "Mixed nature - good for commerce, healing, and unity, but can be used for destruction."
+  }
+]

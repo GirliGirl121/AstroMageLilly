@@ -1,0 +1,446 @@
+{
+  "date": "2026-06-24",
+  "day_of_week": "Wednesday",
+  "day_ruler": "Mercury",
+  "day_ruler_ar": "Utarid عطارد",
+  "sunrise": "05:23 SAST",
+  "sunset": "15:18 SAST",
+  "moon": {
+    "longitude": 211.6611,
+    "sign": "Scorpio",
+    "sign_degree": 1.66,
+    "mansion_index": 15,
+    "mansion_degree_in": 11.66,
+    "mansion_name": "Azubene",
+    "mansion_arabic": "الزُّبَانَى",
+    "mansion_meaning": "The Two Claws (of the Scorpion)",
+    "mansion_nature": "Hot and dry (Martian)",
+    "recommended_works": [
+      "Destroy merchandise, harvests and plants",
+      "Put discord between friends",
+      "Put discord between man and wife",
+      "Debauch a woman you desire",
+      "Impede those who journey so end of road is never reached",
+      "Cause hatred between friends",
+      "Liberate captives from incarceration"
+    ],
+    "forbidden_works": "None explicitly listed (this is a malefic mansion)",
+    "mansion_spirit": "Azeruch (Book IV, Chapter 9)",
+    "pliny_image": {
+      "description": "Figure of a man seated on a throne carrying a scale in his hands",
+      "material": "Silver plate",
+      "suffumigation": "Fine odors",
+      "incantation": "You, Azeruch, make such and such happen for me, and accomplish my request",
+      "spirit_name": "Azeruch",
+      "purpose": "Making of money (selling and buying)",
+      "source": "Book IV, Chapter 9"
+    },
+    "picatrix_citation": {
+      "primary": "Book IV, Chapter 5"
+    }
+  },
+  "planetary_hours": [
+    {
+      "hour_number": 0,
+      "period": "day",
+      "planet": "Mercury",
+      "planet_ar": "Utarid عطارد",
+      "planet_vedic": "Budha",
+      "malikah": "Merhuyez",
+      "malikah_arabic": "Barhujas برحوجاس",
+      "malikah_angel": "Taphthartharath",
+      "start_jd": 2461215.724604687,
+      "end_jd": 2461215.7590314453,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 1,
+      "period": "day",
+      "planet": "Moon",
+      "planet_ar": "Qamar القمر",
+      "planet_vedic": "Chandra",
+      "malikah": "Harnuz",
+      "malikah_arabic": "Garnus قرنوس",
+      "malikah_angel": "Arquyl",
+      "start_jd": 2461215.7590314453,
+      "end_jd": 2461215.7934582033,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 2,
+      "period": "day",
+      "planet": "Saturn",
+      "planet_ar": "Zuhal زحل",
+      "planet_vedic": "Shani",
+      "malikah": "Redimez",
+      "malikah_arabic": "Tus طوس",
+      "malikah_angel": "Myndis",
+      "start_jd": 2461215.793458203,
+      "end_jd": 2461215.827884961,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 3,
+      "period": "day",
+      "planet": "Jupiter",
+      "planet_ar": "Mushtari المشتري",
+      "planet_vedic": "Guru/Brihaspati",
+      "malikah": "Demehuz",
+      "malikah_arabic": "Damahas داماحاس",
+      "malikah_angel": "Raucahehil",
+      "start_jd": 2461215.827884961,
+      "end_jd": 2461215.862311719,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 4,
+      "period": "day",
+      "planet": "Mars",
+      "planet_ar": "Mirih المريخ",
+      "planet_vedic": "Mangala/Kuja",
+      "malikah": "Deharayuz",
+      "malikah_arabic": "Dagdijus داجداس",
+      "malikah_angel": "Graphiel",
+      "start_jd": 2461215.862311719,
+      "end_jd": 2461215.896738477,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 5,
+      "period": "day",
+      "planet": "Sun",
+      "planet_ar": "Shams الشمس",
+      "planet_vedic": "Surya",
+      "malikah": "Beydeluz",
+      "malikah_arabic": "Bandalus بندلوس",
+      "malikah_angel": "Nakkiel",
+      "start_jd": 2461215.896738477,
+      "end_jd": 2461215.931165235,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 6,
+      "period": "day",
+      "planet": "Venus",
+      "planet_ar": "Zuhra الزهرة",
+      "planet_vedic": "Shukra",
+      "malikah": "Deydez",
+      "malikah_arabic": "Didas ديداس",
+      "malikah_angel": "Beyteyl",
+      "start_jd": 2461215.931165235,
+      "end_jd": 2461215.965591993,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 7,
+      "period": "day",
+      "planet": "Mercury",
+      "planet_ar": "Utarid عطارد",
+      "planet_vedic": "Budha",
+      "malikah": "Merhuyez",
+      "malikah_arabic": "Barhujas برحوجاس",
+      "malikah_angel": "Taphthartharath",
+      "start_jd": 2461215.9655919927,
+      "end_jd": 2461216.000018751,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 8,
+      "period": "day",
+      "planet": "Moon",
+      "planet_ar": "Qamar القمر",
+      "planet_vedic": "Chandra",
+      "malikah": "Harnuz",
+      "malikah_arabic": "Garnus قرنوس",
+      "malikah_angel": "Arquyl",
+      "start_jd": 2461216.000018751,
+      "end_jd": 2461216.034445509,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 9,
+      "period": "day",
+      "planet": "Saturn",
+      "planet_ar": "Zuhal زحل",
+      "planet_vedic": "Shani",
+      "malikah": "Redimez",
+      "malikah_arabic": "Tus طوس",
+      "malikah_angel": "Myndis",
+      "start_jd": 2461216.034445509,
+      "end_jd": 2461216.068872267,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 10,
+      "period": "day",
+      "planet": "Jupiter",
+      "planet_ar": "Mushtari المشتري",
+      "planet_vedic": "Guru/Brihaspati",
+      "malikah": "Demehuz",
+      "malikah_arabic": "Damahas داماحاس",
+      "malikah_angel": "Raucahehil",
+      "start_jd": 2461216.0688722664,
+      "end_jd": 2461216.1032990245,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 11,
+      "period": "day",
+      "planet": "Mars",
+      "planet_ar": "Mirih المريخ",
+      "planet_vedic": "Mangala/Kuja",
+      "malikah": "Deharayuz",
+      "malikah_arabic": "Dagdijus داجداس",
+      "malikah_angel": "Graphiel",
+      "start_jd": 2461216.1032990245,
+      "end_jd": 2461216.1377257826,
+      "duration_min": 49.57453144714236
+    },
+    {
+      "hour_number": 12,
+      "period": "night",
+      "planet": "Sun",
+      "planet_ar": "Shams الشمس",
+      "planet_vedic": "Surya",
+      "malikah": "Beydeluz",
+      "malikah_arabic": "Bandalus بندلوس",
+      "malikah_angel": "Nakkiel",
+      "start_jd": 2461216.1377257826,
+      "end_jd": 2461216.1866403227,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 13,
+      "period": "night",
+      "planet": "Venus",
+      "planet_ar": "Zuhra الزهرة",
+      "planet_vedic": "Shukra",
+      "malikah": "Deydez",
+      "malikah_arabic": "Didas ديداس",
+      "malikah_angel": "Beyteyl",
+      "start_jd": 2461216.1866403227,
+      "end_jd": 2461216.235554863,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 14,
+      "period": "night",
+      "planet": "Mercury",
+      "planet_ar": "Utarid عطارد",
+      "planet_vedic": "Budha",
+      "malikah": "Merhuyez",
+      "malikah_arabic": "Barhujas برحوجاس",
+      "malikah_angel": "Taphthartharath",
+      "start_jd": 2461216.235554863,
+      "end_jd": 2461216.284469403,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 15,
+      "period": "night",
+      "planet": "Moon",
+      "planet_ar": "Qamar القمر",
+      "planet_vedic": "Chandra",
+      "malikah": "Harnuz",
+      "malikah_arabic": "Garnus قرنوس",
+      "malikah_angel": "Arquyl",
+      "start_jd": 2461216.284469403,
+      "end_jd": 2461216.333383943,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 16,
+      "period": "night",
+      "planet": "Saturn",
+      "planet_ar": "Zuhal زحل",
+      "planet_vedic": "Shani",
+      "malikah": "Redimez",
+      "malikah_arabic": "Tus طوس",
+      "malikah_angel": "Myndis",
+      "start_jd": 2461216.333383943,
+      "end_jd": 2461216.382298483,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 17,
+      "period": "night",
+      "planet": "Jupiter",
+      "planet_ar": "Mushtari المشتري",
+      "planet_vedic": "Guru/Brihaspati",
+      "malikah": "Demehuz",
+      "malikah_arabic": "Damahas داماحاس",
+      "malikah_angel": "Raucahehil",
+      "start_jd": 2461216.382298483,
+      "end_jd": 2461216.431213023,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 18,
+      "period": "night",
+      "planet": "Mars",
+      "planet_ar": "Mirih المريخ",
+      "planet_vedic": "Mangala/Kuja",
+      "malikah": "Deharayuz",
+      "malikah_arabic": "Dagdijus داجداس",
+      "malikah_angel": "Graphiel",
+      "start_jd": 2461216.431213023,
+      "end_jd": 2461216.4801275632,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 19,
+      "period": "night",
+      "planet": "Sun",
+      "planet_ar": "Shams الشمس",
+      "planet_vedic": "Surya",
+      "malikah": "Beydeluz",
+      "malikah_arabic": "Bandalus بندلوس",
+      "malikah_angel": "Nakkiel",
+      "start_jd": 2461216.480127563,
+      "end_jd": 2461216.529042103,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 20,
+      "period": "night",
+      "planet": "Venus",
+      "planet_ar": "Zuhra الزهرة",
+      "planet_vedic": "Shukra",
+      "malikah": "Deydez",
+      "malikah_arabic": "Didas ديداس",
+      "malikah_angel": "Beyteyl",
+      "start_jd": 2461216.529042103,
+      "end_jd": 2461216.577956643,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 21,
+      "period": "night",
+      "planet": "Mercury",
+      "planet_ar": "Utarid عطارد",
+      "planet_vedic": "Budha",
+      "malikah": "Merhuyez",
+      "malikah_arabic": "Barhujas برحوجاس",
+      "malikah_angel": "Taphthartharath",
+      "start_jd": 2461216.577956643,
+      "end_jd": 2461216.626871183,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 22,
+      "period": "night",
+      "planet": "Moon",
+      "planet_ar": "Qamar القمر",
+      "planet_vedic": "Chandra",
+      "malikah": "Harnuz",
+      "malikah_arabic": "Garnus قرنوس",
+      "malikah_angel": "Arquyl",
+      "start_jd": 2461216.626871183,
+      "end_jd": 2461216.675785723,
+      "duration_min": 70.43693767860532
+    },
+    {
+      "hour_number": 23,
+      "period": "night",
+      "planet": "Saturn",
+      "planet_ar": "Zuhal زحل",
+      "planet_vedic": "Shani",
+      "malikah": "Redimez",
+      "malikah_arabic": "Tus طوس",
+      "malikah_angel": "Myndis",
+      "start_jd": 2461216.675785723,
+      "end_jd": 2461216.7247002632,
+      "duration_min": 70.43693767860532
+    }
+  ],
+  "aspects": [
+    {
+      "planet1": "Sun",
+      "planet2": "Moon",
+      "aspect": "Trine",
+      "symbol": "△",
+      "orb": 1.26,
+      "applying": "separating"
+    },
+    {
+      "planet1": "Moon",
+      "planet2": "Jupiter",
+      "aspect": "Square",
+      "symbol": "□",
+      "orb": 2.9,
+      "applying": "applying"
+    },
+    {
+      "planet1": "Mercury",
+      "planet2": "Mars",
+      "aspect": "Sextile",
+      "symbol": "✶",
+      "orb": 1.68,
+      "applying": "applying"
+    },
+    {
+      "planet1": "Venus",
+      "planet2": "Saturn",
+      "aspect": "Trine",
+      "symbol": "△",
+      "orb": 1.19,
+      "applying": "applying"
+    },
+    {
+      "planet1": "Mars",
+      "planet2": "Jupiter",
+      "aspect": "Sextile",
+      "symbol": "✶",
+      "orb": 1.91,
+      "applying": "separating"
+    }
+  ],
+  "picatrix_references": [
+    {
+      "type": "lunar_mansion",
+      "citation": {
+        "primary": "Book IV, Chapter 5"
+      }
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "When you wish to make images to cause love between two people, make images of the two in their likenesses. Let this be done in the hour of Jupiter or Venus, with Caput Draconis rising, and with the Mo"
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "The trine is an aspect of perfect love... The sextile is an aspect of moderate friendship... The square aspect is of moderate hatred... The opposition is an aspect of perfect hatred."
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "You should know that the virtues of images and their power and the effect that they have only exist because of the heavenly bodies, and when these images are made according to the motions of heaven yo"
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "It is necessary to observe, when casting images for love and friendship, that the Moon is fortunate and waxing and not when the Moon is afflicted and waning."
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "Make images for love and delight and to visit kings and high lords in the day of the Moon, when she is waxing, and in Sagittarius, Taurus, Cancer or Pisces (and if she is with the Dragon's Head it is "
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "Make images for evil conversely, that is, when the Moon is in a malefic mansion and conjoined to malefic planets, or aspecting them by square or opposition."
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "Note also that working with images is better done at night than in the daytime in all of the aforesaid."
+    },
+    {
+      "type": "talismanic_timing",
+      "citation": "Book II, Chapter 5",
+      "text": "The working of these operations must be hidden from other people and from the light of the Sun, nor should they be done in any place where the Sun may enter."
+    }
+  ]
+}
