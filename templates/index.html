@@ -2864,7 +2864,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('magi-next-week').addEventListener('click', function(){ magiWeekStart.setDate(magiWeekStart.getDate() + 7); magiRenderWeek(); });
 
   // ═══ Year View ═══
-  var magiYear = new Date().getFullYear();
+  magiYear = new Date().getFullYear();
   function magiRenderYear() {
     document.getElementById('magi-year-title').textContent = magiYear;
     var grid = document.getElementById('magi-year-grid');
@@ -2896,7 +2896,6 @@ document.addEventListener('DOMContentLoaded', () => {
   magiLoadDay(magiFormatDate(new Date()));
   magiRenderWeek();
   magiRenderYear();
-});
 
 async function remBM(id) {
   await loadJSON('/api/diary/bookmark/remove', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({id})});
@@ -3064,6 +3063,7 @@ loadNatal();
 initNatalCRUD();
 document.getElementById('btn-refresh').addEventListener('click', loadHome);
 document.getElementById('btn-notif').addEventListener('click', () => alert('🔔 Notifications coming soon!'));
+});
 </script>
 </body>
 </html>
