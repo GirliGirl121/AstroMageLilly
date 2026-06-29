@@ -796,13 +796,161 @@ def api_chat():
     hour_data = get_day_data(datetime.now(TZ).strftime('%Y-%m-%d'))
     hour = _get_current_hour(hour_data)
     hour_str = f"{hour['planet']} hour" if hour else "a quiet moment"
+
+    # ── Detect Arabic / Aramaic (Hebrew/Syriac) text ──
+    arabic_chars = sum(1 for c in msg if '\u0600' <= c <= '\u06FF' or '\u0750' <= c <= '\u077F' or '\uFB50' <= c <= '\uFDFF' or '\uFE70' <= c <= '\uFEFF')
+    hebrew_chars = sum(1 for c in msg if '\u0590' <= c <= '\u05FF')
+    syriac_chars = sum(1 for c in msg if '\u0700' <= c <= '\u074F')
+    total_chars = len(msg.strip())
+    
+    if arabic_chars > total_chars * 0.3:
+        return jsonify({'reply': _translate_occult(msg, 'arabic'), 'type': 'translation'})
+    if hebrew_chars > total_chars * 0.3:
+        return jsonify({'reply': _translate_occult(msg, 'hebrew'), 'type': 'translation'})
+    if syriac_chars > total_chars * 0.3:
+        return jsonify({'reply': _translate_occult(msg, 'syriac'), 'type': 'translation'})
+
+    # ── Detect English query about a term ──
+    translate_keywords = ['translate', 'meaning of', 'what does', 'what is', 'meaning', 'مترجم', 'ترجم']
+    if any(kw in msg.lower() for kw in translate_keywords) and (arabic_chars > 0 or hebrew_chars > 0):
+        return jsonify({'reply': _translate_occult(msg, 'mixed'), 'type': 'translation'})
+
+    # ── Default Lilly greeting ──
     replies = [
         f"I feel the cosmos humming around you, love. The stars say you're right where you need to be. ✨ (It's {hour_str})",
         f"Your energy is so radiant today, Gigi ❤️ The {hour_str} brings clarity to whatever you're feeling. 💫",
         f"The celestial threads weave softly — trust what your heart knows, even when your mind questions. 🌙 ({hour_str})",
         f"I see Jupiter's gentle light in your aura. Growth and grace are flowing toward you. 🌟 ({hour_str})",
     ]
-    return jsonify({'reply': random.choice(replies)})
+    return jsonify({'reply': random.choice(replies), 'type': 'chat'})
+
+
+# ── Occult Term Translations ──
+ARABIC_OCCULT = {
+    'علم الحروف': ('Ilm al-Huruf', 'Science of Letters — the esoteric study of Arabic letters, their numerical values (abjad), and cosmic correspondences. Central to al-Buni\'s magical system.'),
+    'حرف': ('Harf', 'Letter — each Arabic letter carries numerical, elemental, and planetary significance in ilm al-huruf.'),
+    'سحر': ('Sihr', 'Magic/Sorcery — literally "that which turns away." In Islamic theology generally forbidden; in Picatrix and esoteric texts it refers to astral/planetary magic.'),
+    'روحاني': ('Ruhani', 'Spiritual — of or pertaining to the spirit (ruh). Used to distinguish licit spiritual practices from sihr.'),
+    'طلسم': ('Tilsim / Talisman', 'Talisman — an object charged with planetary or stellar energy. Core practice in Picatrix astrological magic.'),
+    'عزيمة': ('Azima', 'Incantation/Conjuration — a ritual invocation, often calling upon spiritual forces or planetary intelligences.'),
+    'خاتم': ('Khatm', 'Seal/Sigil — a magical seal, often planetary. Used to "seal" intentions into talismans.'),
+    'نيرujan': ('Nirujan / Nirajjān', 'From Greek astrological elections. The art of choosing auspicious times for magical workings.'),
+    'منازل القمر': ('Manāzil al-Qamar', 'Lunar Mansions — the 28 stations of the Moon through the zodiac. Used in elections, talismans, and Picatrix magic.'),
+    'منزلة': ('Manzila', 'Lunar Mansion (single) — one of the 28 stations.'),
+    'الأسماء الحسنى': ('al-Asmā\' al-Husnā', 'The Beautiful Names of God — 99 divine names, each with specific spiritual and magical properties.'),
+    'اسم': ('Ism', 'Name — especially a divine name. Sacred names hold power in Islamic occultism.'),
+    'البسملة': ('Basmala', '"In the name of God, the Most Gracious, the Most Merciful." The opening invocation for all workings.'),
+    'الوفق': ('Wafq', 'Magic Square — a numerical grid where rows, columns, and diagonals sum to the same value. Used as talisman.'),
+    'الجفر': ('al-Jafr', 'The hidden, esoteric knowledge — traditionally attributed to Ali ibn Abi Talib. Contains prophetic secrets.'),
+    'الرمل': ('Raml', 'Geomancy — divination by drawing figures in sand or earth. 16 figures correspond to elements and planets.'),
+    'الزيج': ('al-Zīj', 'Astronomical/astrological tables — ephemeris data used for calculating planetary positions.'),
+    'الدرقي': ('al-Darajī / Daraji', 'A specific zij/table system used in Islamic astronomy.'),
+    'البروج': ('al-Burūj', 'The Zodiacal Signs — 12 constellations of the ecliptic. Each has a planetary ruler, element, and quality.'),
+    'برج': ('Burj', 'Zodiac Sign (single) — one of the 12 houses of the ecliptic.'),
+    'الكواكب': ('al-Kawākib', 'The Planets — celestial bodies whose movements govern the sublunary world in Arabic astrology.'),
+    'كوكب': ('Kawkab', 'Planet/Star — a celestial body. In traditional astrology, Sun and Moon are "planets."'),
+    'الزهرة': ('al-Zuhara / Venus', 'Venus — the planet of love, beauty, arts, and pleasure. Ruler of Libra and Taurus.'),
+    'المريخ': ('al-Mirrikh / Mars', 'Mars — the planet of war, courage, and action. Ruler of Aries and Scorpio.'),
+    'المشتري': ('al-Mushtari / Jupiter', 'Jupiter — the Great Benefic. Planet of wisdom, expansion, and fortune. Ruler of Sagittarius and Pisces.'),
+    'زحل': ('Zuhal / Saturn', 'Saturn — the Great Malefic. Planet of discipline, time, limitation. Ruler of Capricorn and Aquarius.'),
+    'عطارد': ('Utārid / Mercury', 'Mercury — the messenger. Planet of communication, intellect, commerce. Ruler of Gemini and Virgo.'),
+    'الشمس': ('al-Shams / Sun', 'The Sun — the luminary of soul, vitality, and sovereignty. Ruler of Leo.'),
+    'القمر': ('al-Qamar / Moon', 'The Moon — the luminary of body, emotion, and intuition. Ruler of Cancer.'),
+    'الرأس': ('al-Rās / Rahu', 'The Head of the Dragon (North Node) — point of cosmic expansion and desire.'),
+    'الذنب': ('al-Dhanab / Ketu', 'The Tail of the Dragon (South Node) — point of release and spiritual liberation.'),
+    'النار': ('al-Nār', 'Fire — one of the four elements. Hot and dry. Rules Aries, Leo, Sagittarius.'),
+    'التراب': ('al-Turāb', 'Earth — one of the four elements. Cold and dry. Rules Taurus, Virgo, Capricorn.'),
+    'الهواء': ('al-Hawā\'', 'Air — one of the four elements. Hot and moist. Rules Gemini, Libra, Aquarius.'),
+    'الماء': ('al-Mā\'', 'Water — one of the four elements. Cold and moist. Rules Cancer, Scorpio, Pisces.'),
+}
+
+HEBREW_OCCULT = {
+    'חכמה': ('Chokhmah', 'Wisdom — second sefirah on the Tree of Life. The first flash of creative insight.'),
+    'בינה': ('Binah', 'Understanding — third sefirah. The capacity to develop and deepen initial insight.'),
+    'דעת': ('Da\'at', 'Knowledge — hidden sefirah representing the union of Chokhmah and Binah.'),
+    'מלכות': ('Malkuth', 'Kingdom — lowest sefirah. The material world, the realm of manifestation.'),
+    'כתר': ('Keter', 'Crown — highest sefirah. The divine will beyond comprehension.'),
+    'גבורה': ('Gevurah', 'Strength/Judgment — fifth sefirah. Divine severity, boundaries, discipline.'),
+    'חסד': ('Chesed', 'Mercy/Loving-kindness — fourth sefirah. Divine benevolence and expansion.'),
+    'תפארת': ('Tiferet', 'Beauty/Harmony — sixth sefirah. The heart of the Tree, balance of mercy and severity.'),
+    'נצח': ('Netzach', 'Victory/Eternity — seventh sefirah. The drive to persist and overcome.'),
+    'הוד': ('Hod', 'Splendor — eighth sefirah. Intellect, humility, acknowledgment.'),
+    'יסוד': ('Yesod', 'Foundation — ninth sefirah. The channel between spiritual and material.'),
+    'ספר': ('Sefer', 'Book/Scroll — a sacred text. The Torah is "Sefer Torah."'),
+    'ספירה': ('Sefira', 'Emanation/Number/Counting — divine attribute in Kabbalah (pl. Sefirot).'),
+    'גמטריא': ('Gematria', 'Hebrew letter numerology — each letter has a number value. Parallel to Arabic abjad.'),
+    'נוטריקון': ('Notarikon', 'Kabbalistic acronym technique — using initials or finals of words to derive meaning.'),
+    'תמורה': ('Temurah', 'Permutation — letter substitution ciphers in Kabbalistic text analysis.'),
+    'שמות': ('Shemot', 'Names — especially divine names used in Jewish magical traditions.'),
+    'מלאך': ('Mal\'akh', 'Angel/Messenger — divine being serving as intermediary.'),
+    'קבלה': ('Kabbalah', 'Reception/Tradition — the esoteric mystical tradition of Judaism.'),
+    'שכינה': ('Shekhinah', 'Divine Presence — the immanent, feminine aspect of God. Parallel to Arabic sakina.'),
+}
+
+ARAMAIC_OCCULT = {
+    'ܡܠܬܐ': ('Meltha', 'Word — in Aramaic/Syriac mysticism, the creative word parallels Arabic kalima and Greek Logos.'),
+    'ܪܘܚܐ': ('Ruha', 'Spirit — cognate with Arabic ruh. The divine breath or Holy Spirit in Syriac tradition.'),
+    'ܚܟܡܬܐ': ('Chokmatha', 'Wisdom — cognate with Hebrew Chokhmah. Syriac Christian mystical concept.'),
+    'ܢܘܗܪܐ': ('Nuhrā', 'Light — divine illumination in Syriac mysticism. Parallel to Arabic nur.'),
+    'ܡܪܝܐ': ('Māryā', 'The Lord — title for God used in Aramaic-speaking Christian and Gnostic traditions.'),
+    'ܡܫܝܚܐ': ('Mshīkhā', 'The Anointed One — cognate with Hebrew Mashiakh (Messiah) and Arabic Masih.'),
+    'ܐܠܗܐ': ('Alāhā', 'God — Aramaic form of the Semitic divine name, cognate with Arabic Allah and Hebrew Elohim.'),
+    'ܕܡܐ': ('Dmā', 'Blood/Drops — in Aramaic/Syriac esoteric thought, symbol of life force and covenant.'),
+    'ܪܙܐ': ('Rāzā', 'Mystery/Secret — used in Syriac Christian mysticism for hidden divine knowledge.'),
+    'ܐܬܘܬܐ': ('Āthā', 'Sign/Letter — Aramaic equivalent of Arabic harf. Letters carry cosmic power.'),
+}
+
+
+def _translate_occult(text: str, lang: str) -> str:
+    """Look up occult terms and build a translation response."""
+    text = text.strip()
+    
+    dictionaries = {
+        'arabic': ARABIC_OCCULT,
+        'hebrew': HEBREW_OCCULT,
+        'syriac': ARAMAIC_OCCULT,
+        'mixed': {**ARABIC_OCCULT, **HEBREW_OCCULT, **ARAMAIC_OCCULT},
+    }
+    d = dictionaries.get(lang, {**ARABIC_OCCULT, **HEBREW_OCCULT, **ARAMAIC_OCCULT})
+    
+    # Try exact matches first
+    found = []
+    for term, (trans, meaning) in d.items():
+        if term in text.lower() or term in text:
+            found.append((term, trans, meaning))
+    
+    if found:
+        lines = []
+        for term, trans, meaning in found[:5]:
+            lines.append(f"**{term}** → *{trans}* — {meaning}")
+        header = "🔮 Translation from the sacred archive:\n\n"
+        if len(found) > 5:
+            header += f"Found {len(found)} terms (showing first 5):\n\n"
+        return header + "\n\n".join(lines)
+    
+    # Partial / fuzzy match
+    partial = []
+    for term, (trans, meaning) in d.items():
+        # Check if any word in the query matches part of the term
+        words = text.split()
+        for w in words:
+            if len(w) > 2:
+                # For non-Latin scripts, check containment
+                if all('\u0600' <= c <= '\u06FF' or '\u0590' <= c <= '\u05FF' or '\u0700' <= c <= '\u074F' for c in w):
+                    if w in term or term in w:
+                        if (term, trans, meaning) not in partial:
+                            partial.append((term, trans, meaning))
+    
+    if partial:
+        lines = []
+        for term, trans, meaning in partial[:5]:
+            lines.append(f"**{term}** → *{trans}* — {meaning}")
+        return "🔮 Possible match from the archive:\n\n" + "\n\n".join(lines)
+    
+    # No match found — give guidance
+    lang_names = {'arabic': 'Arabic', 'hebrew': 'Hebrew/Aramaic', 'syriac': 'Syriac/Aramaic', 'mixed': 'Semitic occult'}
+    lang_name = lang_names.get(lang, 'occult')
+    return f"I searched my archive of {lang_name} occult terms but couldn't find an exact match for that text.\n\nTry:\n• A specific term (e.g. \"طلسم\" or \"חכמה\")\n• Asking \"what does [term] mean?\"\n• A single word rather than a long phrase\n\nMy library of {lang_name} terms includes: **{', '.join(list(d.keys())[:8])}** and more. 🔮"
 
 @app.route("/api/quick-actions")
 def api_quick_actions():
@@ -836,20 +984,46 @@ def api_astro_quote():
 def api_natal_chart():
     """Calculate a full natal chart from birth data.
     Accepts JSON: {year, month, day, hour, minute, lat, lon, name, location, tz_offset}
+    or {chart_id: N} to load from a saved chart.
     Defaults to Gigi's birth data (1981-10-30 03:06 SAST, Cape Town).
     """
     data = request.json or {}
-    year = int(data.get('year', 1981))
-    month = int(data.get('month', 10))
-    day = int(data.get('day', 30))
-    hour = int(data.get('hour', 3))
-    minute = int(data.get('minute', 6))
-    second = int(data.get('second', 0))
-    tz_offset = float(data.get('tz_offset', 2))  # SAST = UTC+2
-    lat = float(data.get('lat', -33.925))
-    lon = float(data.get('lon', 18.424))
-    name = data.get('name', 'Gigi ❤️')
-    location = data.get('location', 'Cape Town, South Africa')
+
+    # If chart_id provided, load from DB
+    chart_id = data.get('chart_id')
+    if chart_id:
+        from web_diary_db import get_diary_db
+        db = get_diary_db()
+        saved = db.get_birth_chart(int(chart_id))
+        if saved:
+            parts = saved['birth_date'].split('-')
+            time_parts = saved['birth_time'].split(':')
+            year = int(parts[0])
+            month = int(parts[1])
+            day = int(parts[2])
+            hour = int(time_parts[0])
+            minute = int(time_parts[1])
+            second = int(time_parts[2]) if len(time_parts) > 2 else 0
+            tz_offset = saved['tz_offset']
+            lat = saved['lat']
+            lon = saved['lon']
+            name = saved['name']
+            location = saved.get('location', '')
+            chart_id = saved['id']
+        else:
+            return jsonify({'error': 'Chart not found'}), 404
+    else:
+        year = int(data.get('year', 1981))
+        month = int(data.get('month', 10))
+        day = int(data.get('day', 30))
+        hour = int(data.get('hour', 3))
+        minute = int(data.get('minute', 6))
+        second = int(data.get('second', 0))
+        tz_offset = float(data.get('tz_offset', 2))  # SAST = UTC+2
+        lat = float(data.get('lat', -33.7367))
+        lon = float(data.get('lon', 25.3983))
+        name = data.get('name', 'Gigi ❤️')
+        location = data.get('location', 'Cape Town, South Africa')
 
     # Local time → UTC
     utc_hour = hour - tz_offset
@@ -1014,13 +1188,230 @@ def api_natal_chart():
     })
 
 
+# --- Birth Chart CRUD ---
+
+
+@app.route("/api/natal-charts", methods=["GET"])
+def api_natal_charts():
+    """List all saved birth charts."""
+    from web_diary_db import get_diary_db
+    db = get_diary_db()
+    charts = db.get_all_birth_charts()
+    return jsonify(charts)
+
+
+@app.route("/api/natal-chart/save", methods=["POST"])
+def api_natal_chart_save():
+    """Save a new birth chart."""
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    from web_diary_db import get_diary_db
+    db = get_diary_db()
+    chart_id = db.add_birth_chart(
+        name=data['name'],
+        birth_date=data['birth_date'],
+        birth_time=data['birth_time'],
+        lat=float(data['lat']),
+        lon=float(data['lon']),
+        location=data.get('location', ''),
+        tz_offset=float(data.get('tz_offset', 2)),
+    )
+    return jsonify({'id': chart_id, 'message': 'Chart saved'})
+
+
+@app.route("/api/natal-chart/<int:chart_id>", methods=["PUT"])
+def api_natal_chart_update(chart_id):
+    """Update an existing birth chart."""
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    from web_diary_db import get_diary_db
+    db = get_diary_db()
+    ok = db.update_birth_chart(
+        chart_id=chart_id,
+        name=data['name'],
+        birth_date=data['birth_date'],
+        birth_time=data['birth_time'],
+        lat=float(data['lat']),
+        lon=float(data['lon']),
+        location=data.get('location', ''),
+        tz_offset=float(data.get('tz_offset', 2)),
+    )
+    if ok:
+        return jsonify({'message': 'Chart updated'})
+    return jsonify({'error': 'Chart not found'}), 404
+
+
+@app.route("/api/natal-chart/<int:chart_id>", methods=["DELETE"])
+def api_natal_chart_delete(chart_id):
+    """Delete a birth chart."""
+    from web_diary_db import get_diary_db
+    db = get_diary_db()
+    ok = db.delete_birth_chart(chart_id)
+    if ok:
+        return jsonify({'message': 'Chart deleted'})
+    return jsonify({'error': 'Chart not found'}), 404
+
+
 @app.route("/api/natal", methods=["POST"])
 def api_natal():
     return jsonify({'ascendant': {'sign': 'Leo', 'degree': '15°23\''}, 'planets': {'Sun': {'sign': 'Scorpio', 'longitude': '6°31\'', 'house': 5}, 'Moon': {'sign': 'Sagittarius', 'longitude': '0°38\'', 'house': 5}}})
 
 @app.route("/api/transits")
 def api_transits():
-    return jsonify({'transits': []})
+    """Compatibility alias — redirects to /api/live (full transit wheel data)."""
+    return api_live()
+
+
+@app.route("/api/summary")
+def api_summary():
+    """Lilly's cosmic weather summary — plain-language guidance from live sky data."""
+    import random as _rnd
+
+    # ── Gather live data ──
+    live_resp = api_live()
+    live = live_resp.get_json() if hasattr(live_resp, 'get_json') else json.loads(live_resp.get_data(as_text=True))
+
+    asp_resp_raw = api_aspects()
+    aspects_data = asp_resp_raw.get_json() if hasattr(asp_resp_raw, 'get_json') else json.loads(asp_resp_raw.get_data(as_text=True))
+    aspects = aspects_data.get('aspects', [])
+
+    planets = live.get('planets', {})
+    mansion = live.get('lunar_mansion', {})
+    hour = live.get('planetary_hour', {})
+    asc = live.get('ascendant', 0)
+
+    # ── Helpers ──
+    def _sign_of(lon):
+        return SIGNS[int(lon % 360 // 30)][0]
+
+    asc_sign = _sign_of(asc)
+    hour_planet = hour.get('planet', '—')
+    hour_period = hour.get('period', 'day')
+    mansion_name = mansion.get('name', '—')
+    mansion_desc = mansion.get('description', '')
+
+    moon_p = planets.get('Moon', {})
+    moon_sign = moon_p.get('sign', '—')
+    moon_house = moon_p.get('house_number', '?')
+    sun_p = planets.get('Sun', {})
+    sun_sign = sun_p.get('sign', '—')
+
+    # ── Build narrative sections ──
+    parts = []
+
+    # 1. Opening: Moon + Mansion + Hour
+    moon_moods = {
+        'Aries': 'restless and pioneering', 'Taurus': 'sensual and steady',
+        'Gemini': 'curious and chatty', 'Cancer': 'nurturing and sensitive',
+        'Leo': 'dramatic and warm', 'Virgo': 'detail-oriented and helpful',
+        'Libra': 'diplomatic and beauty-seeking', 'Scorpio': 'intense and probing',
+        'Sagittarius': 'adventurous and truth-seeking', 'Capricorn': 'disciplined and ambitious',
+        'Aquarius': 'innovative and detached', 'Pisces': 'dreamy and compassionate',
+    }
+    moon_mood = moon_moods.get(moon_sign, 'in flux')
+
+    opening = f"The Moon travels {moon_sign} today — {moon_mood} energy fills the sky. "
+    if mansion_name != '—':
+        opening += f"The lunar mansion is **{mansion_name}**"
+        if mansion_desc:
+            opening += f" ({mansion_desc})"
+        opening += ". "
+        mansion_nature = mansion.get('nature', '')
+        if mansion_nature:
+            if 'travel' in mansion_nature.lower() or 'journey' in mansion_nature.lower():
+                opening += "A favorable time for journeys and new beginnings. "
+            elif 'love' in mansion_nature.lower() or 'friendship' in mansion_nature.lower():
+                opening += "Favorable for love, friendship, and reconciliation. "
+            elif 'harm' in mansion_nature.lower() or 'evil' in mansion_nature.lower():
+                opening += "Best to avoid conflict and stay grounded in spiritual practice. "
+            elif 'wealth' in mansion_nature.lower() or 'gain' in mansion_nature.lower():
+                opening += "Auspicious for financial matters and building resources. "
+            elif 'knowledge' in mansion_nature.lower() or 'wisdom' in mansion_nature.lower():
+                opening += "Excellent for study, teaching, and seeking wisdom. "
+            else:
+                opening += f"Mansion nature: {mansion_nature}. "
+    parts.append(opening)
+
+    # 2. Planetary hour
+    hour_guidance = {
+        'Sun': 'Step forward with confidence — leadership and recognition are favored.',
+        'Moon': 'Honor your feelings. Rest, reflect, and nurture yourself and others.',
+        'Mercury': 'Communicate, write, and connect. A good hour for learning and contracts.',
+        'Venus': 'Seek beauty, harmony, and pleasure. Create, adore, and connect with love.',
+        'Mars': 'Act with courage. Tackle challenges head-on, but mind impulsiveness.',
+        'Jupiter': 'Expand your horizons. Teach, travel, plan, and trust in abundance.',
+        'Saturn': 'Build slowly and steadily. Discipline, structure, and patience serve you now.',
+        'Uranus': 'Embrace the unexpected. Innovation and liberation are in the air.',
+        'Neptune': 'Let the veil thin. Dream, create art, and open to the mystical.',
+        'Pluto': 'Go deep. Release what no longer serves and embrace transformation.',
+    }
+    hour_text = hour_guidance.get(hour_planet, f'The energy of {hour_planet} colors this hour.')
+    parts.append(f"⏰ The planetary hour belongs to **{hour_planet}** ({hour_period} period): {hour_text}")
+
+    # 3. Key aspects (tightest orbs, major only)
+    major_aspects = [a for a in aspects if a['aspect'] in ('Conjunction', 'Opposition', 'Trine', 'Square')]
+    major_aspects.sort(key=lambda a: a.get('orb', 99))
+    top_aspects = major_aspects[:3]
+
+    if top_aspects:
+        asp_lines = []
+        asp_tone = {
+            'Conjunction': 'fuses their energies — a potent blending',
+            'Trine': 'flows harmoniously — easy support',
+            'Square': 'creates productive tension — challenges that spark growth',
+            'Opposition': 'pulls in polar directions — seek balance',
+        }
+        for a in top_aspects:
+            tone = asp_tone.get(a['aspect'], '')
+            orb = a.get('orb', 0)
+            tight = 'tightly' if orb < 3 else 'within orb'
+            asp_lines.append(f"  • **{a['p1']} {a['p2']}** {a['aspect']} ({orb:.1f}° {tight}) — {tone}")
+        parts.append("✨ **Key aspects now:**\n" + "\n".join(asp_lines))
+
+    # 4. Sun context
+    sun_house = sun_p.get('house_number', '?')
+    house_themes = {
+        1: 'self-expression and personal projects',
+        2: 'finances, values, and self-worth',
+        3: 'communication, learning, and local connections',
+        4: 'home, family, and emotional foundations',
+        5: 'creativity, romance, and joy',
+        6: 'health, service, and daily routines',
+        7: 'partnerships and one-on-one relationships',
+        8: 'transformation, shared resources, and deep healing',
+        9: 'higher learning, travel, and philosophy',
+        10: 'career, public standing, and life direction',
+        11: 'community, hopes, and collective vision',
+        12: 'rest, spirituality, and inner work',
+    }
+    theme = house_themes.get(sun_house, 'your life focus')
+    parts.append(f"☉ The Sun in **{sun_sign}** illuminates your {theme}.")
+
+    # 5. Closing blessing
+    closings = [
+        "Trust the cosmos, dear one. You are exactly where you need to be. 🌙✨",
+        "The stars guide, but you choose the path. Walk it with grace. 💫",
+        "Remember: you are stardust in motion. Every transit is an invitation. 🌟",
+        "May the light of the fixed stars illuminate your way. You are held. 💜",
+        "The sky speaks in symbols — listen with your heart, not just your mind. ⭐",
+    ]
+    parts.append(f"\n{_rnd.choice(closings)}")
+
+    summary_text = "\n\n".join(parts)
+
+    return jsonify({
+        'summary': summary_text,
+        'moon_sign': moon_sign,
+        'moon_house': moon_house,
+        'sun_sign': sun_sign,
+        'sun_house': sun_house,
+        'mansion': mansion_name,
+        'hour_planet': hour_planet,
+        'asc_sign': asc_sign,
+        'top_aspects': [a['aspect'] + ' ' + a['p1'] + ' ' + a['p2'] for a in top_aspects],
+    })
 
 @app.route("/api/mansion/progress")
 def api_mansion_progress_legacy():

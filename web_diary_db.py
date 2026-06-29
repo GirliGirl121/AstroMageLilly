@@ -1,11 +1,10 @@
-"""
-web_diary_db.py — Web diary database layer for AstroMage Dashboard.
+"""web_diary_db.py - Web diary database layer for AstroMage Dashboard.
 
-SQLite-powered diary, tasks, dreams, bookmarks, favorites, search history.
-Mirrors the desktop MagiJournal's database.py but as a lightweight
-web-compatible module. Uses WAL mode for concurrent Flask access.
+SQLite-powered diary, tasks, dreams, bookmarks, favorites, search history,
+and birth charts. Mirrors the desktop MagiJournal's database.py but as a
+lightweight web-compatible module. Uses WAL mode for concurrent Flask access.
 
-Gigi ❤️ — Your words, your dreams, your stars.
+Gigi - Your words, your dreams, your stars.
 """
 
 import sqlite3
@@ -92,6 +91,20 @@ class DiaryDB:
                     created_at TEXT NOT NULL DEFAULT (datetime('now'))
                 );
             """)
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS birth_charts (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    birth_date TEXT NOT NULL,
+                    birth_time TEXT NOT NULL,
+                    lat REAL NOT NULL,
+                    lon REAL NOT NULL,
+                    location TEXT NOT NULL DEFAULT '',
+                    tz_offset REAL NOT NULL DEFAULT 2.0,
+                    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+                    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+                );
+            """)
 
             # Indexes
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_diary_date ON diary_entries(date);")
@@ -100,7 +113,52 @@ class DiaryDB:
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_bookmarks_date ON bookmarks(date);")
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_favorites_date ON favorites(date);")
 
-    # ─── Diary ────────────────────────────────────────────────
+    # --- Birth Chart CRUD ---
+
+    def add_birth_chart(self, name: str, birth_date: str, birth_time: str,
+                        lat: float, lon: float, location: str = '',
+                        tz_offset: float = 2.0) -> int:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO birth_charts (name, birth_date, birth_time, lat, lon, location, tz_offset)
+                VALUES (?, ?, ?, ?, ?, ?, ?);
+            """, (name, birth_date, birth_time, lat, lon, location, tz_offset))
+            return cursor.lastrowid
+
+    def get_all_birth_charts(self) -> list:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM birth_charts ORDER BY created_at DESC;")
+            return [dict(r) for r in cursor.fetchall()]
+
+    def get_birth_chart(self, chart_id: int):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM birth_charts WHERE id = ?;", (chart_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def update_birth_chart(self, chart_id: int, name: str, birth_date: str,
+                           birth_time: str, lat: float, lon: float,
+                           location: str = '', tz_offset: float = 2.0) -> bool:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+                UPDATE birth_charts
+                SET name=?, birth_date=?, birth_time=?, lat=?, lon=?,
+                    location=?, tz_offset=?, updated_at=datetime('now')
+                WHERE id=?;
+            """, (name, birth_date, birth_time, lat, lon, location, tz_offset, chart_id))
+            return cursor.rowcount > 0
+
+    def delete_birth_chart(self, chart_id: int) -> bool:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM birth_charts WHERE id = ?;", (chart_id,))
+            return cursor.rowcount > 0
+
+    # --- Diary ---
 
     def add_diary(self, date: str, content: str) -> int:
         with self._get_connection() as conn:
@@ -142,7 +200,7 @@ class DiaryDB:
             cursor.execute("DELETE FROM diary_entries WHERE id = ?;", (entry_id,))
             return cursor.rowcount > 0
 
-    # ─── Tasks ────────────────────────────────────────────────
+    # --- Tasks ---
 
     def add_task(self, date: str, text: str) -> int:
         with self._get_connection() as conn:
@@ -175,7 +233,7 @@ class DiaryDB:
             cursor.execute("DELETE FROM tasks WHERE id = ?;", (task_id,))
             return cursor.rowcount > 0
 
-    # ─── Dreams ───────────────────────────────────────────────
+    # --- Dreams ---
 
     def add_dream(self, date: str, content: str) -> int:
         with self._get_connection() as conn:
@@ -208,7 +266,7 @@ class DiaryDB:
             cursor.execute("DELETE FROM dream_journal WHERE id = ?;", (dream_id,))
             return cursor.rowcount > 0
 
-    # ─── Bookmarks ────────────────────────────────────────────
+    # --- Bookmarks ---
 
     def add_bookmark(self, date: str, note: str = "") -> int:
         with self._get_connection() as conn:
@@ -239,7 +297,7 @@ class DiaryDB:
             cursor.execute("DELETE FROM bookmarks WHERE id = ?;", (bookmark_id,))
             return cursor.rowcount > 0
 
-    # ─── Favorites ────────────────────────────────────────────
+    # --- Favorites ---
 
     def add_favorite(self, date: str, note: str = "") -> int:
         with self._get_connection() as conn:
@@ -270,7 +328,7 @@ class DiaryDB:
             cursor.execute("DELETE FROM favorites WHERE id = ?;", (favorite_id,))
             return cursor.rowcount > 0
 
-    # ─── Search History ───────────────────────────────────────
+    # --- Search History ---
 
     def add_search_history(self, query: str):
         with self._get_connection() as conn:
@@ -290,7 +348,7 @@ class DiaryDB:
             rows = cursor.fetchall()
             return [dict(r) for r in rows]
 
-    # ─── Search ───────────────────────────────────────────────
+    # --- Search ---
 
     def search_entries(self, query: str):
         """Search across diary, tasks, and dreams. Returns grouped results."""
@@ -327,7 +385,7 @@ class DiaryDB:
         return results
 
 
-# ─── Global singleton ────────────────────────────────────────────────
+# --- Global singleton ---
 
 _db_instance: DiaryDB | None = None
 
