@@ -8,7 +8,7 @@ import swisseph as swe
 
 # Constants
 ROOT = Path(__file__).resolve().parent
-PROFILES_FILE = ROOT / 'profiles.json'
+PROFILES_FILE = ROOT / 'data' / 'profiles.json'
 
 app = Flask(__name__)
 

@@ -19,9 +19,9 @@ from collections import defaultdict
 sys.path.insert(0, '/home/ladylefey')
 
 DB_PATH = '/home/ladylefey/AstroMage/picatrix_calendar/picatrix_calendar.db'
-MANSIONS_JSON = '/home/ladylefey/AstroMage/picatrix_mansions.json'
-ELECTIONS_JSON = '/home/ladylefey/AstroMage/picatrix_elections.json'
-CORRESPONDENCES_JSON = '/home/ladylefey/AstroMage/picatrix_planetary_correspondences.json'
+MANSIONS_JSON = '/home/ladylefey/AstroMage/data/picatrix_mansions.json'
+ELECTIONS_JSON = '/home/ladylefey/AstroMage/data/picatrix_elections.json'
+CORRESPONDENCES_JSON = '/home/ladylefey/AstroMage/data/picatrix_planetary_correspondences.json'
 OUTPUT_DIR = '/home/ladylefey/AstroMage/picatrix_calendar/output'
 
 # Kariega coordinates

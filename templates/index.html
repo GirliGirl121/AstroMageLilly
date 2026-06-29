@@ -832,6 +832,8 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
       else if(btn.dataset.tab === 'tab-nakshatras') loadNakshatrasFull();
       else if(btn.dataset.tab === 'tab-horoscope') switchHoro('daily');
       else if(btn.dataset.tab === 'tab-magi') magiLoadDay(document.getElementById('magi-date-input').value || magiFormatDate(new Date()));
+      else if(btn.dataset.tab === 'tab-quran') loadQuranFull();
+      else if(btn.dataset.tab === 'tab-hadith') loadHadithFull();
     }
   });
 });
@@ -906,9 +908,9 @@ async function loadHome() {
     const hadith = qh.hadith || {};
     document.getElementById('obs-quran').innerHTML = `
       <div style="font-size:11px;line-height:1.6">
-        <strong>${quran.surah_name||'—'}</strong><br>
+        <strong>${quran.surahNameEn||'—'}</strong><br>
         ${(quran.translation||'').substring(0,120)}<br>
-        <em>— ${quran.surah_name||''} (${quran.surah||''}:${quran.ayah||''})</em>
+        <em>— ${quran.surahNameEn||''} (${quran.surah||''}:${quran.ayah||''})</em>
         <br><br>
         <strong>Hadith:</strong> ${(hadith.english||hadith.text||'').replace(/\n/g,' ').replace(/\s+/g,' ').substring(0,100)}<br>
         <em>— ${hadith.bookName||''} (${hadith.idInBook||''})</em>
@@ -1225,7 +1227,7 @@ async function loadObservatoryData() {
   document.getElementById('obs-mansion').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${mp.picatrix_name||'—'}</strong><br>${mp.arabic_name||''}<br><em>${mp.meaning||''}</em><br><br>Nature: ${mp.nature||'—'}<br>Ruler: ${mp.planetary_ruler||'—'}<br>Spirit: ${mp.spirit||'—'}</div>`;
   document.getElementById('obs-nakshatra').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(ia.nakshatra||{}).nakshatra||'—'}</strong><br>Lord: ${(ia.nakshatra||{}).lord||'—'}<br><br>${(ia.dasha||{}).current_dasha? `<strong>Mahadasha:</strong> ${(ia.dasha||{}).current_dasha.lord||'—'}` : ''}</div>`;
   document.getElementById('obs-tarot').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.tarot||{}).name||'—'}</strong><br>${(home.tarot||{}).keywords?.join(', ') || ''}<br><br><em>${(home.tarot||{}).daily_message||''}</em></div>`;
-  document.getElementById('obs-quran').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.quran_hadith||{}).quran?.surah_name||'—'}</strong><br>${(home.quran_hadith||{}).quran?.translation?.substring(0,120)||''}...</div>`;
+  document.getElementById('obs-quran').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.quran_hadith||{}).quran?.surahNameEn||'—'}</strong><br>${(home.quran_hadith||{}).quran?.translation?.substring(0,120)||''}...</div>`;
 
   // ── Lilly's Cosmic Weather Summary ──
   try {

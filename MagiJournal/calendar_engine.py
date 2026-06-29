@@ -22,9 +22,9 @@ import swisseph as swe
 # ─── Paths ────────────────────────────────────────────────────────────────────
 DB_PATH = '/home/ladylefey/AstroMage/picatrix_calendar/picatrix_calendar.db'
 EPHE_PATH = '/home/ladylefey/ephe'
-MANSIONS_JSON = '/home/ladylefey/AstroMage/picatrix_mansions.json'
-ELECTIONS_JSON = '/home/ladylefey/AstroMage/picatrix_elections.json'
-CORRESP_JSON = '/home/ladylefey/AstroMage/picatrix_planetary_correspondences.json'
+MANSIONS_JSON = '/home/ladylefey/AstroMage/data/picatrix_mansions.json'
+ELECTIONS_JSON = '/home/ladylefey/AstroMage/data/picatrix_elections.json'
+CORRESP_JSON = '/home/ladylefey/AstroMage/data/picatrix_planetary_correspondences.json'
 
 # ─── Research JSON Data Loader ──────────────────────────────────────────────
 _RICH_MANSIONS = None

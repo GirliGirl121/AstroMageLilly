@@ -62,7 +62,7 @@ with app.test_client() as c:
     r = c.get('/api/islamic-astro')
     ia = json.loads(r.get_data(as_text=True))
     print(f'\n  📍 Mansion: {ia["mansion"]["picatrix_name"]} ({ia["mansion"]["arabic_name"]})')
-    print(f'  📍 Nakshatra: {ia["nakshatra"]["nakshatra"]} Pada {ia["nakshatra"]["pada"]}')
+    print(f'  📍 Nakshatra: {ia["nakshatra"]["name"]} Pada {ia["nakshatra"]["pada"]}')
     cd = ia['dasha']['current_dasha']
     cb = ia['dasha']['current_bhukti']
     print(f'  📍 Mahadasha: {cd["lord"]} — Bhukti: {cb["lord"]}')
@@ -78,8 +78,8 @@ with app.test_client() as c:
 with app.test_client() as c:
     r = c.get('/api/quran-hadith')
     qh = json.loads(r.get_data(as_text=True))
-    print(f'  📍 Quran: {qh["quran"]["surah_name"]} {qh["quran"]["surah"]}:{qh["quran"]["ayah"]}')
-    print(f'  📍 Hadith: {qh["hadith"]["book"]}')
+    print(f'  📍 Quran: {qh["quran"]["surahNameEn"]} {qh["quran"]["surah"]}:{qh["quran"]["ayah"]}')
+    print(f'  📍 Hadith: {qh["hadith"]["bookName"]}')
 
 # HTML structure verification
 with app.test_client() as c:
@@ -106,7 +106,7 @@ with app.test_client() as c:
 # Data file verification
 print()
 for fn in ['tarot_data.json', 'nakshatra_data.json', 'quran_hadith_data.json']:
-    path = os.path.join(os.getcwd(), fn)
+    path = os.path.join(os.getcwd(), 'data', fn)
     exists = os.path.exists(path)
     print(f'  {"✅" if exists else "❌"} Data file: {fn}')
     if not exists: failures.append(f'Missing: {fn}')

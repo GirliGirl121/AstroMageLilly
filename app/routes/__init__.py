@@ -1,0 +1,1 @@
+"""AstroMage route modules."""
