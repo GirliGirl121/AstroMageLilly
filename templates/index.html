@@ -23,6 +23,28 @@
       <input type="text" placeholder="Ask Lilly something..." id="search-input">
       <span class="search-hint">⏎</span>
     </div>
+    <div class="topbar-translate">
+      <button class="translate-btn" id="translate-btn" title="Arabic / Aramaic / Hebrew translation">𐤀 𐡀 ع</button>
+      <div class="translate-panel" id="translate-panel" style="display:none">
+        <div class="translate-header">
+          <span class="translate-title">🔮 Sacred Translation</span>
+          <button class="translate-close" id="translate-close">✕</button>
+        </div>
+        <div class="translate-lang-tabs">
+          <button class="t-lang active" data-lang="arabic">Arabic ع</button>
+          <button class="t-lang" data-lang="hebrew">Hebrew א</button>
+          <button class="t-lang" data-lang="syriac">Syriac ܐ</button>
+          <button class="t-lang" data-lang="abjad">Abjad الأبجدية</button>
+        </div>
+        <textarea id="translate-input" placeholder="Enter Arabic, Hebrew, or Aramaic text..." rows="3"></textarea>
+        <div class="translate-actions">
+          <button id="translate-submit" class="translate-submit-btn">Translate ⚡</button>
+        </div>
+        <div class="translate-result" id="translate-result">
+          <div class="translate-placeholder">Lilly will translate from the sacred archive... 🌙</div>
+        </div>
+      </div>
+    </div>
     <div class="topbar-right">
       <button class="topbar-btn" title="Refresh" id="btn-refresh">🔄</button>
       <button class="topbar-btn" title="Notifications" id="btn-notif">🔔</button>
@@ -128,6 +150,18 @@
             </div>
           </div>
 
+          <!-- Lilly's Cosmic Weather Summary -->
+          <div class="cosmic-summary-card" id="cosmic-summary">
+            <div class="cs-header">
+              <span class="cs-icon">🔮</span>
+              <span class="cs-title">Lilly's Cosmic Weather</span>
+              <span class="cs-refresh" id="cs-refresh" title="Refresh summary">↻</span>
+            </div>
+            <div class="cs-body" id="cosmic-summary-body">
+              <div class="obs-loading">Consulting the stars...</div>
+            </div>
+          </div>
+
           <!-- Main Observatory Layout: Wheel + Sidebar -->
           <div class="obs-main">
 
@@ -222,6 +256,20 @@
 
       <!-- ─── NATAL CHART WORKSHEET ─── -->
       <div class="tab-page" id="tab-natal">
+        <!-- Chart Selector Bar -->
+        <div class="natal-chart-bar">
+          <div class="natal-chart-selector">
+            <span class="natal-bar-label">🎂 Chart:</span>
+            <select id="natal-chart-select" class="natal-chart-select">
+              <option value="">Gigi (Default)</option>
+            </select>
+          </div>
+          <div class="natal-chart-actions">
+            <button class="natal-bar-btn" id="natal-btn-new" title="New Chart">＋ New</button>
+            <button class="natal-bar-btn" id="natal-btn-save" title="Save Chart">💾 Save</button>
+            <button class="natal-bar-btn danger" id="natal-btn-delete" title="Delete Chart">🗑 Delete</button>
+          </div>
+        </div>
         <div class="natal-worksheet" id="natal-worksheet">
 
           <!-- Top Row: Planetary Positions + Wheel -->
@@ -436,27 +484,113 @@
           <!-- Left: Section Navigation -->
           <div class="simply-nav-panel">
             <div class="simply-nav-header">🔭 Simply Astrology</div>
-            <div class="simply-nav-search">
-              <input type="text" id="simply-search" placeholder="Filter sections..." class="simply-search-input">
-            </div>
             <div class="simply-nav-list" id="simply-nav-list">
-              <div class="loading">Loading...</div>
-            </div>
-          </div>
-          <!-- Right: Knowledge Cards -->
-          <div class="simply-content" id="simply-content">
-            <div class="simply-welcome">
-              <div class="simply-welcome-icon">🔭</div>
-              <div class="simply-welcome-title">Simply Astrology</div>
-              <div class="simply-welcome-sub">Select a topic from the left to begin exploring the celestial sciences.</div>
-              <div class="simply-scholars">
-                <div class="simply-scholar-label">Drawn from the masters:</div>
-                <div class="simply-scholar-tags">
-                  <span>Ptolemy</span><span>Valens</span><span>Abu Ma'shar</span>
-                  <span>Al-Biruni</span><span>Al-Buni</span><span>Firmicus</span>
-                </div>
+              <div class="simply-nav-item active" data-idx="0" onclick="simplySelect(0)">
+                <span class="simply-nav-icon">🪐</span>
+                <span class="simply-nav-name">Planets</span>
+              </div>
+              <div class="simply-nav-item" data-idx="1" onclick="simplySelect(1)">
+                <span class="simply-nav-icon">⭐</span>
+                <span class="simply-nav-name">Zodiac Signs</span>
+              </div>
+              <div class="simply-nav-item" data-idx="2" onclick="simplySelect(2)">
+                <span class="simply-nav-icon">🏠</span>
+                <span class="simply-nav-name">Houses</span>
+              </div>
+              <div class="simply-nav-item" data-idx="3" onclick="simplySelect(3)">
+                <span class="simply-nav-icon">✨</span>
+                <span class="simply-nav-name">Aspects</span>
               </div>
             </div>
+          </div>
+          <!-- Right: Cheat Sheet Content -->
+          <div class="simply-content" id="simply-content">
+
+            <!-- 0: PLANETS -->
+            <div class="simply-section active" id="simply-sec-0">
+              <div class="simply-section-title">🪐 Planets & Points</div>
+              <div class="cheat-sheet">
+                <div class="cheat-row cheat-header"><span class="cheat-glyph">Symbol</span><span class="cheat-name">Planet</span><span class="cheat-keywords">Keywords</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">☉</span><span class="cheat-name">Sun</span><span class="cheat-keywords">Identity, ego, vitality, life purpose, father</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">☽</span><span class="cheat-name">Moon</span><span class="cheat-keywords">Emotions, instincts, comfort, mother, memory</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">☿</span><span class="cheat-name">Mercury</span><span class="cheat-keywords">Communication, thinking, learning, writing</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♀</span><span class="cheat-name">Venus</span><span class="cheat-keywords">Love, beauty, values, relationships, art</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♂</span><span class="cheat-name">Mars</span><span class="cheat-keywords">Action, desire, courage, anger, drive</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♃</span><span class="cheat-name">Jupiter</span><span class="cheat-keywords">Growth, wisdom, expansion, luck, faith</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♄</span><span class="cheat-name">Saturn</span><span class="cheat-keywords">Discipline, structure, responsibility, time</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♅</span><span class="cheat-name">Uranus</span><span class="cheat-keywords">Innovation, rebellion, freedom, sudden change</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♆</span><span class="cheat-name">Neptune</span><span class="cheat-keywords">Dreams, illusion, spirituality, compassion</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♇</span><span class="cheat-name">Pluto</span><span class="cheat-keywords">Transformation, power, rebirth, the unconscious</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">☊</span><span class="cheat-name">Rahu (North Node)</span><span class="cheat-keywords">Destiny, growth, ambition, new experiences</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">☋</span><span class="cheat-name">Ketu (South Node)</span><span class="cheat-keywords">Past life, wisdom, detachment, spirituality</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">⚸</span><span class="cheat-name">Lilith</span><span class="cheat-keywords">Shadow self, independence, raw truth</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">⊕</span><span class="cheat-name">Part of Fortune</span><span class="cheat-keywords">Luck, success, prosperity, happiness</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">ASC</span><span class="cheat-name">Ascendant</span><span class="cheat-keywords">Self, appearance, first impressions, approach</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">MC</span><span class="cheat-name">Midheaven</span><span class="cheat-keywords">Career, public image, life goals, reputation</span></div>
+              </div>
+            </div>
+
+            <!-- 1: ZODIAC SIGNS -->
+            <div class="simply-section" id="simply-sec-1">
+              <div class="simply-section-title">⭐ Zodiac Signs</div>
+              <div class="cheat-sheet">
+                <div class="cheat-row cheat-header"><span class="cheat-glyph">Sign</span><span class="cheat-name">Name</span><span class="cheat-keywords">Keywords</span><span class="cheat-ruler">Ruler</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♈</span><span class="cheat-name">Aries</span><span class="cheat-keywords">Bold, initiating, independent, impulsive</span><span class="cheat-ruler">♂ Mars</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♉</span><span class="cheat-name">Taurus</span><span class="cheat-keywords">Steady, sensual, patient, determined</span><span class="cheat-ruler">♀ Venus</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♊</span><span class="cheat-name">Gemini</span><span class="cheat-keywords">Curious, communicative, adaptable, witty</span><span class="cheat-ruler">☿ Mercury</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♋</span><span class="cheat-name">Cancer</span><span class="cheat-keywords">Nurturing, protective, intuitive, emotional</span><span class="cheat-ruler">☽ Moon</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♌</span><span class="cheat-name">Leo</span><span class="cheat-keywords">Creative, generous, proud, dramatic</span><span class="cheat-ruler">☉ Sun</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♍</span><span class="cheat-name">Virgo</span><span class="cheat-keywords">Analytical, practical, healing, precise</span><span class="cheat-ruler">☿ Mercury</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♎</span><span class="cheat-name">Libra</span><span class="cheat-keywords">Harmonious, fair, relational, balanced</span><span class="cheat-ruler">♀ Venus</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♏</span><span class="cheat-name">Scorpio</span><span class="cheat-keywords">Intense, transformative, deep, secretive</span><span class="cheat-ruler">♂ Mars / ♇ Pluto</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♐</span><span class="cheat-name">Sagittarius</span><span class="cheat-keywords">Adventurous, philosophical, free, optimistic</span><span class="cheat-ruler">♃ Jupiter</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♑</span><span class="cheat-name">Capricorn</span><span class="cheat-keywords">Ambitious, disciplined, wise, enduring</span><span class="cheat-ruler">♄ Saturn</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♒</span><span class="cheat-name">Aquarius</span><span class="cheat-keywords">Innovative, humanitarian, unique, detached</span><span class="cheat-ruler">♄ Saturn / ♅ Uranus</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">♓</span><span class="cheat-name">Pisces</span><span class="cheat-keywords">Dreamy, compassionate, mystical, artistic</span><span class="cheat-ruler">♃ Jupiter / ♆ Neptune</span></div>
+              </div>
+              <div class="cheat-note" style="margin-top:14px"><strong>Elements:</strong> 🔥 Fire (Aries, Leo, Sagittarius) · 🌍 Earth (Taurus, Virgo, Capricorn) · 💨 Air (Gemini, Libra, Aquarius) · 💧 Water (Cancer, Scorpio, Pisces)</div>
+              <div class="cheat-note"><strong>Modalities:</strong> 🃏 Cardinal (initiating) · 📌 Fixed (sustaining) · 🔄 Mutable (adapting)</div>
+            </div>
+
+            <!-- 2: HOUSES -->
+            <div class="simply-section" id="simply-sec-2">
+              <div class="simply-section-title">🏠 The Houses</div>
+              <div class="cheat-sheet">
+                <div class="cheat-row cheat-header"><span class="cheat-glyph">#</span><span class="cheat-name">House</span><span class="cheat-keywords">Keywords</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">1st</span><span class="cheat-name">Self</span><span class="cheat-keywords">Identity, appearance, personality, approach to life</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">2nd</span><span class="cheat-name">Values</span><span class="cheat-keywords">Money, possessions, self-worth, resources</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">3rd</span><span class="cheat-name">Communication</span><span class="cheat-keywords">Siblings, short trips, writing, early education</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">4th</span><span class="cheat-name">Home</span><span class="cheat-keywords">Family, roots, mother, emotional foundation</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">5th</span><span class="cheat-name">Creativity</span><span class="cheat-keywords">Romance, children, joy, self-expression, art</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">6th</span><span class="cheat-name">Health</span><span class="cheat-keywords">Daily work, service, routines, wellness, pets</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">7th</span><span class="cheat-name">Partnerships</span><span class="cheat-keywords">Marriage, contracts, open enemies, one-on-one</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">8th</span><span class="cheat-name">Transformation</span><span class="cheat-keywords">Shared resources, intimacy, death & rebirth, occult</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">9th</span><span class="cheat-name">Philosophy</span><span class="cheat-keywords">Travel, higher learning, faith, publishing, law</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">10th</span><span class="cheat-name">Career</span><span class="cheat-keywords">Public image, father, ambition, life direction</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">11th</span><span class="cheat-name">Community</span><span class="cheat-keywords">Friends, hopes, groups, humanitarian causes</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">12th</span><span class="cheat-name">Subconscious</span><span class="cheat-keywords">Solitude, hidden matters, dreams, spirituality</span></div>
+              </div>
+            </div>
+
+            <!-- 3: ASPECTS -->
+            <div class="simply-section" id="simply-sec-3">
+              <div class="simply-section-title">✨ Aspects</div>
+              <div class="cheat-sheet">
+                <div class="cheat-row cheat-header"><span class="cheat-glyph">Symbol</span><span class="cheat-name">Aspect</span><span class="cheat-keywords">Meaning</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">☌</span><span class="cheat-name">Conjunction (0°)</span><span class="cheat-keywords">Energies merge — intense, focused, blended</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">⚹</span><span class="cheat-name">Sextile (60°)</span><span class="cheat-keywords">Supportive opportunity — gentle, requires effort</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">□</span><span class="cheat-name">Square (90°)</span><span class="cheat-keywords">Tension & friction — challenges that drive growth</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">△</span><span class="cheat-name">Trine (120°)</span><span class="cheat-keywords">Natural harmony — talents that flow effortlessly</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">☍</span><span class="cheat-name">Opposition (180°)</span><span class="cheat-keywords">Polarization — balance between two forces</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">⚺</span><span class="cheat-name">Quincunx (150°)</span><span class="cheat-keywords">Adjustment needed — awkward, requires adaptation</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">⚻</span><span class="cheat-name">Quintile (72°)</span><span class="cheat-keywords">Creative gift — subtle talent, inspiration</span></div>
+                <div class="cheat-row"><span class="cheat-glyph">⚼</span><span class="cheat-name">Semi-sextile (30°)</span><span class="cheat-keywords">Mild connection — small opportunities, awareness</span></div>
+              </div>
+              <div class="cheat-note" style="margin-top:14px"><strong>☌ Conjunction:</strong> Can be harmonious or challenging depending on the planets involved.</div>
+              <div class="cheat-note"><strong>□ Square vs △ Trine:</strong> Squares push you to grow; Trines give natural ease. Both are needed.</div>
+              <div class="cheat-note"><strong>Orbs:</strong> The tighter the aspect (smaller orb), the stronger its influence. Major orbs are 6–10°.</div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -475,19 +609,19 @@
       <div class="tab-page" id="tab-dashas">
         <div class="card tab-full-card">
           <div class="card-header"><span class="card-title">🔄 Vimshottari Dashas Explained</span></div>
-          <div id="dashas-content"><div class="loading">Calculating the cosmic clock...</div></div>
+          <div id="dashas-content"><div class="loading">Loading dashas...</div></div>
         </div>
       </div>
       <div class="tab-page" id="tab-nakshatras">
         <div class="card tab-full-card">
           <div class="card-header"><span class="card-title">⭐ 27 Nakshatras Explained</span></div>
-          <div id="nakshatras-full-content"><div class="loading">Reading the lunar stations...</div></div>
+          <div id="nakshatras-full-content"><div class="loading">Loading nakshatras...</div></div>
         </div>
       </div>
       <div class="tab-page" id="tab-tarot">
         <div class="card tab-full-card">
           <div class="card-header"><span class="card-title">🃏 Rider-Waite Tarot — Full Deck</span></div>
-          <div id="tarot-full-content"><div class="loading">Shuffling the deck...</div></div>
+          <div id="tarot-full-content"><div class="loading">Loading tarot...</div></div>
         </div>
       </div>
       <div class="tab-page" id="tab-transits">
@@ -630,7 +764,7 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
       'tab-quran': 'quran-full-content', 'tab-hadith': 'hadith-full-content',
       'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content',
       'tab-tarot': 'tarot-full-content', 'tab-transits': 'live-content',
-      'tab-simply': 'simply-content',
+      // 'tab-simply' removed from lazy — content is now static
     };
     const cid = lazy[btn.dataset.tab];
     if(cid && document.getElementById(cid).innerHTML.includes('Loading')) {
@@ -650,6 +784,10 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
 // ══════════ Helpers ══════════
 async function loadJSON(p, opts) { const r = await fetch(p, opts); if(!r.ok) throw new Error(p+': '+r.status); return r.json(); }
 function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+// Natal Chart CRUD state
+let currentNatalChartId = null;
+let currentNatalData = null;
 
 // ══════════ HOME PAGE — Load Everything ══════════
 async function loadHome() {
@@ -745,6 +883,10 @@ const PCOLORS = {Sun:'#ffd166',Moon:'#c0c0ff',Mercury:'#b0b0b0',Venus:'#ff9ec4',
 const ASPECT_STYLES = {Conjunction:{c:'#a855f7',d:''},Sextile:{c:'#4ade80',d:'5,3'},
   Square:{c:'#f87171',d:''},Trine:{c:'#60a5fa',d:''},Opposition:{c:'#f97316',d:'4,4'},
   Quincunx:{c:'#06b6d4',d:'3,2'}};
+const PLANET_COLORS = { Sun:'#ffd166', Moon:'#c0c0ff', Mercury:'#b0b0b0', Venus:'#ff9ec4',
+  Mars:'#ff3b5c', Jupiter:'#ffa500', Saturn:'#d4b86a', Uranus:'#00cfff', Neptune:'#4444ff', Pluto:'#a020f0' };
+const PLANET_SYMBOLS = { Sun:'☉', Moon:'☽', Mercury:'☿', Venus:'♀', Mars:'♂',
+  Jupiter:'♃', Saturn:'♄', Uranus:'♅', Neptune:'♆', Pluto:'♇' };
 
 // ══════════ PREMIUM TRANSIT WHEEL — Solar Fire / AstroGold Inspired ══════════
 const WHEEL = {
@@ -1029,8 +1171,31 @@ async function loadObservatoryData() {
   document.getElementById('obs-nakshatra').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(ia.nakshatra||{}).nakshatra||'—'}</strong><br>Lord: ${(ia.nakshatra||{}).lord||'—'}<br><br>${(ia.dasha||{}).current_dasha? `<strong>Mahadasha:</strong> ${(ia.dasha||{}).current_dasha.lord||'—'}` : ''}</div>`;
   document.getElementById('obs-tarot').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.tarot||{}).name||'—'}</strong><br>${(home.tarot||{}).keywords?.join(', ') || ''}<br><br><em>${(home.tarot||{}).daily_message||''}</em></div>`;
   document.getElementById('obs-quran').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.quran_hadith||{}).quran?.surah_name||'—'}</strong><br>${(home.quran_hadith||{}).quran?.translation?.substring(0,120)||''}...</div>`;
+
+  // ── Lilly's Cosmic Weather Summary ──
+  try {
+    const summ = await loadJSON('/api/summary');
+    const body = document.getElementById('cosmic-summary-body');
+    if (body && summ.summary) {
+      body.innerHTML = summ.summary.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    }
+  } catch(e) { console.error('Summary fetch error:', e); }
+
   } catch(e) { console.error('Observatory data error:', e); }
 }
+
+// Cosmic summary refresh button
+document.addEventListener('click', (e) => {
+  if (e.target.id === 'cs-refresh') {
+    const body = document.getElementById('cosmic-summary-body');
+    if (body) body.innerHTML = '<div class="obs-loading">Consulting the stars...</div>';
+    fetch('/api/summary').then(r => r.json()).then(d => {
+      if (body && d.summary) {
+        body.innerHTML = d.summary.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+      }
+    }).catch(() => { if (body) body.innerHTML = '<div class="obs-loading">The stars are quiet...</div>'; });
+  }
+});
 
 // Initial load
 loadObservatoryData();
@@ -1042,11 +1207,15 @@ fetch('/api/live').then(r => r.json()).then(d => { window.__WHEEL_DATA__ = d; dr
 fetch('/api/aspects').then(r => r.json()).then(d => { window.__WHEEL_ASPECTS__ = d.aspects || []; });
 
 // ══════════ NATAL CHART LOADER ══════════
-async function loadNatal() {
+async function loadNatal(chartId) {
   const nc = document.getElementById('natal-worksheet');
   if (!nc) return;
   try {
-    const data = await loadJSON('/api/natal-chart', {method:'POST'});
+    const body = chartId ? {chart_id: chartId} : {};
+    const data = await loadJSON('/api/natal-chart', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+
+    currentNatalChartId = chartId || null;
+    currentNatalData = data;
 
     // ── Birth Data ──
     document.getElementById('natal-name').textContent = data.name;
@@ -1059,13 +1228,40 @@ async function loadNatal() {
     // ── Planetary Positions Table ──
     const porder = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn',
                     'Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune'];
+
+    // ── Equal House cusps (for tables) ──
+    const ascLon = data.ascendant.longitude;
+    const SIGN_NAMES = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+    const SIGN_SYM = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+    const SIGN_RULERS = {0:'Mars',1:'Venus',2:'Mercury',3:'Moon',4:'Sun',5:'Mercury',6:'Venus',7:'Mars',8:'Jupiter',9:'Saturn',10:'Saturn',11:'Jupiter'};
+    const equalCusps = [];
+    for(let i = 0; i < 12; i++) {
+      const cuspLon = (ascLon + i * 30) % 360;
+      equalCusps.push({
+        house: i + 1,
+        longitude: cuspLon,
+        sign: SIGN_NAMES[Math.floor(cuspLon / 30)],
+        sign_symbol: SIGN_SYM[Math.floor(cuspLon / 30)],
+        degree: (cuspLon % 30).toFixed(1).replace('.0','') + '°',
+        ruler: SIGN_RULERS[Math.floor(cuspLon / 30)]
+      });
+    }
+
+    // Assign house via Equal House
+    function getEqualHouse(lon) {
+      const rel = ((lon - ascLon) % 360 + 360) % 360;
+      return Math.floor(rel / 30) + 1;
+    }
+
+    // ── Planetary Positions Table ──
     const ptbody = document.getElementById('natal-planet-tbody');
     ptbody.innerHTML = porder.map(n => {
       const p = data.planets[n];
       if(!p) return '';
       const sym = PLANET_SYMBOLS[n] || '&#9673;';
       const col = PLANET_COLORS[n] || '#fff';
-      return '<tr><td><span style="color:'+col+'">'+sym+'</span> '+n+'</td><td>'+p.sign_symbol+' '+p.sign+'</td><td>'+p.degree+'</td><td>'+(p.house_number||'&mdash;')+'</td></tr>';
+      const houseNum = getEqualHouse(p.longitude);
+      return '<tr><td><span style="color:'+col+'">'+sym+'</span> '+n+'</td><td>'+p.sign_symbol+' '+p.sign+'</td><td>'+p.degree+'</td><td>'+houseNum+'</td></tr>';
     }).join('');
 
     // ── Aspect List ──
@@ -1079,9 +1275,9 @@ async function loadNatal() {
         ' <span class="natal-aspect-orb">('+a.orb+'&deg;)</span></div>';
     }).join('');
 
-    // ── House Cusps Table ──
+    // ── House Cusps Table (Equal House) ──
     const ctbody = document.getElementById('natal-cusp-tbody');
-    ctbody.innerHTML = data.house_cusps.map(function(c) {
+    ctbody.innerHTML = equalCusps.map(function(c) {
       return '<tr><td>'+c.house+'</td><td>'+c.sign_symbol+' '+c.sign+'</td><td>'+c.degree+'</td><td>'+c.ruler+'</td></tr>';
     }).join('');
 
@@ -1108,8 +1304,16 @@ async function loadNatal() {
     // ── NATAL WHEEL (SVG) ──
     drawNatalWheel(data);
 
+    // Update the select to reflect the current chart
+    const sel = document.getElementById('natal-chart-select');
+    if(sel) {
+      for(let o of sel.options) {
+        o.selected = o.value === String(chartId || '');
+      }
+    }
+
   } catch(e) {
-    nc.innerHTML = `<div class="natal-error">Failed to load natal chart: ${e.message}</div>`;
+    nc.innerHTML = '<div class="natal-error">Failed to load natal chart: '+e.message+'</div>';
   }
 }
 
@@ -1117,72 +1321,140 @@ function drawNatalWheel(data) {
   const container = document.getElementById('natal-wheel-canvas');
   if(!container) return;
 
-  const size = 480, cx = size/2, cy = size/2, rOuter = 220, rInner = 160, rLabel = 145;
-  const deg = data.ascendant.longitude;
+  const size = 480, cx = size/2, cy = size/2;
+  const rOuter = 220, rInner = 160, rPlanet = 185, rLabel = 145, rAspect = rInner - 10;
+
+  // AstroChart coordinate system: SHIFT_IN_DEGREES = 180
+  // angleInRad = (180 - angle) * PI/180
+  // x = cx + r * cos(angleInRad), y = cy + r * sin(angleInRad)
+  // 0° = 9o'clock(ASC), 90° = 6o'clock(IC), 180° = 3o'clock(DSC), 270° = 12o'clock(MC)
+  const SHIFT = 180;
+  function pos(angle, r) {
+    const rad = (SHIFT - angle) * Math.PI / 180;
+    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  }
+
+  // ── Equal House system: each house = 30° from ASC ──
+  const ascLon = data.ascendant.longitude;
+  const equalCusps = [];
+  for(let i = 0; i < 12; i++) {
+    equalCusps.push((ascLon + i * 30) % 360);
+  }
+  // shift: rotate chart so ASC lands at 0° (9 o'clock)
+  const shift = (360 - ascLon) % 360;
+  function screenAngle(lon) { return ((lon + shift) % 360 + 360) % 360; }
+  // Assign house number for a planet based on equal house cusps
+  function getHouse(lon) {
+    for(let i = 0; i < 12; i++) {
+      const c1 = equalCusps[i];
+      const c2 = equalCusps[(i+1) % 12];
+      const diff = (lon - c1 + 360) % 360;
+      const span = (c2 - c1 + 360) % 360;
+      if(diff < span) return i + 1;
+    }
+    return 1;
+  }
 
   let svg = `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
     <rect width="${size}" height="${size}" fill="#0a0a14"/>
     <circle cx="${cx}" cy="${cy}" r="${rOuter+10}" fill="none" stroke="#d4af37" stroke-width="2"/>
-    <circle cx="${cx}" cy="${cy}" r="${rInner-5}" fill="#0d0d1a" stroke="#d4af37" stroke-width="1" opacity="0.4"/>
-    <circle cx="${cx}" cy="${cy}" r="30" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.3"/>`;
+    <circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.3"/>
+    <circle cx="${cx}" cy="${cy}" r="${rInner}" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.2"/>
+    <circle cx="${cx}" cy="${cy}" r="30" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.2"/>`;
 
-  // 12 houses (sectors)
-  for(let i=0; i<12; i++) {
-    const cusp = data.house_cusps[i].longitude;
-    const nextCusp = data.house_cusps[(i+1)%12].longitude;
-    const mid = ((cusp + nextCusp)/2) % 360;
-    const startAngle = cusp - deg;
-    const endAngle = nextCusp - deg;
-    // Draw sector
-    const sa = startAngle * Math.PI/180;
-    const ea = endAngle * Math.PI/180;
-    const x1 = cx + rOuter * Math.sin(sa), y1 = cy - rOuter * Math.cos(sa);
-    const x2 = cx + rOuter * Math.sin(ea), y2 = cy - rOuter * Math.cos(ea);
-    const xi1 = cx + rInner * Math.sin(sa), yi1 = cy - rInner * Math.cos(sa);
-    const xi2 = cx + rInner * Math.sin(ea), yi2 = cy - rInner * Math.cos(ea);
-    const largeArc = ((nextCusp - cusp + 360) % 360) > 180 ? 1 : 0;
-    svg += `<path d="M ${xi1} ${yi1} L ${x1} ${y1} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${rInner} ${rInner} 0 ${largeArc} 0 ${xi1} ${yi1} Z" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.3"/>`;
-
-    // House number at midpoint
-    const ma = mid * Math.PI/180;
-    const mr = (rOuter + rInner)/2;
-    const mx = cx + mr * Math.sin(ma - deg * Math.PI/180);
-    const my = cy - mr * Math.cos(ma - deg * Math.PI/180);
-    svg += `<text x="${mx}" y="${my}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="11" opacity="0.6">${i+1}</text>`;
-
-    // Sign glyph at label radius
-    const signAngle = (cusp + 15) * Math.PI/180;
-    const lx = cx + rLabel * Math.sin(signAngle - deg * Math.PI/180);
-    const ly = cy - rLabel * Math.cos(signAngle - deg * Math.PI/180);
-    svg += `<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="#a090b0" font-size="16" font-family="serif">${data.house_cusps[i].sign_symbol}</text>`;
+  // ── Aspect lines (inside the wheel, drawn first so planets sit on top) ──
+  const ASPECT_COLORS = {'Conjunction':'#a855f7','Opposition':'#f97316','Trine':'#60a5fa','Square':'#f87171','Sextile':'#4ade80'};
+  if(data.aspects) {
+    for(const a of data.aspects) {
+      if(a.orb > 6) continue;
+      const p1lon = data.planets[a.p1]?.longitude;
+      const p2lon = data.planets[a.p2]?.longitude;
+      if(p1lon === undefined || p2lon === undefined) continue;
+      const p1 = pos(screenAngle(p1lon), rAspect);
+      const p2 = pos(screenAngle(p2lon), rAspect);
+      const col = ASPECT_COLORS[a.aspect] || '#888';
+      const sw = a.orb <= 2 ? 1.2 : a.orb <= 4 ? 0.8 : 0.5;
+      const op = a.orb <= 2 ? 0.7 : a.orb <= 4 ? 0.5 : 0.3;
+      svg += `<line x1="${p1.x.toFixed(1)}" y1="${p1.y.toFixed(1)}" x2="${p2.x.toFixed(1)}" y2="${p2.y.toFixed(1)}" stroke="${col}" stroke-width="${sw}" opacity="${op}"/>`;
+    }
   }
 
-  // ASC marker
-  svg += `<circle cx="${cx}" cy="${cy - rOuter - 10}" r="4" fill="#d4af37"/>
-    <text x="${cx}" y="${cy - rOuter - 18}" text-anchor="middle" fill="#d4af37" font-size="12" font-weight="bold">ASC</text>`;
+  // ── 12 house sectors (Equal House) ──
+  const SIGN_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+  for(let i=0; i<12; i++) {
+    const cusp = equalCusps[i];
+    const nextCusp = equalCusps[(i+1)%12];
+    const sa = screenAngle(cusp);
+    const ea = screenAngle(nextCusp);
+    const sRad = (SHIFT - sa) * Math.PI/180;
+    const eRad = (SHIFT - ea) * Math.PI/180;
+    const x1 = cx + rOuter * Math.cos(sRad), y1 = cy + rOuter * Math.sin(sRad);
+    const x2 = cx + rOuter * Math.cos(eRad), y2 = cy + rOuter * Math.sin(eRad);
+    const xi1 = cx + rInner * Math.cos(sRad), yi1 = cy + rInner * Math.sin(sRad);
+    const xi2 = cx + rInner * Math.cos(eRad), yi2 = cy + rInner * Math.sin(eRad);
+    const arcDiff = ((ea - sa) + 360) % 360;
+    const largeArc = arcDiff > 180 ? 1 : 0;
+    svg += `<path d="M ${xi1.toFixed(1)} ${yi1.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)} A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} L ${xi2.toFixed(1)} ${yi2.toFixed(1)} A ${rInner} ${rInner} 0 ${largeArc} 0 ${xi1.toFixed(1)} ${yi1.toFixed(1)} Z" fill="none" stroke="#d4af37" stroke-width="0.5" opacity="0.25"/>`;
 
-  // Planets on wheel
+    // House number at midpoint
+    const midMid = (sa + arcDiff/2) % 360;
+    const midRad = (SHIFT - midMid) * Math.PI/180;
+    const mr = (rOuter + rInner) / 2;
+    const mx = cx + mr * Math.cos(midRad);
+    const my = cy + mr * Math.sin(midRad);
+    svg += `<text x="${mx.toFixed(1)}" y="${my.toFixed(1)}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="10" opacity="0.5">${i+1}</text>`;
+
+    // Sign glyph at label radius (15° into the sign from this cusp)
+    const signAngle = sa + 15;
+    const signRad = (SHIFT - signAngle) * Math.PI/180;
+    const lx = cx + rLabel * Math.cos(signRad);
+    const ly = cy + rLabel * Math.sin(signRad);
+    const signIdx = Math.floor(cusp / 30) % 12;
+    svg += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="central" fill="#a090b0" font-size="16" font-family="serif">${SIGN_SYMBOLS[signIdx]}</text>`;
+  }
+
+  // ── Angle lines ──
+  // ASC/DSC: horizontal line through center (ASC left at 9o'clock, DSC right at 3o'clock)
+  const ascPos = pos(0, rOuter + 5);
+  const dscPos = pos(180, rOuter + 5);
+  svg += `<line x1="${dscPos.x.toFixed(1)}" y1="${dscPos.y.toFixed(1)}" x2="${ascPos.x.toFixed(1)}" y2="${ascPos.y.toFixed(1)}" stroke="#ffffff" stroke-width="2" opacity="0.9"/>`;
+  // ASC label
+  const al = pos(0, rOuter + 18);
+  svg += `<text x="${al.x.toFixed(1)}" y="${al.y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="10" font-weight="bold" transform="rotate(-90, ${al.x.toFixed(1)}, ${al.y.toFixed(1)})">${data.ascendant.degree} ${data.ascendant.sign_symbol} ${data.ascendant.sign}</text>`;
+  // DSC label
+  const dl = pos(180, rOuter + 18);
+  svg += `<text x="${dl.x.toFixed(1)}" y="${dl.y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" fill="#ffffff" font-size="8" opacity="0.7">DSC</text>`;
+
+  // MC/IC: MC at 270° (12 o'clock), IC at 90° (6 o'clock)
+  const mcPos = pos(270, rOuter + 5);
+  const icPos = pos(90, rOuter + 5);
+  svg += `<line x1="${icPos.x.toFixed(1)}" y1="${icPos.y.toFixed(1)}" x2="${mcPos.x.toFixed(1)}" y2="${mcPos.y.toFixed(1)}" stroke="#44aaff" stroke-width="1.2" opacity="0.5" stroke-dasharray="5,3"/>`;
+  // MC label
+  const ml = pos(270, rOuter + 18);
+  svg += `<text x="${ml.x.toFixed(1)}" y="${ml.y.toFixed(1)}" text-anchor="middle" fill="#44aaff" font-size="8" font-weight="bold">MC ${data.midheaven.sign_symbol}</text>`;
+  // IC label
+  const il = pos(90, rOuter + 18);
+  svg += `<text x="${il.x.toFixed(1)}" y="${il.y.toFixed(1)}" text-anchor="middle" fill="#44aaff" font-size="8" opacity="0.6">IC</text>`;
+
+  // ── Planets on wheel ──
   const porder = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn',
                   'Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune'];
   for(const n of porder) {
     const p = data.planets[n];
     if(!p || p.longitude === undefined) continue;
-    const angle = (p.longitude - deg) * Math.PI/180;
-    const pr = 185;
-    const px = cx + pr * Math.sin(angle);
-    const py = cy - pr * Math.cos(angle);
+    const pp = pos(screenAngle(p.longitude), rPlanet);
     const sym = PLANET_SYMBOLS[n] || '◉';
     const col = PLANET_COLORS[n] || '#fff';
-    svg += `<text x="${px}" y="${py}" text-anchor="middle" dominant-baseline="central" fill="${col}" font-size="14">${sym}</text>`;
-    // label for outer planets
+    svg += `<text x="${pp.x.toFixed(1)}" y="${pp.y.toFixed(1)}" text-anchor="middle" dominant-baseline="central" fill="${col}" font-size="14">${sym}</text>`;
+    // Label for outer points — name + degree
     if(['Uranus','Neptune','Pluto','Chiron','Lilith','Ketu','Part of Fortune'].includes(n)) {
-      svg += `<text x="${px}" y="${py+16}" text-anchor="middle" fill="${col}" font-size="7" opacity="0.8">${n}</text>`;
+      svg += `<text x="${pp.x.toFixed(1)}" y="${(pp.y+14).toFixed(1)}" text-anchor="middle" fill="${col}" font-size="6" opacity="0.8">${n} ${p.degree}</text>`;
     }
   }
 
   // Center text
-  svg += `<text x="${cx}" y="${cy-5}" text-anchor="middle" fill="#d4af37" font-size="14" font-weight="bold">${data.name}</text>
-    <text x="${cx}" y="${cy+14}" text-anchor="middle" fill="#a090b0" font-size="10">${data.birth_date}</text>
+  svg += `<text x="${cx}" y="${cy-5}" text-anchor="middle" fill="#d4af37" font-size="13" font-weight="bold">${data.name}</text>
+    <text x="${cx}" y="${cy+12}" text-anchor="middle" fill="#a090b0" font-size="9">${data.birth_date}</text>
   </svg>`;
 
   container.innerHTML = svg;
@@ -1709,6 +1981,7 @@ const LIB_BOOKS = [
   {id: 'al-tukhi-system',         title: 'Al-Tukhi — System & Teachings',     author: 'Astrological Judgments & Mansions',    icon: '🌙', color: '#10B981', type: 'reference'},
   {id: 'picatrix-full-text',      title: 'The Picatrix — Ghayat al-Hakim',    author: 'Greer & Warnock — Complete 12K-line text', icon: '📜', color: '#7C3AED', type: 'full_text'},
   {id: 'shadrach-magic-that-works', title: 'Nineveh Shadrach — Magic That Works', author: 'Practical Occultism Training',      icon: '⚡', color: '#EF4444', type: 'reference'},
+  {id: 'magic-that-works-full',    title: 'Magic That Works — FULL BOOK',       author: 'Shadrach & Harrison — 359 pages',     icon: '📖', color: '#DC2626', type: 'full_text'},
   // ─── Astrology ───
   {id: 'abu-mashar-al-balkhi',    title: 'Abu Ma\'shar al-Balkhi — Great Introduction', author: 'Abbasid Astrology Master',  icon: '🪐', color: '#3B82F6', type: 'reference'},
   {id: 'al-biruni-tafhim',        title: 'Al-Biruni — Kitab al-Tafhim',       author: 'The Supreme Polymath',                icon: '🔭', color: '#06B6D4', type: 'reference'},
@@ -1802,9 +2075,35 @@ async function libOpenBook(bookId) {
     chapters.innerHTML = '';
 
     if (isLarge) {
-      // Fast path for large texts: pre-formatted block, no markdown parsing
-      const plain = esc(ref.content);
-      content.innerHTML = `<div class="lib-ref-body lib-ref-large"><pre style="white-space:pre-wrap;font-size:14px;line-height:1.6;color:#d0c8e0;font-family:inherit">${plain}</pre></div>`;
+      // Fast path for large texts: chunked paginated reader for page-delimited books
+      const allText = ref.content;
+      const pageChunks = allText.split(/--- Page \d+ ---/).filter(c => c.trim());
+      const totalPages = pageChunks.length;
+      const perChunk = 25; // pages per view
+      
+      function renderChunk(pageIdx) {
+        const start = pageIdx * perChunk;
+        const end = Math.min(start + perChunk, totalPages);
+        let html = '';
+        for (let i = start; i < end; i++) {
+          html += `<div class="lib-page-block" data-page="${i+1}">`;
+          html += `<div class="lib-page-num">— Page ${i+1} —</div>`;
+          html += `<pre class="lib-page-content">${esc(pageChunks[i])}</pre></div>`;
+        }
+        
+        const totalChunks = Math.ceil(totalPages / perChunk);
+        const nav = `<div class="lib-page-nav">
+          <button ${pageIdx === 0 ? 'disabled' : ''} onclick="libCurrentChunk=${pageIdx-1};renderChunk(libCurrentChunk)">◀ Prev</button>
+          <span class="lib-page-info">Pages ${start+1}–${end} of ${totalPages}</span>
+          <button ${pageIdx >= totalChunks-1 ? 'disabled' : ''} onclick="libCurrentChunk=${pageIdx+1};renderChunk(libCurrentChunk)">Next ▶</button>
+        </div>`;
+        
+        content.innerHTML = nav + '<div class="lib-ref-body lib-ref-large">' + html + '</div>' + nav;
+        content.scrollTop = 0;
+      }
+      
+      let libCurrentChunk = 0;
+      renderChunk(0);
     } else {
       // Normal path: render markdown-ish content
       let body = esc(ref.content);
@@ -1892,11 +2191,71 @@ document.getElementById('search-input').addEventListener('keydown', e => {
   if(e.key === 'Enter') { document.getElementById('chat-input').value = e.target.value; e.target.value=''; sendChat(); }
 });
 
-// ══════════ Constants ══════════
-const PLANET_COLORS = { Sun:'#ffd166', Moon:'#c0c0ff', Mercury:'#b0b0b0', Venus:'#ff9ec4',
-  Mars:'#ff3b5c', Jupiter:'#ffa500', Saturn:'#d4b86a', Uranus:'#00cfff', Neptune:'#4444ff', Pluto:'#a020f0' };
-const PLANET_SYMBOLS = { Sun:'☉', Moon:'☽', Mercury:'☿', Venus:'♀', Mars:'♂',
-  Jupiter:'♃', Saturn:'♄', Uranus:'♅', Neptune:'♆', Pluto:'♇' };
+// ─── Translate Panel ───
+document.getElementById('translate-btn').addEventListener('click', () => {
+  const panel = document.getElementById('translate-panel');
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+});
+document.getElementById('translate-close').addEventListener('click', () => {
+  document.getElementById('translate-panel').style.display = 'none';
+});
+// Close on outside click
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('translate-panel');
+  const btn = document.getElementById('translate-btn');
+  if (panel && panel.style.display !== 'none' && !panel.contains(e.target) && !btn.contains(e.target)) {
+    panel.style.display = 'none';
+  }
+});
+// Language tab switching
+document.querySelectorAll('.t-lang').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.t-lang').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const lang = btn.dataset.lang;
+    const textarea = document.getElementById('translate-input');
+    if (lang === 'arabic') textarea.placeholder = 'أدخل نصاً عربياً... Enter Arabic text...';
+    else if (lang === 'hebrew') textarea.placeholder = 'הכנס טקסט עברי... Enter Hebrew text...';
+    else if (lang === 'syriac') textarea.placeholder = 'ܡܘܬܒ ܟܬܒܐ ܣܘܪܝܝܐ... Enter Syriac text...';
+    else if (lang === 'abjad') textarea.placeholder = 'Type Arabic letters to see abjad values (e.g. ب س م ا ل ل ه)';
+  });
+});
+// Abjad quick reference
+const ABJAD_MAP = {'ا':1,'ب':2,'ج':3,'د':4,'ه':5,'و':6,'ز':7,'ح':8,'ط':9,'ي':10,'ك':20,'ل':30,'م':40,'ن':50,'س':60,'ع':70,'ف':80,'ص':90,'ق':100,'ر':200,'ش':300,'ت':400,'ث':500,'خ':600,'ذ':700,'ض':800,'ظ':900,'غ':1000,'ة':5,'ى':10};
+// Translate submit
+document.getElementById('translate-submit').addEventListener('click', async () => {
+  const input = document.getElementById('translate-input');
+  const result = document.getElementById('translate-result');
+  const txt = input.value.trim();
+  if (!txt) return;
+
+  // Abjad mode
+  const activeLang = document.querySelector('.t-lang.active')?.dataset.lang;
+  if (activeLang === 'abjad') {
+    const chars = txt.split('').filter(c => ABJAD_MAP[c] !== undefined);
+    const values = chars.map(c => `${c}=${ABJAD_MAP[c]}`);
+    const total = chars.reduce((s, c) => s + ABJAD_MAP[c], 0);
+    result.innerHTML = `<strong>🔢 Abjad Calculation:</strong><br><br>${values.join(' + ')}<br><br><strong>Total: ${total}</strong> ${chars.length > 1 ? `(${chars.length} letters)` : ''}<br><br><em>Letter values (abjad) are used in Islamic talisman design, letter magic (ilm al-huruf), and Picatrix calculations.</em>`;
+    return;
+  }
+
+  result.innerHTML = '<div class="translate-placeholder">Consulting the sacred archive... 🔮</div>';
+  const submitBtn = document.getElementById('translate-submit');
+  submitBtn.disabled = true;
+  try {
+    const reply = await loadJSON('/api/chat', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message: txt})
+    });
+    if (reply.reply) {
+      const body = reply.reply.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      result.innerHTML = body.replace(/\n/g, '<br>');
+    }
+  } catch(e) {
+    result.innerHTML = '<div class="translate-placeholder">The stars are quiet... try again? 🌙</div>';
+  }
+  submitBtn.disabled = false;
+});
 
 // ══════════ MagiJournal Diary JS ══════════
 let magiDate = new Date();
@@ -2217,9 +2576,160 @@ async function remFV(id) {
   document.getElementById('magi-show-favorites').click();
 }
 
+// ══════════ NATAL CHART CRUD ══════════
+
+async function refreshNatalChartList() {
+  const sel = document.getElementById('natal-chart-select');
+  if(!sel) return;
+  try {
+    const charts = await loadJSON('/api/natal-charts', {});
+    const curVal = sel.value;
+    sel.innerHTML = '<option value="">Gigi (Default)</option>';
+    charts.forEach(function(c) {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.name + ' (' + c.birth_date + ')';
+      sel.appendChild(opt);
+    });
+    sel.value = String(currentNatalChartId || '');
+  } catch(e) {
+    console.warn('Failed to load chart list:', e);
+  }
+}
+
+function natalShowSaveModal() {
+  const d = currentNatalData;
+  if(!d) return;
+  // Parse date/time into form values
+  let dateStr = d.birth_date || '';
+  let timeStr = d.birth_time || '';
+  let nameStr = d.name || '';
+  let locStr = d.location || '';
+  let latStr = String(d.latitude || d.lat || '-33.925');
+  let lonStr = String(d.longitude || d.lon || '18.424');
+  let tzStr = String(d.tz_offset || '2');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'natal-modal-overlay';
+  overlay.innerHTML =
+    '<div class="natal-modal">' +
+    '<h3>' + (currentNatalChartId ? '✏️ Edit Chart' : '💾 Save Chart') + '</h3>' +
+    '<label>Chart Name</label>' +
+    '<input id="natal-modal-name" value="' + esc(nameStr) + '" placeholder="e.g. Gigi">' +
+    '<label>Birth Date</label>' +
+    '<input id="natal-modal-date" type="date" value="' + dateStr + '">' +
+    '<label>Birth Time (24h)</label>' +
+    '<input id="natal-modal-time" type="time" value="' + timeStr + '">' +
+    '<label>Latitude</label>' +
+    '<input id="natal-modal-lat" type="number" step="any" value="' + latStr + '">' +
+    '<label>Longitude</label>' +
+    '<input id="natal-modal-lon" type="number" step="any" value="' + lonStr + '">' +
+    '<label>Location Name</label>' +
+    '<input id="natal-modal-location" value="' + esc(locStr) + '" placeholder="e.g. Cape Town">' +
+    '<label>UTC Offset</label>' +
+    '<input id="natal-modal-tz" type="number" step="0.5" value="' + tzStr + '">' +
+    '<div class="natal-modal-buttons">' +
+    '<button class="natal-modal-btn cancel" id="natal-modal-cancel">Cancel</button>' +
+    '<button class="natal-modal-btn primary" id="natal-modal-confirm">' + (currentNatalChartId ? 'Update' : 'Save') + '</button>' +
+    '</div></div>';
+  document.body.appendChild(overlay);
+
+  document.getElementById('natal-modal-cancel').addEventListener('click', function() {
+    overlay.remove();
+  });
+
+  document.getElementById('natal-modal-confirm').addEventListener('click', async function() {
+    const chartData = {
+      name: document.getElementById('natal-modal-name').value || 'Unnamed',
+      birth_date: document.getElementById('natal-modal-date').value,
+      birth_time: document.getElementById('natal-modal-time').value,
+      lat: parseFloat(document.getElementById('natal-modal-lat').value) || 0,
+      lon: parseFloat(document.getElementById('natal-modal-lon').value) || 0,
+      location: document.getElementById('natal-modal-location').value || '',
+      tz_offset: parseFloat(document.getElementById('natal-modal-tz').value) || 2,
+    };
+    if(!chartData.birth_date || !chartData.birth_time) {
+      alert('Please fill in date and time');
+      return;
+    }
+    try {
+      if(currentNatalChartId) {
+        await fetch('/api/natal-chart/' + currentNatalChartId, {
+          method:'PUT',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(chartData)
+        });
+      } else {
+        const res = await fetch('/api/natal-chart/save', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(chartData)
+        });
+        const data = await res.json();
+        currentNatalChartId = data.id;
+      }
+      overlay.remove();
+      await refreshNatalChartList();
+      await loadNatal(currentNatalChartId);
+    } catch(e) {
+      alert('Failed to save chart: ' + e.message);
+    }
+  });
+}
+
+function initNatalCRUD() {
+  const sel = document.getElementById('natal-chart-select');
+  const btnNew = document.getElementById('natal-btn-new');
+  const btnSave = document.getElementById('natal-btn-save');
+  const btnDelete = document.getElementById('natal-btn-delete');
+
+  if(sel) {
+    sel.addEventListener('change', function() {
+      const val = sel.value;
+      if(val) {
+        loadNatal(parseInt(val));
+      } else {
+        loadNatal(null);
+      }
+    });
+  }
+  if(btnNew) {
+    btnNew.addEventListener('click', function() {
+      currentNatalChartId = null;
+      loadNatal(null);
+      // Reset the select
+      if(sel) sel.value = '';
+    });
+  }
+  if(btnSave) {
+    btnSave.addEventListener('click', natalShowSaveModal);
+  }
+  if(btnDelete) {
+    btnDelete.addEventListener('click', async function() {
+      if(!currentNatalChartId) {
+        alert('No saved chart selected to delete.');
+        return;
+      }
+      if(!confirm('Delete this saved chart? This cannot be undone.')) return;
+      try {
+        await fetch('/api/natal-chart/' + currentNatalChartId, {method:'DELETE'});
+        currentNatalChartId = null;
+        await refreshNatalChartList();
+        await loadNatal(null);
+      } catch(e) {
+        alert('Failed to delete chart: ' + e.message);
+      }
+    });
+  }
+
+  // Load the chart list on init
+  refreshNatalChartList();
+}
+
 // ══════════ Init ══════════
 loadHome();
 loadNatal();
+initNatalCRUD();
 document.getElementById('btn-refresh').addEventListener('click', loadHome);
 document.getElementById('btn-notif').addEventListener('click', () => alert('🔔 Notifications coming soon!'));
 </script>
