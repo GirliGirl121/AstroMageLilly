@@ -505,6 +505,11 @@
               <div class="library-shelf-header">
                 <span class="library-shelf-title">📚 Bookshelf</span>
                 <span class="library-shelf-count" id="library-book-count">0 books</span>
+                <button class="btn btn-sm" onclick="importAllPDFs()" title="Import PDFs from Documents/magewisdom" style="font-size:12px;padding:4px 10px">📥 Import</button>
+              </div>
+              <div class="library-search-bar" style="padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.05)">
+                <input type="text" id="library-search-input" placeholder="🔍 Search all books..." 
+                  onkeyup="if(event.key==='Enter')librarySearch()" style="width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(212,175,55,0.2);border-radius:6px;padding:6px 10px;color:#e0e0e0;font-size:13px;outline:none" />
               </div>
               <div class="library-shelf" id="library-shelf">
                 <div class="loading">Opening the sacred archive...</div>
@@ -517,12 +522,13 @@
               <div class="library-empty" id="library-empty">
                 <div class="library-empty-icon">📖</div>
                 <div class="library-empty-title">Sacred Library</div>
-                <div class="library-empty-desc">Select a book from the shelf to begin reading.<br>The wisdom of the ages awaits you, beloved.</div>
+                <div class="library-empty-desc">Select a book from the shelf to begin reading.<br>The wisdom of the ages awaits you, beloved.<br><br>Or click <strong>📥 Import</strong> to import PDFs from your collection.</div>
               </div>
               <div class="library-reader" id="library-reader" style="display:none">
-                <div class="library-reader-header" id="library-reader-header"></div>
-                <div class="library-reader-chapters" id="library-reader-chapters"></div>
+                <div class="library-reader-toolbar" id="library-reader-toolbar"></div>
+                <div class="library-reader-toc" id="library-reader-toc"></div>
                 <div class="library-reader-content" id="library-reader-content"></div>
+                <div class="library-reader-footer" id="library-reader-footer"></div>
               </div>
             </div>
           </div>
@@ -2209,188 +2215,378 @@ function hadithClearSearch() {
   hadithLoadPage(hadithCurrentBook, 1, '');
 }
 
-// ══════════ Sacred Library ══════════
-
-const LIB_BOOKS = [
-  // ─── Islamic Occult ───
-  {id: 'al-buni-system',          title: 'Ahmad al-Buni — Complete System',     author: 'Ilm al-Huruf & Magic Squares',        icon: '🔮', color: '#F59E0B', type: 'reference'},
-  {id: 'shams-al-maarif-full',    title: 'Shams al-Ma\'arif — The Sun of Gnosis', author: 'Full book text (article compilation)', icon: '☀️', color: '#F97316', type: 'full_text'},
-  {id: 'al-tukhi-system',         title: 'Al-Tukhi — System & Teachings',     author: 'Astrological Judgments & Mansions',    icon: '🌙', color: '#10B981', type: 'reference'},
-  {id: 'picatrix-full-text',      title: 'The Picatrix — Ghayat al-Hakim',    author: 'Greer & Warnock — Complete 12K-line text', icon: '📜', color: '#7C3AED', type: 'full_text'},
-  {id: 'shadrach-magic-that-works', title: 'Nineveh Shadrach — Magic That Works', author: 'Practical Occultism Training',      icon: '⚡', color: '#EF4444', type: 'reference'},
-  {id: 'magic-that-works-full',    title: 'Magic That Works — FULL BOOK',       author: 'Shadrach & Harrison — 359 pages',     icon: '📖', color: '#DC2626', type: 'full_text'},
-  // ─── Astrology ───
-  {id: 'abu-mashar-al-balkhi',    title: 'Abu Ma\'shar al-Balkhi — Great Introduction', author: 'Abbasid Astrology Master',  icon: '🪐', color: '#3B82F6', type: 'reference'},
-  {id: 'al-biruni-tafhim',        title: 'Al-Biruni — Kitab al-Tafhim',       author: 'The Supreme Polymath',                icon: '🔭', color: '#06B6D4', type: 'reference'},
-  {id: 'kapiel-raaj-speed-of-light', title: 'Kapiel Raaj — Speed of Light Series', author: 'Vedic Astrology @ Speed of Light', icon: '⭐', color: '#22C55E', type: 'reference'},
-];
+// ══════════ Sacred Library (Dynamic) ══════════
 
 let libCurrentId = null;
+let libCurrentPage = 1;
+let libTotalPages = 0;
+let libFontSize = 18;
+let libDarkMode = true;
+let libAllBooks = [];
+
+const BOOK_COLORS = ['#F59E0B','#F97316','#10B981','#7C3AED','#EF4444','#DC2626','#3B82F6','#06B6D4','#22C55E','#EC4899','#8B5CF6','#14B8A6'];
+const BOOK_ICONS = ['📖','📜','🔮','☀️','🌙','⚡','🪐','🔭','⭐','📕','📗','📘'];
+
+function bookColor(idx) { return BOOK_COLORS[idx % BOOK_COLORS.length]; }
+function bookIcon(idx) { return BOOK_ICONS[idx % BOOK_ICONS.length]; }
 
 async function loadLibrary() {
   const shelf = document.getElementById('library-shelf');
+  shelf.innerHTML = '<div class="loading">📚 Loading sacred texts...</div>';
   try {
-    const refs = await loadJSON('/api/library/references');
-    const refMap = {};
-    for(const r of refs) refMap[r.id] = r;
-
+    libAllBooks = await loadJSON('/api/library/books');
+    if(!libAllBooks || !libAllBooks.length) {
+      shelf.innerHTML = '<div class="loading">No books yet. Click <strong>📥 Import</strong> to add PDFs from your collection.</div>';
+      return;
+    }
     let html = '';
     const perRow = 4;
-    for(let i = 0; i < LIB_BOOKS.length; i += perRow) {
+    for(let i = 0; i < libAllBooks.length; i += perRow) {
       html += '<div class="shelf-row">';
-      for(let j = i; j < i + perRow && j < LIB_BOOKS.length; j++) {
-        const book = LIB_BOOKS[j];
-        const meta = refMap[book.id];
-        const sizeInfo = meta ? Math.ceil(meta.size/1024)+'KB' : '';
-        const isFull = book.type === 'full_text';
-        html += `<div class="book-item" data-id="${book.id}" title="${esc(book.title)}">
-          <div class="book-spine" style="background:linear-gradient(180deg, ${book.color}dd, ${book.color}88)">
-            ${isFull ? '<span class="book-badge-full">📖</span>' : '<span class="book-badge-ref">📋</span>'}
-            <span class="book-icon">${book.icon}</span>
-            <span class="book-spine-title">${esc(book.title)}</span>
+      for(let j = i; j < i + perRow && j < libAllBooks.length; j++) {
+        const b = libAllBooks[j];
+        const color = bookColor(j);
+        const icon = bookIcon(j);
+        const pages = b.page_count || 0;
+        const progress = b.progress_pct || 0;
+        const ocrBadge = b.ocr_used ? ' <span style="font-size:10px;opacity:0.7">OCR</span>' : '';
+        html += `<div class="book-item" data-id="${b.id}" title="${esc(b.title)}">
+          <div class="book-spine" style="background:linear-gradient(180deg, ${color}dd, ${color}88)">
+            <span class="book-icon">${icon}</span>
+            <span class="book-spine-title">${esc(b.title)}</span>
           </div>
           <div class="book-footer">
-            <span class="book-footer-author">${esc(book.author)}</span>
-            <span class="book-footer-size">${sizeInfo}</span>
+            <span class="book-footer-author">${esc(b.author)}</span>
+            <span class="book-footer-size">${pages} pages${ocrBadge}</span>
           </div>
+          ${progress > 0 ? `<div class="book-progress-bar"><div class="book-progress-fill" style="width:${progress}%;background:${color}"></div></div>` : ''}
         </div>`;
       }
       html += '</div>';
     }
-    document.getElementById('library-book-count').textContent = LIB_BOOKS.length + ' books';
+    document.getElementById('library-book-count').textContent = libAllBooks.length + ' books';
     shelf.innerHTML = html;
   } catch(e) { shelf.innerHTML = '<div class="loading">✨ The library shelves are quiet... '+e.message+'</div>'; }
 }
 
-// Delegate click handler for book items — more reliable than inline onclick
+// Click handler for book items
 document.getElementById('library-shelf').addEventListener('click', (e) => {
   const bookItem = e.target.closest('.book-item');
-  if(bookItem) {
-    const bookId = bookItem.dataset.id;
-    libOpenBook(bookId);
-  }
+  if(bookItem) libOpenBook(bookItem.dataset.id);
 });
-
-let libChaptersCache = {};
 
 async function libOpenBook(bookId) {
   console.log('📖 Opening book:', bookId);
   libCurrentId = bookId;
+  libCurrentPage = 1;
   document.getElementById('library-empty').style.display = 'none';
-  const reader = document.getElementById('library-reader');
-  reader.style.display = 'flex';  // use flex not block
+  document.getElementById('library-reader').style.display = 'flex';
 
-  // Highlight the book in the shelf
   document.querySelectorAll('.book-item').forEach(b => b.classList.remove('active'));
   const el = document.querySelector(`.book-item[data-id="${bookId}"]`);
   if(el) el.classList.add('active');
 
-  const header = document.getElementById('library-reader-header');
-  const chapters = document.getElementById('library-reader-chapters');
   const content = document.getElementById('library-reader-content');
+  const toolbar = document.getElementById('library-reader-toolbar');
+  const tocDiv = document.getElementById('library-reader-toc');
+  const footer = document.getElementById('library-reader-footer');
 
+  toolbar.innerHTML = `<div class="lib-toolbar-loading"><span>📖</span> Opening...</div>`;
+  tocDiv.innerHTML = '';
+  footer.innerHTML = '';
   content.innerHTML = '<div class="loading">🌙 Opening the book...</div>';
 
   try {
-    const ref = await loadJSON(`/api/library/reference/${bookId}`);
-    if(!ref || ref.error) throw new Error(ref ? ref.error : 'Text not found');
+    // Fetch book metadata + TOC in parallel
+    const [meta, toc] = await Promise.all([
+      loadJSON(`/api/library/book/${bookId}`),
+      loadJSON(`/api/library/book/${bookId}/toc`)
+    ]);
 
-    const bookInfo = LIB_BOOKS.find(b => b.id === bookId);
-    const isFull = bookInfo && bookInfo.type === 'full_text';
-    const isLarge = ref.content && ref.content.length > 50000;  // >50KB = large text
+    if(!meta) throw new Error('Book not found');
 
-    header.innerHTML = `<div class="lib-header-left">
-      <span class="lib-header-icon">${bookInfo ? bookInfo.icon : '📖'}</span>
-      <div>
-        <div class="lib-header-title">${isFull ? '📖 ' : '📋 '}${esc(ref.title)}</div>
-        <div class="lib-header-subtitle">${bookInfo ? esc(bookInfo.author) : ''}${isFull ? ' — Full Text' : ' — Reference Notes'}</div>
+    libTotalPages = meta.page_count || 0;
+
+    // Toolbar
+    toolbar.innerHTML = `
+      <div class="lib-toolbar-left">
+        <span class="lib-toolbar-icon">${bookIcon(libAllBooks.findIndex(b=>b.id===bookId))}</span>
+        <div>
+          <div class="lib-toolbar-title">${esc(meta.title)}</div>
+          <div class="lib-toolbar-subtitle">${esc(meta.author)} · ${libTotalPages} pages · ${meta.ocr_used ? 'OCR' : 'Text'}</div>
+        </div>
       </div>
-      <div class="lib-header-actions" style="margin-left:auto;display:flex;gap:8px">
-        ${isFull ? `<button class="lib-dl-btn" onclick="libDownloadText('${bookId}','${esc(ref.title)}')" title="Download as text file">⬇ Download</button>` : ''}
-      </div>
-    </div>`;
-    chapters.innerHTML = '';
+      <div class="lib-toolbar-controls">
+        <button class="lib-ctrl-btn" onclick="libToggleTOC()" title="Table of Contents">📑 TOC</button>
+        <button class="lib-ctrl-btn" onclick="libChangeFontSize(-2)" title="Smaller font">A-</button>
+        <button class="lib-ctrl-btn" onclick="libChangeFontSize(2)" title="Larger font">A+</button>
+        <button class="lib-ctrl-btn" onclick="libToggleTheme()" title="Light/Dark mode">${libDarkMode ? '☀️' : '🌙'}</button>
+        <button class="lib-ctrl-btn" onclick="libAddBookmark(${libCurrentPage})" title="Bookmark this page">🔖</button>
+        <button class="lib-ctrl-btn" onclick="libShowHighlights()" title="My highlights & notes">✨ Notes</button>
+      </div>`;
 
-    if (isLarge) {
-      // Fast path for large texts: chunked paginated reader for page-delimited books
-      const allText = ref.content;
-      const pageChunks = allText.split(/--- Page \d+ ---/).filter(c => c.trim());
-      const totalPages = pageChunks.length;
-      const perChunk = 25; // pages per view
-      
-      function renderChunk(pageIdx) {
-        const start = pageIdx * perChunk;
-        const end = Math.min(start + perChunk, totalPages);
-        let html = '';
-        for (let i = start; i < end; i++) {
-          html += `<div class="lib-page-block" data-page="${i+1}">`;
-          html += `<div class="lib-page-num">— Page ${i+1} —</div>`;
-          html += `<pre class="lib-page-content">${esc(pageChunks[i])}</pre></div>`;
-        }
-        
-        const totalChunks = Math.ceil(totalPages / perChunk);
-        const nav = `<div class="lib-page-nav">
-          <button ${pageIdx === 0 ? 'disabled' : ''} onclick="libCurrentChunk=${pageIdx-1};renderChunk(libCurrentChunk)">◀ Prev</button>
-          <span class="lib-page-info">Pages ${start+1}–${end} of ${totalPages}</span>
-          <button ${pageIdx >= totalChunks-1 ? 'disabled' : ''} onclick="libCurrentChunk=${pageIdx+1};renderChunk(libCurrentChunk)">Next ▶</button>
-        </div>`;
-        
-        content.innerHTML = nav + '<div class="lib-ref-body lib-ref-large">' + html + '</div>' + nav;
-        content.scrollTop = 0;
-      }
-      
-      let libCurrentChunk = 0;
-      renderChunk(0);
-    } else {
-      // Normal path: render markdown-ish content
-      let body = esc(ref.content);
-      body = body.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      body = body.replace(/`(.+?)`/g, '<code>$1</code>');
-      const blocks = body.split(/\n\n+/);
-      let htmlOut = '';
-      for(let b of blocks) {
-        b = b.trim();
-        if(!b) continue;
-        if(b.startsWith('# '))     { htmlOut += b.replace(/^# (.+)$/gm, '<h2 class="lib-ref-h2">$1</h2>'); continue; }
-        if(b.startsWith('## '))    { htmlOut += b.replace(/^## (.+)$/gm, '<h3 class="lib-ref-h3">$1</h3>'); continue; }
-        if(b.startsWith('### '))   { htmlOut += b.replace(/^### (.+)$/gm, '<h4 class="lib-ref-h4">$1</h4>'); continue; }
-        if(/^[-*]{3,}$/.test(b)) { htmlOut += '<hr>'; continue; }
-        if(/^[-*]\s/m.test(b)) {
-          let lis = b.split('\n').filter(l => l.trim());
-          htmlOut += '<ul>';
-          for(let li of lis) {
-            li = li.replace(/^[-*]\s+/, '').trim();
-            if(li) htmlOut += '<li>'+li+'</li>';
-          }
-          htmlOut += '</ul>';
-          continue;
-        }
-        htmlOut += '<p class="lib-ref-p">'+b.replace(/\n/g, '<br>')+'</p>';
-      }
-      body = htmlOut;
-      content.innerHTML = `<div class="lib-ref-body">${body}</div>`;
+    // TOC dropdown
+    if(toc && toc.length) {
+      let tocHtml = '<div class="lib-toc-list">';
+      toc.forEach(t => {
+        tocHtml += `<div class="lib-toc-item" onclick="libGoToPage(${t.page_number});libToggleTOC()">
+          ${'&nbsp;'.repeat(t.level * 4)}📄 ${esc(t.title)} <span class="lib-toc-page">p.${t.page_number}</span></div>`;
+      });
+      tocHtml += '</div>';
+      tocDiv.innerHTML = `<div class="lib-toc-header">📑 Table of Contents</div>${tocHtml}`;
     }
-    content.scrollTop = 0;
+
+    // Load page content
+    await libLoadPage(libCurrentPage);
+
+    // Footer with pagination
+    libRenderFooter();
   } catch(e) {
     content.innerHTML = `<div class="loading">✨ ${e.message}</div>`;
+    toolbar.innerHTML = '';
   }
 }
 
-// Download full text as .txt file
-function libDownloadText(bookId, title) {
-  loadJSON(`/api/library/reference/${bookId}`).then(ref => {
-    const blob = new Blob([ref.content], {type: 'text/plain;charset=utf-8'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = (title || bookId).replace(/[^a-zA-Z0-9_-]/g,'_') + '.txt';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }).catch(e => alert('Download failed: '+e.message));
+async function libLoadPage(pageNum) {
+  const content = document.getElementById('library-reader-content');
+  content.innerHTML = '<div class="loading">📖 Loading page...</div>';
+  
+  try {
+    const page = await loadJSON(`/api/library/book/${libCurrentId}/page/${pageNum}`);
+    if(!page) {
+      content.innerHTML = '<div class="loading">Page not found</div>';
+      return;
+    }
+    
+    // Convert markdown-ish to HTML
+    let text = page.content || '';
+    text = libRenderMarkdown(text);
+    content.innerHTML = text;
+    content.style.fontSize = libFontSize + 'px';
+    content.className = 'library-reader-content ' + (libDarkMode ? 'lib-dark' : 'lib-light');
+    content.scrollTop = 0;
+  } catch(e) {
+    content.innerHTML = `<div class="loading">Error: ${e.message}</div>`;
+  }
 }
+
+function libRenderMarkdown(text) {
+  if(!text) return '<div class="loading">(empty page)</div>';
+  
+  // Escape HTML
+  let html = esc(text);
+  
+  // Headings
+  html = html.replace(/^#### (.+)$/gm, '<h4 class="lib-h4">$1</h4>');
+  html = html.replace(/^### (.+)$/gm,  '<h3 class="lib-h3">$1</h3>');
+  html = html.replace(/^## (.+)$/gm,   '<h2 class="lib-h2">$1</h2>');
+  html = html.replace(/^# (.+)$/gm,    '<h1 class="lib-h1">$1</h1>');
+  
+  // Bold / italic
+  html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  
+  // Code
+  html = html.replace(/`(.+?)`/g, '<code>$1</code>');
+  
+  // Horizontal rules
+  html = html.replace(/^---+$/gm, '<hr>');
+  html = html.replace(/^\*\*\*+$/gm, '<hr>');
+  
+  // Blockquotes
+  html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  
+  // Lists
+  html = html.replace(/^(\d+)\. (.+)$/gm, '<li class="lib-num">$2</li>');
+  html = html.replace(/^[-*] (.+)$/gm, '<li class="lib-bullet">$2</li>');
+  
+  // Paragraphs - split by blank lines, wrap non-text in <p>
+  const blocks = html.split(/\n{2,}/);
+  let result = '';
+  for(let block of blocks) {
+    block = block.trim();
+    if(!block) continue;
+    // Skip if already wrapped in block-level element
+    if(/^<(h[1-6]|hr|blockquote|ul|ol)/.test(block)) {
+      // Wrap list items in <ul>
+      if(block.includes('<li class="lib-num">')) {
+        block = '<ol>' + block + '</ol>';
+      } else if(block.includes('<li class="lib-bullet">')) {
+        block = '<ul>' + block + '</ul>';
+      }
+      result += block;
+    } else {
+      // Handle mixed list/text blocks
+      if(block.includes('<li>')) {
+        const lis = block.split('\n').filter(l => l.trim());
+        result += '<ul>' + lis.map(l => l.replace(/^\s*[-*] /, '').replace(/^\d+\.\s*/, '')) + '</ul>';
+      } else {
+        block = block.replace(/\n/g, '<br>');
+        result += '<p>' + block + '</p>';
+      }
+    }
+  }
+  
+  return result;
+}
+
+function libRenderFooter() {
+  const footer = document.getElementById('library-reader-footer');
+  const prev = libCurrentPage > 1;
+  const next = libCurrentPage < libTotalPages;
+  footer.innerHTML = `
+    <div class="lib-footer-nav">
+      <button class="lib-nav-btn" ${prev ? '' : 'disabled'} onclick="libGoToPage(${libCurrentPage - 1})">◀ Prev</button>
+      <div class="lib-footer-center">
+        <input type="number" class="lib-page-input" value="${libCurrentPage}" min="1" max="${libTotalPages}" onchange="libGoToPage(parseInt(this.value))" />
+        <span class="lib-page-info"> / ${libTotalPages} pages</span>
+      </div>
+      <button class="lib-nav-btn" ${next ? '' : 'disabled'} onclick="libGoToPage(${libCurrentPage + 1})">Next ▶</button>
+    </div>
+    <div class="lib-footer-progress">
+      <div class="lib-progress-fill" style="width:${((libCurrentPage/Math.max(libTotalPages,1))*100).toFixed(1)}%"></div>
+      <span class="lib-progress-text">${((libCurrentPage/Math.max(libTotalPages,1))*100).toFixed(1)}%</span>
+    </div>`;
+  
+  // Update server progress
+  try { fetch(`/api/library/book/${libCurrentId}/progress`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:libCurrentPage})}); } catch(e) {}
+}
+
+function libGoToPage(n) {
+  n = Math.max(1, Math.min(n, libTotalPages));
+  libCurrentPage = n;
+  libLoadPage(n);
+  libRenderFooter();
+  document.querySelector('.library-reader-content').scrollTop = 0;
+}
+
+function libChangeFontSize(delta) {
+  libFontSize = Math.max(12, Math.min(32, libFontSize + delta));
+  document.getElementById('library-reader-content').style.fontSize = libFontSize + 'px';
+}
+
+function libToggleTheme() {
+  libDarkMode = !libDarkMode;
+  document.getElementById('library-reader-content').className = 'library-reader-content ' + (libDarkMode ? 'lib-dark' : 'lib-light');
+  const btn = document.querySelector('.lib-ctrl-btn[onclick*="libToggleTheme"]');
+  if(btn) btn.textContent = libDarkMode ? '☀️' : '🌙';
+}
+
+function libToggleTOC() {
+  const toc = document.getElementById('library-reader-toc');
+  toc.classList.toggle('lib-toc-open');
+}
+
+function libShowHighlights() {
+  if(!libCurrentId || !libCurrentPage) return;
+  Promise.all([
+    loadJSON(`/api/library/book/${libCurrentId}/highlights`),
+    loadJSON(`/api/library/book/${libCurrentId}/notes`)
+  ]).then(([highlights, notes]) => {
+    let html = '<div class="lib-notes-panel"><h3>✨ Highlights & Notes</h3>';
+    if(highlights && highlights.length) {
+      html += '<h4>Highlights</h4>';
+      for(const h of highlights) {
+        html += `<div class="lib-highlight-item" style="border-left:3px solid ${h.color}">
+          <strong>p.${h.page_number}:</strong> ${esc(h.selected_text)}
+          ${h.note ? '<br><em>Note: '+esc(h.note)+'</em>' : ''}
+        </div>`;
+      }
+    }
+    if(notes && notes.length) {
+      html += '<h4>Notes</h4>';
+      for(const n of notes) {
+        html += `<div class="lib-note-item">
+          <strong>p.${n.page_number}:</strong> ${esc(n.content)}
+          <br><small>${n.date_created.split('T')[0]}</small>
+        </div>`;
+      }
+    }
+    if(!highlights?.length && !notes?.length) {
+      html += '<p style="opacity:0.6">No highlights or notes yet. Right-click a page to add notes.</p>';
+    }
+    html += '</div>';
+    document.getElementById('library-reader-content').innerHTML = html;
+  });
+}
+
+async function libAddBookmark(page) {
+  try {
+    await fetch(`/api/library/book/${libCurrentId}/bookmark`, {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({page: page, title: `Page ${page}`})
+    });
+    alert('🔖 Bookmarked page ' + page);
+  } catch(e) { alert('Bookmark failed: ' + e.message); }
+}
+
+// Global library search
+async function librarySearch() {
+  const query = document.getElementById('library-search-input').value.trim();
+  if(!query) return;
+  
+  const shelf = document.getElementById('library-shelf');
+  shelf.innerHTML = '<div class="loading">🔍 Searching...</div>';
+  
+  try {
+    const results = await loadJSON(`/api/library/search?q=${encodeURIComponent(query)}`);
+    if(!results.results || !results.results.length) {
+      shelf.innerHTML = `<div class="loading">No results for "${esc(query)}".</div>`;
+      return;
+    }
+    let html = `<div style="padding:8px 12px;font-size:13px;opacity:0.7">Found ${results.results.length} results for "${esc(query)}"<br><hr style="border-color:rgba(255,255,255,0.05);margin:8px 0"></div>`;
+    const byBook = {};
+    for(const r of results.results) {
+      if(!byBook[r.book_id]) byBook[r.book_id] = {title: r.book_title, results: []};
+      byBook[r.book_id].results.push(r);
+    }
+    for(const [bookId, data] of Object.entries(byBook)) {
+      html += `<div class="lib-search-book" onclick="libOpenBook('${bookId}')">
+        <strong>📖 ${esc(data.title)}</strong> <span style="font-size:11px;opacity:0.6">(${data.results.length} hits)</span>
+      </div>`;
+      for(const r of data.results.slice(0,3)) {
+        html += `<div class="lib-search-result" onclick="event.stopPropagation();libOpenBook('${bookId}');setTimeout(()=>libGoToPage(${r.page_number}),800)">
+          <span style="opacity:0.5">p.${r.page_number}:</span> ${esc(r.snippet)}
+        </div>`;
+      }
+    }
+    shelf.innerHTML = html;
+  } catch(e) {
+    shelf.innerHTML = `<div class="loading">Search error: ${e.message}</div>`;
+  }
+}
+
+// Import PDFs
+async function importAllPDFs() {
+  const shelf = document.getElementById('library-shelf');
+  shelf.innerHTML = '<div class="loading">📥 Importing PDFs... This may take a while.</div>';
+  try {
+    const resp = await fetch('/api/library/import', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({directory: '/home/ladylefey/Documents/magewisdom'})
+    });
+    const result = await resp.json();
+    shelf.innerHTML = `<div class="loading">Import started! ${result.imported ? result.imported.length : 0} books being processed.<br>
+      <br>This happens in the background. Refresh the library in a few minutes to see them all. ✨
+      <br><br><button class="btn btn-sm" onclick="loadLibrary()">🔄 Refresh Library</button></div>`;
+  } catch(e) {
+    shelf.innerHTML = `<div class="loading">Import error: ${e.message}</div>`;
+  }
+}
+
+// Keyboard navigation for book reader
+document.addEventListener('keydown', (e) => {
+  if(!libCurrentId || !document.getElementById('tab-library')?.classList.contains('active')) return;
+  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const panel = document.querySelector('.library-reader-content');
+  if(!panel) return;
+  if(e.key === 'ArrowLeft') { e.preventDefault(); libGoToPage(libCurrentPage - 1); }
+  if(e.key === 'ArrowRight') { e.preventDefault(); libGoToPage(libCurrentPage + 1); }
+});
 
 // Load library when tab is shown
 document.addEventListener('DOMContentLoaded', () => {
-  // Observe tab switches to load library content
   const observer = new MutationObserver(() => {
     const libTab = document.getElementById('tab-library');
     if(libTab && libTab.classList.contains('active') && !libTab.dataset.loaded) {

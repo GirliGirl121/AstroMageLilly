@@ -14,7 +14,14 @@ from datetime import datetime, date, timezone, timedelta
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from flask import Flask, jsonify, make_response, render_template, request
+from flask import Flask, jsonify, make_response, render_template, request, send_file
+from library_engine import (
+    init_db, process_pdf, get_all_books, get_book, get_book_page,
+    get_book_toc, search_library, update_reading_progress,
+    add_bookmark, get_bookmarks, add_highlight, get_highlights,
+    add_note, get_notes, delete_book, import_pdfs_from_directory,
+    PDF_SOURCE_DIR, PROCESSED_DIR
+)
 import swisseph as swe
 swe.set_ephe_path(os.path.expanduser('~/.swisseph'))
 from web_diary_db import get_diary_db
@@ -2349,6 +2356,141 @@ def home():
     resp.headers["Pragma"] = "no-cache"
     resp.headers["Expires"] = "0"
     return resp
+
+# ════════════════════════════════════════════════════════════════════════
+# LIBRARY API ROUTES
+# ═══════════════════════════════════════════════════════════════════════
+
+@app.route("/api/library/books", methods=["GET"])
+def api_library_books():
+    """Get all books in the library."""
+    books = get_all_books()
+    return jsonify(books)
+
+@app.route("/api/library/book/<book_id>", methods=["GET"])
+def api_library_book(book_id):
+    """Get a single book's metadata."""
+    book = get_book(book_id)
+    if not book:
+        return jsonify({"error": "Book not found"}), 404
+    return jsonify(book)
+
+@app.route("/api/library/book/<book_id>/page/<int:page_number>", methods=["GET"])
+def api_library_page(book_id, page_number):
+    """Get a single page's content."""
+    page = get_book_page(book_id, page_number)
+    if not page:
+        return jsonify({"error": "Page not found"}), 404
+    return jsonify(page)
+
+@app.route("/api/library/book/<book_id>/toc", methods=["GET"])
+def api_library_toc(book_id):
+    """Get table of contents for a book."""
+    toc = get_book_toc(book_id)
+    return jsonify(toc)
+
+@app.route("/api/library/book/<book_id>/search", methods=["GET"])
+def api_library_search_in_book(book_id):
+    """Search within a specific book."""
+    query = request.args.get("q", "")
+    if not query:
+        return jsonify({"error": "Missing query parameter 'q'"}), 400
+    results = search_library(query, book_id)
+    return jsonify({"query": query, "results": results})
+
+@app.route("/api/library/search", methods=["GET"])
+def api_library_search():
+    """Search across all books."""
+    query = request.args.get("q", "")
+    if not query:
+        return jsonify({"error": "Missing query parameter 'q'"}), 400
+    results = search_library(query)
+    return jsonify({"query": query, "results": results})
+
+@app.route("/api/library/book/<book_id>/progress", methods=["POST"])
+def api_library_progress(book_id):
+    """Update reading progress."""
+    data = request.json or {}
+    page_number = data.get("page", 1)
+    update_reading_progress(book_id, page_number)
+    return jsonify({"status": "ok", "page": page_number})
+
+@app.route("/api/library/book/<book_id>/bookmark", methods=["POST"])
+def api_library_add_bookmark(book_id):
+    """Add a bookmark."""
+    data = request.json or {}
+    page_number = data.get("page", 1)
+    title = data.get("title", "")
+    color = data.get("color", "#d4af37")
+    result = add_bookmark(book_id, page_number, title, color)
+    return jsonify(result)
+
+@app.route("/api/library/book/<book_id>/bookmarks", methods=["GET"])
+def api_library_bookmarks(book_id):
+    """Get all bookmarks for a book."""
+    bookmarks = get_bookmarks(book_id)
+    return jsonify(bookmarks)
+
+@app.route("/api/library/book/<book_id>/highlight", methods=["POST"])
+def api_library_add_highlight(book_id):
+    """Add a highlight."""
+    data = request.json or {}
+    result = add_highlight(
+        book_id,
+        data.get("page", 1),
+        data.get("start_offset", 0),
+        data.get("end_offset", 0),
+        data.get("selected_text", ""),
+        data.get("color", "#ffd700"),
+        data.get("note", "")
+    )
+    return jsonify(result)
+
+@app.route("/api/library/book/<book_id>/highlights", methods=["GET"])
+def api_library_highlights(book_id):
+    """Get all highlights for a book."""
+    highlights = get_highlights(book_id)
+    return jsonify(highlights)
+
+@app.route("/api/library/book/<book_id>/note", methods=["POST"])
+def api_library_add_note(book_id):
+    """Add a personal note."""
+    data = request.json or {}
+    result = add_note(book_id, data.get("page", 1), data.get("content", ""))
+    return jsonify(result)
+
+@app.route("/api/library/book/<book_id>/notes", methods=["GET"])
+def api_library_notes(book_id):
+    """Get all notes for a book."""
+    notes = get_notes(book_id)
+    return jsonify(notes)
+
+@app.route("/api/library/book/<book_id>", methods=["DELETE"])
+def api_library_delete_book(book_id):
+    """Delete a book from the library."""
+    delete_book(book_id)
+    return jsonify({"status": "ok", "deleted": book_id})
+
+@app.route("/api/library/import", methods=["POST"])
+def api_library_import():
+    """Import PDFs from the default directory or uploaded file."""
+    data = request.json or {}
+    directory = data.get("directory", str(PDF_SOURCE_DIR))
+    force_ocr = data.get("force_ocr", False)
+    results = import_pdfs_from_directory(directory, force_ocr=force_ocr)
+    return jsonify({"imported": results})
+
+@app.route("/api/library/cover/<book_id>", methods=["GET"])
+def api_library_cover(book_id):
+    """Get book cover image."""
+    cover_path = PROCESSED_DIR / f"{book_id}_cover.png"
+    if cover_path.exists():
+        return send_file(str(cover_path))
+    return jsonify({"error": "No cover"}), 404
+
+# Initialize library DB on startup
+init_db()
+
 
 if __name__ == "__main__":
     import socket
