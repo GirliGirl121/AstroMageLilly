@@ -368,10 +368,18 @@
       <div class="tab-page" id="tab-magi">
         <!-- ═══ MagiJournal — Web Diary ═══ -->
         <div class="magi-layout">
-          <!-- Left Column: Day Navigation + Calendar -->
+          <!-- Left Column: Day Navigation + Calendar + View Switcher -->
           <div class="magi-left">
+            <!-- View Switcher -->
+            <div class="card magi-view-switch">
+              <button class="magi-view-btn active" data-magi-view="day">📝 Day</button>
+              <button class="magi-view-btn" data-magi-view="week">📅 Week</button>
+              <button class="magi-view-btn" data-magi-view="year">🗓 Year</button>
+              <button class="magi-view-btn" data-magi-view="search">🔍 Search</button>
+            </div>
+
             <!-- Day Picker -->
-            <div class="card magi-day-picker">
+            <div class="card magi-day-picker" id="magi-day-picker">
               <div class="magi-day-nav">
                 <button class="magi-nav-btn" id="magi-prev-day">◀</button>
                 <div class="magi-day-display">
@@ -387,7 +395,7 @@
             </div>
 
             <!-- Month Calendar Mini -->
-            <div class="card magi-month-card">
+            <div class="card magi-month-card" id="magi-month-cal">
               <div class="magi-month-header">
                 <button class="magi-nav-btn mini" id="magi-prev-month">◀</button>
                 <span class="magi-month-title" id="magi-month-title">—</span>
@@ -408,57 +416,62 @@
             </div>
           </div>
 
-          <!-- Right Column: Day Detail -->
+          <!-- Right Column: Dynamic Content -->
           <div class="magi-right">
-            <!-- Astro Info Bar -->
-            <div class="card magi-astro-bar" id="magi-astro-bar">
-              <div class="loading">Consulting the stars...</div>
+
+            <!-- Day View: Astro Bar + Diary/Tasks/Dreams -->
+            <div class="magi-view" id="magi-view-day">
+              <!-- Astro Info Bar -->
+              <div class="card magi-astro-bar" id="magi-astro-bar">
+                <div class="loading">Consulting the stars...</div>
+              </div>
+              <!-- Sub-tabs -->
+              <div class="magi-tabs">
+                <div class="magi-tab-bar">
+                  <button class="magi-tab-btn active" data-magi-tab="diary">📝 Diary</button>
+                  <button class="magi-tab-btn" data-magi-tab="tasks">☑ Tasks</button>
+                  <button class="magi-tab-btn" data-magi-tab="dreams">🌙 Dreams</button>
+                </div>
+                <div class="magi-tab-content active" id="magi-tab-diary">
+                  <div class="magi-toolbar">
+                    <button class="magi-tool-btn" id="magi-bookmark-btn">☆ Bookmark</button>
+                    <button class="magi-tool-btn" id="magi-favorite-btn">♥ Favorite</button>
+                    <span class="magi-saved-status" id="magi-saved-status"></span>
+                  </div>
+                  <textarea class="magi-diary-text" id="magi-diary-text" placeholder="Write your diary entry for this day..."></textarea>
+                </div>
+                <div class="magi-tab-content" id="magi-tab-tasks">
+                  <div class="magi-task-input-row">
+                    <input type="text" class="magi-task-input" id="magi-task-input" placeholder="Add a task...">
+                    <button class="magi-task-add-btn" id="magi-task-add">+ Add</button>
+                  </div>
+                  <div class="magi-task-list" id="magi-task-list">
+                    <div class="loading">No tasks for this day</div>
+                  </div>
+                </div>
+                <div class="magi-tab-content" id="magi-tab-dreams">
+                  <textarea class="magi-dream-text" id="magi-dream-text" placeholder="Record your dreams..."></textarea>
+                </div>
+              </div>
             </div>
 
-            <!-- Tabs: Diary / Tasks / Dreams / Search -->
-            <div class="magi-tabs">
-              <div class="magi-tab-bar">
-                <button class="magi-tab-btn active" data-magi-tab="diary">📝 Diary</button>
-                <button class="magi-tab-btn" data-magi-tab="week">📅 Week</button>
-                <button class="magi-tab-btn" data-magi-tab="year">🗓 Year</button>
-                <button class="magi-tab-btn" data-magi-tab="tasks">☑ Tasks</button>
-                <button class="magi-tab-btn" data-magi-tab="dreams">🌙 Dreams</button>
-                <button class="magi-tab-btn" data-magi-tab="search">🔍 Search</button>
-              </div>
-
-              <!-- Diary Tab -->
-              <div class="magi-tab-content active" id="magi-tab-diary">
-                <div class="magi-toolbar">
-                  <button class="magi-tool-btn" id="magi-bookmark-btn">☆ Bookmark</button>
-                  <button class="magi-tool-btn" id="magi-favorite-btn">♥ Favorite</button>
-                  <span class="magi-saved-status" id="magi-saved-status"></span>
-                </div>
-                <textarea class="magi-diary-text" id="magi-diary-text" placeholder="Write your diary entry for this day..."></textarea>
-              </div>
-
-              <!-- Tasks Tab -->
-              <div class="magi-tab-content" id="magi-tab-tasks">
-                <div class="magi-task-input-row">
-                  <input type="text" class="magi-task-input" id="magi-task-input" placeholder="Add a task...">
-                  <button class="magi-task-add-btn" id="magi-task-add">+ Add</button>
-                </div>
-                <div class="magi-task-list" id="magi-task-list">
-                  <div class="loading">No tasks for this day</div>
-                </div>
-              </div>
-
-              <!-- Week View Tab -->
-              <div class="magi-tab-content" id="magi-tab-week">
+            <!-- Week View -->
+            <div class="magi-view" id="magi-view-week" style="display:none">
+              <div class="card">
+                <div class="card-header"><span class="card-title">📅 Week View</span></div>
                 <div class="magi-week-header">
-                  <button class="magi-nav-btn" id="magi-prev-week">◀ Prev</button>
+                  <button class="magi-nav-btn" id="magi-prev-week">◀ Prev Week</button>
                   <span class="magi-week-title" id="magi-week-title">—</span>
-                  <button class="magi-nav-btn" id="magi-next-week">Next ▶</button>
+                  <button class="magi-nav-btn" id="magi-next-week">Next Week ▶</button>
                 </div>
                 <div class="magi-week-grid" id="magi-week-grid"></div>
               </div>
+            </div>
 
-              <!-- Year View Tab -->
-              <div class="magi-tab-content" id="magi-tab-year">
+            <!-- Year View -->
+            <div class="magi-view" id="magi-view-year" style="display:none">
+              <div class="card">
+                <div class="card-header"><span class="card-title">🗓 Year View</span></div>
                 <div class="magi-year-header">
                   <button class="magi-nav-btn" id="magi-prev-year">◀</button>
                   <span class="magi-year-title" id="magi-year-title">—</span>
@@ -466,14 +479,12 @@
                 </div>
                 <div class="magi-year-grid" id="magi-year-grid"></div>
               </div>
+            </div>
 
-              <!-- Dreams Tab -->
-              <div class="magi-tab-content" id="magi-tab-dreams">
-                <textarea class="magi-dream-text" id="magi-dream-text" placeholder="Record your dreams..."></textarea>
-              </div>
-
-              <!-- Search Tab -->
-              <div class="magi-tab-content" id="magi-tab-search">
+            <!-- Search View -->
+            <div class="magi-view" id="magi-view-search" style="display:none">
+              <div class="card">
+                <div class="card-header"><span class="card-title">🔍 Search</span></div>
                 <div class="magi-search-row">
                   <input type="text" class="magi-search-input" id="magi-search-input" placeholder="Search diary, tasks, dreams...">
                   <button class="magi-search-btn" id="magi-search-btn">Search</button>
@@ -482,6 +493,7 @@
                 <div class="magi-search-results" id="magi-search-results"></div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -2678,7 +2690,7 @@ document.addEventListener('DOMContentLoaded', () => {
     magiLoadDay(dateStr);
   });
 
-  // Tab switching inside MagiJournal
+  // Tab switching inside MagiJournal (Diary/Tasks/Dreams sub-tabs)
   document.querySelectorAll('.magi-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.magi-tab-btn').forEach(b => b.classList.remove('active'));
@@ -2686,6 +2698,20 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.classList.add('active');
       const tab = document.getElementById('magi-tab-'+btn.dataset.magiTab);
       if(tab) tab.classList.add('active');
+    });
+  });
+
+  // View switching (Day/Week/Year/Search)
+  document.querySelectorAll('.magi-view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.magi-view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      var view = btn.dataset.magiView;
+      document.querySelectorAll('.magi-view').forEach(v => v.style.display = 'none');
+      var viewEl = document.getElementById('magi-view-'+view);
+      if(viewEl) viewEl.style.display = 'block';
+      if(view === 'week') magiRenderWeek();
+      if(view === 'year') magiRenderYear();
     });
   });
 

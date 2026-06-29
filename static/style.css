@@ -1828,6 +1828,35 @@ body::before {
   padding: 10px;
 }
 
+/* View Switcher */
+.magi-view-switch {
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+}
+.magi-view-btn {
+  flex: 1;
+  padding: 8px 4px;
+  font-size: 11px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  color: #a090b0;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.magi-view-btn:hover {
+  background: rgba(212,175,55,0.08);
+  color: #f0eaff;
+}
+.magi-view-btn.active {
+  background: rgba(212,175,55,0.15);
+  border-color: #d4af37;
+  color: #d4af37;
+  font-weight: 600;
+}
+
 .magi-bm-row {
   display: flex;
   gap: 8px;
