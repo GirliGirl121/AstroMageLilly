@@ -23,7 +23,15 @@ def load_json(name: str) -> dict:
 
 MANIONS_DATA = load_json('picatrix_mansions.json')
 NAKSHATRA_DATA = load_json('nakshatra_data.json')
-TAROT_DATA = load_json('tarot_data.json')
+TAROT_RAW = load_json('tarot_data.json')
+# Build flat cards list from major_arcana + minor_arcana suits
+_TAROT_CARDS = list(TAROT_RAW.get('major_arcana', []))
+_minor = TAROT_RAW.get('minor_arcana', {})
+for suit in ('wands', 'cups', 'swords', 'pentacles'):
+    for card in _minor.get(suit, []):
+        card['suit'] = suit
+        _TAROT_CARDS.append(card)
+TAROT_DATA = {**TAROT_RAW, 'cards': _TAROT_CARDS}
 QH_DATA = load_json('quran_hadith_data.json')
 
 # ─── Nakshatra & Dasha Constants ──────────────────────────────────────────

@@ -674,9 +674,64 @@
         </div>
       </div>
       <div class="tab-page" id="tab-tarot">
-        <div class="card tab-full-card">
-          <div class="card-header"><span class="card-title">🃏 Rider-Waite Tarot — Full Deck</span></div>
-          <div id="tarot-full-content"><div class="loading">Loading tarot...</div></div>
+        <!-- Tarot sub-navigation -->
+        <div class="tarot-subnav" id="tarot-subnav">
+          <button class="tarot-subnav-item active" data-tarot-section="new-reading" onclick="switchTarotSection('new-reading',this)">🔮 New Reading</button>
+          <button class="tarot-subnav-item" data-tarot-section="card-library" onclick="switchTarotSection('card-library',this)">📚 Card Library</button>
+          <button class="tarot-subnav-item" data-tarot-section="reading-journal" onclick="switchTarotSection('reading-journal',this)">📖 Reading Journal</button>
+          <button class="tarot-subnav-item" data-tarot-section="learn-tarot" onclick="switchTarotSection('learn-tarot',this)">⭐ Learn Tarot</button>
+        </div>
+        <!-- Section: New Reading -->
+        <div class="tarot-section active" id="tarot-new-reading">
+          <div class="card tab-full-card">
+            <div class="card-header"><span class="card-title">🔮 New Tarot Reading</span></div>
+            <div class="tarot-reading-toolbar">
+              <label>Spread:</label>
+              <select id="tarot-spread-select">
+                <option value="1">One Card — Quick Insight</option>
+                <option value="3" selected>Three Cards — Past · Present · Future</option>
+                <option value="5">Five Cards — Cross of Intent</option>
+                <option value="10">Celtic Cross (10 cards)</option>
+              </select>
+              <button class="tarot-draw-btn" onclick="tarotDrawCards()">🔮 Draw Cards</button>
+            </div>
+            <div id="tarot-reading-result" class="tarot-reading-result">
+              <div class="tarot-reading-placeholder">Choose a spread and draw cards to begin your reading ✨</div>
+            </div>
+          </div>
+        </div>
+        <!-- Section: Card Library -->
+        <div class="tarot-section" id="tarot-card-library">
+          <div class="card tab-full-card">
+            <div class="card-header">
+              <span class="card-title">📚 Rider-Waite-Smith Tarot — Full Deck</span>
+              <div class="tarot-library-filters">
+                <button class="tarot-filter-btn active" data-filter="all" onclick="tarotFilterLibrary('all',this)">All 78</button>
+                <button class="tarot-filter-btn" data-filter="major" onclick="tarotFilterLibrary('major',this)">⭐ Major</button>
+                <button class="tarot-filter-btn" data-filter="wands" onclick="tarotFilterLibrary('wands',this)">🪄 Wands</button>
+                <button class="tarot-filter-btn" data-filter="cups" onclick="tarotFilterLibrary('cups',this)">🏆 Cups</button>
+                <button class="tarot-filter-btn" data-filter="swords" onclick="tarotFilterLibrary('swords',this)">⚔️ Swords</button>
+                <button class="tarot-filter-btn" data-filter="pentacles" onclick="tarotFilterLibrary('pentacles',this)">🪙 Pentacles</button>
+              </div>
+            </div>
+            <div id="tarot-library-grid"><div class="loading">Loading card library...</div></div>
+          </div>
+        </div>
+        <!-- Section: Reading Journal -->
+        <div class="tarot-section" id="tarot-reading-journal">
+          <div class="card tab-full-card">
+            <div class="card-header"><span class="card-title">📖 Reading Journal</span></div>
+            <div id="tarot-journal-content">
+              <div class="tarot-journal-empty">Your saved readings will appear here. Perform a reading and save it to your journal! 📓</div>
+            </div>
+          </div>
+        </div>
+        <!-- Section: Learn Tarot -->
+        <div class="tarot-section" id="tarot-learn-tarot">
+          <div class="card tab-full-card">
+            <div class="card-header"><span class="card-title">⭐ Learn Tarot</span></div>
+            <div id="tarot-learn-content"><div class="loading">Loading tarot knowledge...</div></div>
+          </div>
         </div>
       </div>
       <div class="tab-page" id="tab-transits">
@@ -817,8 +872,7 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
     const lazy = {
       'tab-natal': 'natal-worksheet', 'tab-library': 'library-shelf',
       'tab-quran': 'quran-full-content', 'tab-hadith': 'hadith-full-content',
-      'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content',
-      'tab-tarot': 'tarot-full-content', 'tab-transits': 'live-content',
+      'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content', 'tab-transits': 'live-content',
       'tab-horoscope': 'horo-content', 'tab-magi': 'magi-astro-bar',
       // 'tab-simply' removed from lazy — content is now static
     };
@@ -835,6 +889,8 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
       else if(btn.dataset.tab === 'tab-quran') loadQuranFull();
       else if(btn.dataset.tab === 'tab-hadith') loadHadithFull();
     }
+    // Tarot has its own section-based lazy load
+    if(btn.dataset.tab === 'tab-tarot') loadTarotFull();
   });
 });
 
@@ -1906,12 +1962,12 @@ async function loadNakshatrasFull() {
     const nd = await loadJSON('/static/nakshatra_data.json');
     let html = `<div class="section-desc">The 27 Nakshatras (lunar mansions) of Vedic astrology. Each spans 13°20' and is ruled by a planet.</div>
     <div class="current-nak-box">
-      <strong>Current: ${d.nakshatra}</strong> (Pada ${d.pada}) — Lord ${d.lord} · ${d.gana||''} · ${d.guna||''}
+      <strong>Current: ${d.name}</strong> (Pada ${d.pada}) — Lord ${d.lord} · ${d.gana||''} · ${d.guna||''}
       <div>${d.description||''}</div>
     </div>
     <h3 class="section-title">All 27 Nakshatras</h3><div class="nak-grid">`;
     for(const n of (nd.nakshatras||[])) {
-      html += `<div class="nak-card ${n.name===d.nakshatra?'nak-active':''}">
+      html += `<div class="nak-card ${n.name===d.name?'nak-active':''}">
         <div class="nak-card-name">${n.name}</div>
         <div class="nak-card-sans">${n.sanskrit||''}</div>
         <div class="nak-card-lord">${n.lord} (${n.dasha_years}yr)</div>
@@ -1924,34 +1980,257 @@ async function loadNakshatrasFull() {
 }
 
 async function loadTarotFull() {
-  const tc = document.getElementById('tarot-full-content');
+  // Load shared tarot data once
   try {
-    const d = await loadJSON('/api/tarot-daily');
     const td = await loadJSON('/static/tarot_data.json');
-    let html = `<div class="section-desc">Rider-Waite-Smith Tarot — 78 cards of wisdom. Today's draw: <strong>${d.name}</strong></div>`;
-    // Major Arcana
-    html += `<h3 class="section-title">🃏 Major Arcana (22)</h3><div class="tarot-grid">`;
-    for(const c of (td.major_arcana||[])) {
-      html += `<div class="tarot-mini ${c.name===d.name?'tarot-active':''}">
-        <span class="tarot-mini-num">${c.id}</span>
-        <span class="tarot-mini-name">${c.name}</span>
-        <span class="tarot-mini-kw">${(c.keywords||[]).slice(0,2).join(', ')}</span>
+    window._tarotData = td;
+    // Build flat cards list if not present in data
+    if(!td.cards) {
+      const all = [...(td.major_arcana||[])];
+      for(const suit of ['wands','cups','swords','pentacles']) {
+        for(const c of (td.minor_arcana?.[suit]||[])) { c.suit = suit; all.push(c); }
+      }
+      td.cards = all;
+    }
+    tarotLoadCardLibrary();
+    tarotLoadJournal();
+    tarotLoadLearnTarot();
+    switchTarotSection('new-reading', document.querySelector('[data-tarot-section="new-reading"]'));
+  } catch(e) { /* silent */ }
+}
+
+// ══════════ Tarot Section Switching ══════════
+function switchTarotSection(section, btn) {
+  document.querySelectorAll('.tarot-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tarot-subnav-item').forEach(b => b.classList.remove('active'));
+  const target = document.getElementById('tarot-'+section);
+  if(target) target.classList.add('active');
+  if(btn) btn.classList.add('active');
+  // Lazy-load sections on first visit
+  if(section==='card-library' && window._tarotData) {
+    const grid = document.getElementById('tarot-library-grid');
+    if(grid && grid.innerHTML.includes('Loading')) tarotLoadCardLibrary();
+  }
+  if(section==='learn-tarot') {
+    const lc = document.getElementById('tarot-learn-content');
+    if(lc && lc.innerHTML.includes('Loading')) tarotLoadLearnTarot();
+  }
+}
+
+// ══════════ Card Image (RWS Public Domain Ready) ══════════
+// The original 1909 Rider-Waite-Smith deck is public domain.
+// Add images to /static/tarot_cards/ following this convention:
+//   major_00_fool.jpg ... major_21_world.jpg
+//   minor_wands_01_ace.jpg ... minor_pentacles_14_king.jpg
+//   minor_cups_01_ace.jpg ... minor_swords_14_king.jpg
+function tarotCardFace(card) {
+  const suit = card.suit || 'major';
+  const emoji = suit==='major'?'⭐':suit==='wands'?'🪄':suit==='cups'?'🏆':suit==='swords'?'⚔️':'🪙';
+  const label = suit==='major'?'Major Arcana':suit.charAt(0).toUpperCase()+suit.slice(1);
+  // Try to load RWS image, fall back to styled placeholder
+  const id = String(card.id||0).padStart(2,'0');
+  const slug = (card.name||'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+  const imgPath = `/static/tarot_cards/${suit}_${id}_${slug}.jpg`;
+  return `<div class="tarot-card-face" data-img="${imgPath}" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;min-height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div style="font-size:32px;margin-bottom:4px">${emoji}</div>
+    <div style="font-size:10px;color:var(--text-muted)">${label}</div>
+  </div>`;
+}
+
+// ══════════ 🔮 New Reading ══════════
+async function tarotDrawCards() {
+  const count = parseInt(document.getElementById('tarot-spread-select').value);
+  const resultDiv = document.getElementById('tarot-reading-result');
+  if(!resultDiv) return;
+  resultDiv.innerHTML = '<div class="loading">🔮 Drawing cards...</div>';
+  try {
+    const data = await loadJSON('/api/tarot/draw?count='+count);
+    const cards = data.cards||[];
+    const spreadNames = {1:'Quick Insight',3:'Past · Present · Future',5:'Cross of Intent',10:'Celtic Cross'};
+    const positions = {1:['The Message'],3:['Past','Present','Future'],5:['Self','Challenge','Past','Future','Outcome'],10:['Self','Challenge','Past','Future','Above','Below','Advice','External','Hopes','Outcome']};
+    const pos = positions[count]||cards.map((_,i)=>'Card '+(i+1));
+    let html = `<div class="tarot-spread-label">${spreadNames[count]||count+' cards'}</div>
+      <div class="tarot-cards-row">`;
+    for(let i=0;i<cards.length;i++) {
+      const c = cards[i];
+      html += `<div class="tarot-card-display">
+        ${tarotCardFace(c)}
+        <div class="tarot-card-pos">${pos[i]||''}</div>
+        <div class="tarot-card-name">${c.name}</div>
+        <div class="tarot-card-keywords">${(c.keywords||[]).join(' · ')}</div>
+        <div class="tarot-card-meaning">${c.upright||c.upright_meaning||''}</div>
       </div>`;
     }
-    html += '</div>';
-    // Minor Arcana
-    for(const [suit,label] of [['wands','🪄 Wands'],['cups','🏆 Cups'],['swords','⚔️ Swords'],['pentacles','🪙 Pentacles']]) {
-      html += `<h3 class="section-title">${label} (14)</h3><div class="tarot-grid">`;
-      for(const c of (td.minor_arcana?.[suit]||[])) {
-        html += `<div class="tarot-mini ${c.name===d.name?'tarot-active':''}">
-          <span class="tarot-mini-num">${c.id}</span>
-          <span class="tarot-mini-name">${c.name}</span>
-        </div>`;
-      }
-      html += '</div>';
-    }
-    tc.innerHTML = html;
-  } catch(e) { tc.innerHTML = `<div class="loading">${e.message}</div>`; }
+    html += `</div><div class="tarot-reading-actions">
+      <button class="tarot-save-btn" onclick="tarotSaveReading(${JSON.stringify(cards.map(c=>({name:c.name,suit:c.suit,keywords:c.keywords,upright:c.upright||c.upright_meaning||''})))})">💾 Save Reading</button>
+      <button class="tarot-draw-btn" onclick="tarotDrawCards()">🔮 Draw Again</button>
+    </div>`;
+    resultDiv.innerHTML = html;
+  } catch(e) { resultDiv.innerHTML = `<div class="loading">${e.message}</div>`; }
+}
+
+// ══════════ 📚 Card Library ══════════
+async function tarotLoadCardLibrary(filter) {
+  const grid = document.getElementById('tarot-library-grid');
+  if(!grid||!window._tarotData) return;
+  const allCards = window._tarotData.cards||[];
+  let html = `<div class="tarot-grid">`;
+  for(const c of allCards) {
+    const suit = c.suit||'major';
+    if(filter&&filter!=='all'&&suit!==filter) continue;
+    html += `<div class="tarot-card-item" data-suit="${suit}" onclick="tarotShowCardDetail('${esc(c.name)}')">
+      ${tarotCardFace(c)}
+      <div class="tarot-card-item-name">${c.name}</div>
+      <div class="tarot-card-item-kw">${(c.keywords||[]).slice(0,2).join(', ')}</div>
+    </div>`;
+  }
+  html += `</div>
+    <div class="tarot-card-detail-overlay" id="tarot-card-detail" style="display:none" onclick="this.style.display='none'">
+      <div class="tarot-card-detail-box" onclick="event.stopPropagation()">
+        <button class="tarot-detail-close" onclick="document.getElementById('tarot-card-detail').style.display='none'">✕</button>
+        <div id="tarot-card-detail-body"></div>
+      </div>
+    </div>`;
+  grid.innerHTML = html;
+  // Define filter function globally
+  window.tarotFilterLibrary = function(f, btn) {
+    document.querySelectorAll('.tarot-filter-btn').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    document.querySelectorAll('.tarot-card-item').forEach(el=>{
+      el.style.display = (f==='all'||el.dataset.suit===f)?'':'none';
+    });
+  };
+  window.tarotShowCardDetail = function(name) {
+    const card = allCards.find(c=>c.name===name);
+    if(!card) return;
+    const overlay = document.getElementById('tarot-card-detail');
+    const body = document.getElementById('tarot-card-detail-body');
+    if(!overlay||!body) return;
+    body.innerHTML = `<div class="tarot-detail-layout">
+      <div class="tarot-detail-image">${tarotCardFace(card)}</div>
+      <div class="tarot-detail-info">
+        <h2 class="tarot-detail-name">${card.name}</h2>
+        <div class="tarot-detail-suit">${card.suit==='major'?'⭐ Major Arcana':card.suit.charAt(0).toUpperCase()+card.suit.slice(1)}</div>
+        <div class="tarot-detail-keywords">${(card.keywords||[]).join(' · ')}</div>
+        <div class="tarot-detail-section"><strong>Upright:</strong> ${card.upright||card.upright_meaning||'—'}</div>
+        <div class="tarot-detail-section"><strong>Reversed:</strong> ${card.reversed||card.reversed_meaning||card.meaning_rev||'—'}</div>
+        <div class="tarot-detail-daily"><em>Daily Message:</em> ${card.daily||card.daily_message||'—'}</div>
+      </div>
+    </div>`;
+    overlay.style.display = 'flex';
+  };
+}
+
+// ══════════ 📖 Reading Journal ══════════
+function tarotLoadJournal() {
+  const jc = document.getElementById('tarot-journal-content');
+  if(!jc) return;
+  const saved = JSON.parse(localStorage.getItem('tarotReadings')||'[]');
+  if(saved.length===0) {
+    jc.innerHTML = '<div class="tarot-journal-empty">Your saved readings will appear here. Perform a reading and save it to your journal! 📓</div>';
+    return;
+  }
+  let html = '<div class="tarot-journal-list">';
+  for(let i=saved.length-1;i>=0;i--) {
+    const r = saved[i];
+    const cards = r.cards||[];
+    html += `<div class="tarot-journal-entry" onclick="tarotViewSavedReading(${i})">
+      <div class="tarot-journal-date">${r.date||'Unknown'}</div>
+      <div class="tarot-journal-spread">${cards.length} card${cards.length!==1?'s':''}</div>
+      <div class="tarot-journal-cards">${cards.map(c=>c.name).join(' · ')}</div>
+    </div>`;
+  }
+  html += '</div>';
+  jc.innerHTML = html;
+}
+
+function tarotSaveReading(cards) {
+  const readings = JSON.parse(localStorage.getItem('tarotReadings')||'[]');
+  readings.push({
+    date: new Date().toLocaleDateString('en-ZA',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),
+    cards: cards
+  });
+  localStorage.setItem('tarotReadings', JSON.stringify(readings));
+  alert('💾 Reading saved to your journal!');
+  tarotLoadJournal();
+}
+
+function tarotViewSavedReading(idx) {
+  const readings = JSON.parse(localStorage.getItem('tarotReadings')||'[]');
+  const r = readings[idx];
+  if(!r) return;
+  let html = `<div class="tarot-saved-detail">
+    <div class="tarot-saved-date">📅 ${r.date}</div>
+    <div class="tarot-cards-row">`;
+  for(const c of (r.cards||[])) {
+    html += `<div class="tarot-card-display">
+      ${tarotCardFace(c)}
+      <div class="tarot-card-name">${c.name}</div>
+      <div class="tarot-card-keywords">${(c.keywords||[]).join(' · ')}</div>
+      <div class="tarot-card-meaning">${c.upright||''}</div>
+    </div>`;
+  }
+  html += `</div>
+    <div class="tarot-reading-actions">
+      <button class="tarot-draw-btn" onclick="if(confirm('Delete this reading?')){const r=JSON.parse(localStorage.getItem('tarotReadings')||'[]');r.splice(${idx},1);localStorage.setItem('tarotReadings',JSON.stringify(r));tarotLoadJournal();}">🗑️ Delete</button>
+      <button class="tarot-draw-btn" onclick="tarotLoadJournal()">← Back to Journal</button>
+    </div>`;
+  document.getElementById('tarot-journal-content').innerHTML = html;
+}
+
+// ══════════ ⭐ Learn Tarot ══════════
+async function tarotLoadLearnTarot() {
+  const lc = document.getElementById('tarot-learn-content');
+  if(!lc) return;
+  lc.innerHTML = `<div class="tarot-learn-intro">A beginner's guide to the Rider-Waite-Smith Tarot — 78 cards of wisdom, symbolism, and self-discovery.</div>
+
+  <details class="tarot-learn-section" open>
+    <summary class="tarot-learn-summary">📜 History of Tarot</summary>
+    <div class="tarot-learn-body">
+      <p>Tarot originated in 15th-century Europe as playing cards (tarocchi), later adopted by occultists in the 18th century for divination. The Rider-Waite-Smith deck, published in 1909, was the first to feature fully illustrated minor arcana cards, making it the most popular tarot deck worldwide.</p>
+      <p>Artist <strong>Pamela Colman Smith</strong> worked under occultist A. E. Waite to create the 78-card deck. The RWS deck's imagery is deeply symbolic, drawing from alchemy, astrology, Kabbalah, and Christian mysticism. The original 1909 illustrations are in the public domain in many countries.</p>
+    </div>
+  </details>
+
+  <details class="tarot-learn-section">
+    <summary class="tarot-learn-summary">🃏 The Major Arcana (22 Cards)</summary>
+    <div class="tarot-learn-body">
+      <p>The Major Arcana represents the Fool's Journey — a spiritual path from innocence (0 — The Fool) to completion (21 — The World). These cards signify major life themes and spiritual lessons.</p>
+      <p><strong>Key cards:</strong> The Fool (beginnings), The Magician (manifestation), The High Priestess (intuition), Death (transformation), The Tower (upheaval), The Star (hope), The World (completion).</p>
+    </div>
+  </details>
+
+  <details class="tarot-learn-section">
+    <summary class="tarot-learn-summary">🪄 The Minor Arcana (56 Cards)</summary>
+    <div class="tarot-learn-body">
+      <p>The Minor Arcana reflects daily life through four suits, each with 14 cards (Ace through 10, plus Page, Knight, Queen, King).</p>
+      <p><strong>🪄 Wands</strong> — Fire element. Creativity, passion, willpower, action, career.</p>
+      <p><strong>🏆 Cups</strong> — Water element. Emotions, relationships, love, intuition, dreams.</p>
+      <p><strong>⚔️ Swords</strong> — Air element. Intellect, communication, truth, conflict, decisions.</p>
+      <p><strong>🪙 Pentacles</strong> — Earth element. Material world, finances, health, work, abundance.</p>
+    </div>
+  </details>
+
+  <details class="tarot-learn-section">
+    <summary class="tarot-learn-summary">🔮 Common Spreads</summary>
+    <div class="tarot-learn-body">
+      <p><strong>One Card Draw</strong> — Quick daily guidance or focus. Simple and powerful.</p>
+      <p><strong>Three Card Spread</strong> — Past · Present · Future. Classic situation overview.</p>
+      <p><strong>Five Card Cross</strong> — Self · Challenge · Past · Future · Outcome. Deeper insight.</p>
+      <p><strong>Celtic Cross (10 cards)</strong> — Comprehensive reading covering all life aspects.</p>
+    </div>
+  </details>
+
+  <details class="tarot-learn-section">
+    <summary class="tarot-learn-summary">💜 Tips for Readings</summary>
+    <div class="tarot-learn-body">
+      <p>✨ Create a calm space before reading. Light a candle, breathe deeply.</p>
+      <p>✨ Ask clear, open-ended questions. "What do I need to know about..." not yes/no.</p>
+      <p>✨ Trust your intuition. Card meanings are guides — your inner knowing matters most.</p>
+      <p>✨ RWS imagery was designed by Pamela Colman Smith (public domain). Study the symbols!</p>
+      <p>✨ Practice regularly. The more you read, the deeper your connection grows.</p>
+    </div>
+  </details>`;
 }
 
 async function loadLive() {
