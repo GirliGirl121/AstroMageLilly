@@ -419,6 +419,8 @@
             <div class="magi-tabs">
               <div class="magi-tab-bar">
                 <button class="magi-tab-btn active" data-magi-tab="diary">📝 Diary</button>
+                <button class="magi-tab-btn" data-magi-tab="week">📅 Week</button>
+                <button class="magi-tab-btn" data-magi-tab="year">🗓 Year</button>
                 <button class="magi-tab-btn" data-magi-tab="tasks">☑ Tasks</button>
                 <button class="magi-tab-btn" data-magi-tab="dreams">🌙 Dreams</button>
                 <button class="magi-tab-btn" data-magi-tab="search">🔍 Search</button>
@@ -443,6 +445,26 @@
                 <div class="magi-task-list" id="magi-task-list">
                   <div class="loading">No tasks for this day</div>
                 </div>
+              </div>
+
+              <!-- Week View Tab -->
+              <div class="magi-tab-content" id="magi-tab-week">
+                <div class="magi-week-header">
+                  <button class="magi-nav-btn" id="magi-prev-week">◀ Prev</button>
+                  <span class="magi-week-title" id="magi-week-title">—</span>
+                  <button class="magi-nav-btn" id="magi-next-week">Next ▶</button>
+                </div>
+                <div class="magi-week-grid" id="magi-week-grid"></div>
+              </div>
+
+              <!-- Year View Tab -->
+              <div class="magi-tab-content" id="magi-tab-year">
+                <div class="magi-year-header">
+                  <button class="magi-nav-btn" id="magi-prev-year">◀</button>
+                  <span class="magi-year-title" id="magi-year-title">—</span>
+                  <button class="magi-nav-btn" id="magi-next-year">▶</button>
+                </div>
+                <div class="magi-year-grid" id="magi-year-grid"></div>
               </div>
 
               <!-- Dreams Tab -->
@@ -779,7 +801,7 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
       'tab-quran': 'quran-full-content', 'tab-hadith': 'hadith-full-content',
       'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content',
       'tab-tarot': 'tarot-full-content', 'tab-transits': 'live-content',
-      'tab-horoscope': 'horo-content',
+      'tab-horoscope': 'horo-content', 'tab-magi': 'magi-astro-bar',
       // 'tab-simply' removed from lazy — content is now static
     };
     const cid = lazy[btn.dataset.tab];
@@ -790,10 +812,8 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
       else if(btn.dataset.tab === 'tab-simply') loadSimply();
       else if(btn.dataset.tab === 'tab-dashas') loadDashasFull();
       else if(btn.dataset.tab === 'tab-nakshatras') loadNakshatrasFull();
-      else if(btn.dataset.tab === 'tab-tarot') loadTarotFull();
-      else if(btn.dataset.tab === 'tab-quran') loadQuranFull();
-      else if(btn.dataset.tab === 'tab-hadith') loadHadithFull();
       else if(btn.dataset.tab === 'tab-horoscope') switchHoro('daily');
+      else if(btn.dataset.tab === 'tab-magi') magiLoadDay(document.getElementById('magi-date-input').value || magiFormatDate(new Date()));
     }
   });
 });
@@ -1712,7 +1732,11 @@ function renderCompatHoro(c, d) {
   var glyphs = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
   var elems = {Aries:'Fire',Taurus:'Earth',Gemini:'Air',Cancer:'Water',Leo:'Fire',Virgo:'Earth',Libra:'Air',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Earth',Aquarius:'Air',Pisces:'Water'};
   var elemColors = {Fire:'#ff6b35',Earth:'#8b6914',Air:'#87ceeb',Water:'#4a90d9'};
-  // Score + color for pair
+  // Score + colored heart for pair
+  // Hearts: 🩷 pink (natural) ❤️ red (harmonious) 🧡 orange (great chemistry) 💛 yellow (mutual understanding) 💚 green (good balance) 🩵 light blue (volatile) 💙 blue (work combo) 🩷 pink (low commitment) 🖤 grey (nothing in common)
+  var catHeart = {natural:'🩷',harmonious:'❤️',moderate:'💚',volatile:'🩵'};
+  var catColor = {natural:'#ff69b4',harmonious:'#e74c3c',moderate:'#4caf50',volatile:'#e74c3c'};
+  var catLabel = {natural:'Natural Partners',harmonious:'Harmonious',moderate:'Good Balance',volatile:'Challenging'};
   function getScore(s1,s2) {
     var e1=elems[s1],e2=elems[s2];
     if(s1===s2) return {score:70,note:'Familiar energy — comfortable but can stagnate',cat:'harmonious'};
@@ -1725,16 +1749,14 @@ function renderCompatHoro(c, d) {
     if((e1==='Air'&&e2==='Water')||(e1==='Water'&&e2==='Air')) return {score:60,note:'Mind meets heart — can flow or flood',cat:'moderate'};
     return {score:55,note:'Neutral — takes conscious work',cat:'moderate'};
   }
-  var catColor = {natural:'#9b59b6',harmonious:'#e67e22',moderate:'#3498db',volatile:'#e74c3c'};
-  var catLabel = {natural:'Natural Partners',harmonious:'Harmonious',moderate:'Good Balance',volatile:'Challenging'};
 
   var html = '<div class="horo-title">💖 Compatibility</div>';
   html += '<div class="horo-date">'+d.date+'</div>';
 
-  // Legend
+  // Legend with colored hearts
   html += '<div class="horo-compat-legend">';
   Object.keys(catColor).forEach(function(cat){
-    html += '<span class="horo-legend-item"><span class="horo-legend-dot" style="background:'+catColor[cat]+'"></span>'+catLabel[cat]+'</span>';
+    html += '<span class="horo-legend-item"><span class="horo-legend-heart">'+catHeart[cat]+'</span>'+catLabel[cat]+'</span>';
   });
   html += '</div>';
 
@@ -1747,9 +1769,8 @@ function renderCompatHoro(c, d) {
     signs.forEach(function(s2,j){
       var r = getScore(s1,s2);
       var color = catColor[r.cat];
-      var hearts = r.score >= 80 ? 4 : r.score >= 65 ? 3 : r.score >= 50 ? 2 : 1;
-      var heartStr = '💕'.repeat(hearts);
-      html += '<td class="horo-matrix-cell" style="background:'+color+'22;border-color:'+color+'" data-s1="'+s1+'" data-s2="'+s2+'" data-score="'+r.score+'" data-note="'+esc(r.note)+'" onclick="showCompatDetail(this)"><span class="horo-cell-hearts">'+heartStr+'</span><span class="horo-cell-pct">'+r.score+'%</span></td>';
+      var heart = catHeart[r.cat];
+      html += '<td class="horo-matrix-cell" style="background:'+color+'22;border-color:'+color+'" data-s1="'+s1+'" data-s2="'+s2+'" data-score="'+r.score+'" data-note="'+esc(r.note)+'" onclick="showCompatDetail(this)"><span class="horo-cell-heart">'+heart+'</span><span class="horo-cell-pct">'+r.score+'</span></td>';
     });
     html += '</tr>';
   });
@@ -2490,20 +2511,37 @@ async function magiLoadDay(dateStr) {
     document.getElementById('magi-day-date').textContent = dateStr;
     document.getElementById('magi-date-input').value = dateStr;
 
-    // Astro bar
+    // Astro bar — full MagiJournal desktop feature parity
     const astro = data.astro || {};
     const ab = document.getElementById('magi-astro-bar');
-    let ph = (astro.planetary_hours||[]).map(h =>
-      `<span style="color:${PLANET_COLORS[h.planet]||'#fff'}">${PLANET_SYMBOLS[h.planet]||''} ${h.planet||''}</span>`
-    ).join(' · ');
-    ab.innerHTML = `
-      <div class="magi-astro-row">
-        <div class="magi-astro-item"><span class="label">Ruler:</span> ${astro.day_ruler||'—'}</div>
-        <div class="magi-astro-item"><span class="label">🌙 Moon:</span> ${astro.moon_sign||'—'} · ${astro.moon_mansion||'—'}</div>
-        <div class="magi-astro-item"><span class="label">Spirit:</span> ${astro.mansion_spirit_name||astro.mansion_spirit||'—'}</div>
-        <div class="magi-astro-item"><span class="label">Nature:</span> ${astro.mansion_nature||'—'}</div>
-      </div>
-      <div class="magi-astro-hours">${ph}</div>`;
+    // Planetary hours with spirits
+    let phHtml = '';
+    (astro.planetary_hours||[]).forEach(function(h){
+      var sym = PLANET_SYMBOLS[h.planet]||'';
+      var col = PLANET_COLORS[h.planet]||'#fff';
+      phHtml += '<span class="magi-hour-pill" style="border-color:'+col+'"><span style="color:'+col+'">'+sym+'</span> '+(h.planet||'')+' <small>'+(h.spendant_name||h.spirit_name||'')+'</small></span>';
+    });
+    // Recommendations
+    var recs = (astro.recommendations||[]).slice(0,5);
+    var avoids = (astro.avoid||[]).slice(0,5);
+    // Picatrix refs
+    var refs = (astro.picatrix_references||[]).slice(0,4);
+    var elections = (astro.elections||[]).slice(0,3);
+    ab.innerHTML = '<div class="magi-astro-grid">' +
+      '<div class="magi-astro-main">' +
+        '<div class="magi-astro-row"><span class="magi-astro-label">Day Ruler:</span> <strong>'+(astro.day_ruler||'—')+'</strong> '+(astro.day_ruler_ar||'')+'</div>' +
+        '<div class="magi-astro-row"><span class="magi-astro-label">Moon:</span> <strong>'+(astro.moon_sign||'—')+'</strong> &middot; Mansion <strong>'+(astro.moon_mansion||'—')+'</strong> #'+(astro.mansion_index>=0?astro.mansion_index+1:'—')+'</div>' +
+        '<div class="magi-astro-row"><span class="magi-astro-label">Spirit:</span> <strong>'+(astro.mansion_spirit_name||astro.mansion_spirit||'—')+'</strong> '+(astro.mansion_spirit_arabic||'')+'</div>' +
+        '<div class="magi-astro-row"><span class="magi-astro-label">Nature:</span> <strong>'+(astro.mansion_nature||'—')+'</strong></div>' +
+      '</div>' +
+      '<div class="magi-astro-side">' +
+        (recs.length ? '<div class="magi-astro-recs"><span class="magi-astro-label green">✓ Recommended</span>'+recs.map(function(r){return '<div class="magi-rec-item">• '+r+'</div>';}).join('')+'</div>' : '') +
+        (avoids.length ? '<div class="magi-astro-avoids"><span class="magi-astro-label red">✗ Avoid</span>'+avoids.map(function(a){return '<div class="magi-avoid-item">• '+a+'</div>';}).join('')+'</div>' : '') +
+      '</div>' +
+    '</div>' +
+    (phHtml ? '<div class="magi-astro-hours">' + phHtml + '</div>' : '') +
+    (elections.length ? '<div class="magi-astro-elections"><span class="magi-astro-label">⚡ Elections:</span> '+elections.map(function(e){return '<span class="magi-election-pill">'+(e.category||e.rating||'').replace(/_/g,' ')+': '+(e.operation||'').substring(0,60)+'</span>';}).join(' ') + '</div>' : '') +
+    (refs.length ? '<div class="magi-astro-refs"><span class="magi-astro-label">📜 Picatrix:</span> <small>'+refs.join(' &middot; ')+'</small></div>' : '');
 
     // Diary
     const diary = data.diary;
@@ -2766,8 +2804,72 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   loadRecentSearches();
 
+  // ═══ Week View ═══
+  var magiWeekStart = new Date();
+  magiWeekStart.setDate(magiWeekStart.getDate() - magiWeekStart.getDay()); // Monday
+  function magiRenderWeek() {
+    var start = new Date(magiWeekStart);
+    var end = new Date(start); end.setDate(end.getDate() + 6);
+    document.getElementById('magi-week-title').textContent = start.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' — ' + end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    var grid = document.getElementById('magi-week-grid');
+    grid.innerHTML = '';
+    for(var i = 0; i < 7; i++) {
+      var d = new Date(start); d.setDate(d.getDate() + i);
+      var dateStr = d.toISOString().split('T')[0];
+      var dayName = d.toLocaleDateString('en-US',{weekday:'short'});
+      var dayNum = d.getDate();
+      var cell = document.createElement('div');
+      cell.className = 'magi-week-day';
+      cell.innerHTML = '<div class="magi-week-dayname">'+dayName+'</div><div class="magi-week-daynum">'+dayNum+'</div><div class="magi-week-moon" id="magi-week-moon-'+i+'">—</div><div class="magi-week-ruler" id="magi-week-ruler-'+i+'">—</div>';
+      (function(idx, ds){
+        cell.addEventListener('click', function(){ magiLoadDay(ds); document.querySelector('[data-magi-tab="diary"]').click(); });
+        fetch('/api/diary/day?date='+ds).then(r=>r.json()).then(function(data){
+          var astro = data.astro || {};
+          var moonEl = document.getElementById('magi-week-moon-'+idx);
+          var rulerEl = document.getElementById('magi-week-ruler-'+idx);
+          if(moonEl) moonEl.textContent = '☽ '+(astro.moon_sign||'—').substring(0,3);
+          if(rulerEl) rulerEl.textContent = (astro.day_ruler||'—').substring(0,3);
+        }).catch(function(){});
+      })(i, dateStr);
+      grid.appendChild(cell);
+    }
+  }
+  document.getElementById('magi-prev-week').addEventListener('click', function(){ magiWeekStart.setDate(magiWeekStart.getDate() - 7); magiRenderWeek(); });
+  document.getElementById('magi-next-week').addEventListener('click', function(){ magiWeekStart.setDate(magiWeekStart.getDate() + 7); magiRenderWeek(); });
+
+  // ═══ Year View ═══
+  var magiYear = new Date().getFullYear();
+  function magiRenderYear() {
+    document.getElementById('magi-year-title').textContent = magiYear;
+    var grid = document.getElementById('magi-year-grid');
+    grid.innerHTML = '';
+    var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    for(var m = 0; m < 12; m++) {
+      var card = document.createElement('div');
+      card.className = 'magi-year-month';
+      card.innerHTML = '<div class="magi-year-month-name">'+monthNames[m]+'</div><div class="magi-year-month-data" id="magi-year-month-'+m+'">Loading...</div>';
+      (function(idx){
+        fetch('/api/diary/month?year='+magiYear+'&month='+(idx+1)).then(r=>r.json()).then(function(data){
+          var el = document.getElementById('magi-year-month-'+idx);
+          if(data && data.length) {
+            var totalAspects = 0;
+            data.forEach(function(d){ totalAspects += (d.aspects||[]).length; });
+            el.innerHTML = data.length+' days<br>'+totalAspects+' aspects';
+          } else {
+            el.innerHTML = '—';
+          }
+        }).catch(function(){});
+      })(m);
+      grid.appendChild(card);
+    }
+  }
+  document.getElementById('magi-prev-year').addEventListener('click', function(){ magiYear--; magiRenderYear(); });
+  document.getElementById('magi-next-year').addEventListener('click', function(){ magiYear++; magiRenderYear(); });
+
   // Init: load today
   magiLoadDay(magiFormatDate(new Date()));
+  magiRenderWeek();
+  magiRenderYear();
 });
 
 async function remBM(id) {

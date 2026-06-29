@@ -1884,6 +1884,77 @@ body::before {
   border-top: 1px solid rgba(255,255,255,0.05);
 }
 
+/* Enhanced Astro Bar — desktop feature parity */
+.magi-astro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.magi-astro-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.magi-astro-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.magi-astro-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+}
+.magi-astro-label.green { color: #8bc34a; }
+.magi-astro-label.red { color: #e57373; }
+.magi-astro-recs, .magi-astro-avoids {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.magi-rec-item { color: #8bc34a; font-size: 11px; }
+.magi-avoid-item { color: #e57373; font-size: 11px; }
+.magi-hour-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border: 1px solid;
+  border-radius: 10px;
+  font-size: 11px;
+  background: rgba(255,255,255,0.03);
+}
+.magi-hour-pill small {
+  color: var(--text-dim);
+  font-size: 9px;
+}
+.magi-astro-elections {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.magi-election-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  background: rgba(212,175,55,0.08);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 8px;
+  font-size: 10px;
+  color: #d4af37;
+  text-transform: capitalize;
+}
+.magi-astro-refs {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 11px;
+  color: var(--text-dim);
+}
+@media(max-width:900px) {
+  .magi-astro-grid { grid-template-columns: 1fr; }
+}
+
 /* Inner Tabs */
 .magi-tabs {
   flex: 1;
@@ -2163,6 +2234,94 @@ body::before {
 .magi-recent-tag:hover {
   background: rgba(255, 165, 0, 0.2);
   border-color: var(--neon-orange);
+}
+
+/* ═══ Week View ═══ */
+.magi-week-header, .magi-year-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.magi-week-title, .magi-year-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f0eaff;
+  min-width: 200px;
+  text-align: center;
+}
+.magi-week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.magi-week-day {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 10px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.magi-week-day:hover {
+  background: rgba(212,175,55,0.08);
+  border-color: rgba(212,175,55,0.2);
+}
+.magi-week-dayname {
+  font-size: 11px;
+  color: #a090b0;
+  text-transform: uppercase;
+}
+.magi-week-daynum {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f0eaff;
+  margin: 2px 0;
+}
+.magi-week-moon {
+  font-size: 11px;
+  color: #87ceeb;
+}
+.magi-week-ruler {
+  font-size: 11px;
+  color: #d4af37;
+}
+
+/* ═══ Year View ═══ */
+.magi-year-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.magi-year-month {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.magi-year-month:hover {
+  background: rgba(212,175,55,0.08);
+  border-color: rgba(212,175,55,0.2);
+}
+.magi-year-month-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f0eaff;
+  margin-bottom: 4px;
+}
+.magi-year-month-data {
+  font-size: 11px;
+  color: #a090b0;
+  line-height: 1.4;
+}
+@media(max-width:900px) {
+  .magi-week-grid { grid-template-columns: repeat(4, 1fr); }
+  .magi-year-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 .magi-search-results {
@@ -4327,8 +4486,8 @@ body::before {
     font-size: 8px;
     padding: 1px;
   }
-  .horo-cell-hearts {
-    font-size: 7px;
+  .horo-cell-heart {
+    font-size: 12px;
   }
   .horo-cell-pct {
     font-size: 7px;
@@ -4354,6 +4513,10 @@ body::before {
   height: 10px;
   border-radius: 50%;
   display: inline-block;
+}
+.horo-legend-heart {
+  font-size: 14px;
+  margin-right: 4px;
 }
 .horo-matrix-wrap {
   overflow-x: auto;
@@ -4390,12 +4553,6 @@ body::before {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
   padding: 2px;
 }
 .horo-matrix-cell:hover {
@@ -4404,16 +4561,17 @@ body::before {
   position: relative;
   box-shadow: 0 0 10px rgba(255,255,255,0.4);
 }
-.horo-cell-hearts {
-  font-size: 10px;
+.horo-cell-heart {
+  font-size: 16px;
   line-height: 1;
-  letter-spacing: -1px;
+  display: block;
 }
 .horo-cell-pct {
   font-size: 9px;
   font-weight: 700;
   color: #d8d0e8;
   line-height: 1;
+  display: block;
 }
 .horo-compat-detail {
   background: rgba(212,175,55,0.06);
