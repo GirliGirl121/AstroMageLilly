@@ -345,9 +345,24 @@
         </div>
       </div>
       <div class="tab-page" id="tab-horoscope">
-        <div class="card tab-full-card">
-          <div class="card-header"><span class="card-title">💞 Horoscope Compatibility</span></div>
-          <div class="placeholder-tab"><span>💑</span><p>Synastry and compatibility analysis coming Phase 2.</p></div>
+        <div class="horoscope-layout">
+          <!-- Left: Horoscope Category Nav -->
+          <div class="horo-nav-panel">
+            <div class="horo-nav-header">🔮 Horoscopes</div>
+            <div class="horo-nav-list">
+              <div class="horo-nav-item active" data-horo="daily" onclick="switchHoro('daily')">⭐ Daily</div>
+              <div class="horo-nav-item" data-horo="weekly" onclick="switchHoro('weekly')">📅 Weekly</div>
+              <div class="horo-nav-item" data-horo="monthly" onclick="switchHoro('monthly')">🌕 Monthly</div>
+              <div class="horo-nav-item" data-horo="love" onclick="switchHoro('love')">💕 Love</div>
+              <div class="horo-nav-item" data-horo="career" onclick="switchHoro('career')">💼 Career</div>
+              <div class="horo-nav-item" data-horo="health" onclick="switchHoro('health')">🌿 Health</div>
+              <div class="horo-nav-item" data-horo="compat" onclick="switchHoro('compat')">💖 Compatibility</div>
+            </div>
+          </div>
+          <!-- Right: Content -->
+          <div class="horo-content" id="horo-content">
+            <div class="horo-loading">Loading the stars...</div>
+          </div>
         </div>
       </div>
       <div class="tab-page" id="tab-magi">
@@ -764,6 +779,7 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
       'tab-quran': 'quran-full-content', 'tab-hadith': 'hadith-full-content',
       'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content',
       'tab-tarot': 'tarot-full-content', 'tab-transits': 'live-content',
+      'tab-horoscope': 'horo-content',
       // 'tab-simply' removed from lazy — content is now static
     };
     const cid = lazy[btn.dataset.tab];
@@ -777,6 +793,7 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
       else if(btn.dataset.tab === 'tab-tarot') loadTarotFull();
       else if(btn.dataset.tab === 'tab-quran') loadQuranFull();
       else if(btn.dataset.tab === 'tab-hadith') loadHadithFull();
+      else if(btn.dataset.tab === 'tab-horoscope') switchHoro('daily');
     }
   });
 });
@@ -1582,6 +1599,193 @@ async function loadSimply() {
     nav.innerHTML = '<div class="simply-empty">Failed to load knowledge base</div>';
     sc.innerHTML = `<div class="simply-welcome"><p>Error: ${e.message}</p></div>`;
   }
+}
+
+// ═══ Horoscope Tab ═══
+function switchHoro(type) {
+  document.querySelectorAll('.horo-nav-item').forEach(item => item.classList.remove('active'));
+  const navItem = document.querySelector('.horo-nav-item[data-horo="' + type + '"]');
+  if(navItem) navItem.classList.add('active');
+  var container = document.getElementById('horo-content');
+  container.innerHTML = '<div class="horo-loading">Loading the stars...</div>';
+  var endpoints = {daily:'/api/horoscope/daily',weekly:'/api/horoscope/weekly',monthly:'/api/horoscope/monthly',love:'/api/horoscope/love',career:'/api/horoscope/career',health:'/api/horoscope/health',compat:'/api/horoscope/compatibility'};
+  fetch(endpoints[type]).then(function(r){return r.json()}).then(function(data){
+    if(type==='daily') renderDailyHoro(container, data);
+    else if(type==='weekly') renderWeeklyHoro(container, data);
+    else if(type==='monthly') renderMonthlyHoro(container, data);
+    else if(type==='love') renderLoveHoro(container, data);
+    else if(type==='career') renderCareerHoro(container, data);
+    else if(type==='health') renderHealthHoro(container, data);
+    else if(type==='compat') renderCompatHoro(container, data);
+  }).catch(function(e){container.innerHTML='<div class="horo-loading">Error: '+e.message+'</div>'});
+}
+
+function renderDailyHoro(c, d) {
+  var html = '<div class="horo-title">⭐ Daily Horoscope</div>';
+  html += '<div class="horo-date">'+d.date+' · '+d.moon_phase+'</div>';
+  if(d.overall) { html += '<div class="horo-overall">'+d.overall+'</div>'; }
+  if(d.aspect_readings && d.aspect_readings.length) {
+    html += '<div class="horo-section-label">✨ Key Aspects</div><div class="horo-aspects">';
+    d.aspect_readings.forEach(function(txt){ html += '<span class="horo-aspect-pill">'+txt+'</span>'; });
+    html += '</div>';
+  }
+  html += '<div class="horo-section-label">🔮 All 12 Signs</div><div class="horo-signs-grid">';
+  d.signs.forEach(function(s){
+    html += '<div class="horo-sign-card"><div class="horo-sign-glyph">'+s.glyph+'</div><div class="horo-sign-name">'+s.sign+'</div><div class="horo-sign-element">'+s.element+'</div>';
+    if(s.transiting.length) { html += '<div class="horo-sign-transit">'+s.transiting.join(', ')+'</div>'; }
+    if(s.interpretation) { html += '<div class="horo-sign-interp">'+s.interpretation+'</div>'; }
+    html += '</div>';
+  });
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+function renderWeeklyHoro(c, d) {
+  var html = '<div class="horo-title">📅 Weekly Horoscope</div>';
+  html += '<div class="horo-date">'+d.week_of+'</div>';
+  html += '<div class="horo-section-label">🌙 Moon Through the Week</div><div class="horo-week-grid">';
+  d.daily_moon.forEach(function(t){
+    html += '<div class="horo-week-day"><div class="horo-week-dayname">'+t.day+'</div><div class="horo-week-glyph">'+t.moon_glyph+'</div><div class="horo-week-sign">'+t.moon_sign+'</div><div class="horo-week-date">'+t.date+'</div></div>';
+  });
+  html += '</div>';
+  c.innerHTML = html;
+}
+
+function renderMonthlyHoro(c, d) {
+  var html = '<div class="horo-title">🌕 Monthly Overview</div>';
+  html += '<div class="horo-date">'+d.month+'</div>';
+  html += '<div class="horo-month-grid">';
+  html += '<div class="horo-month-card"><div class="horo-month-label">🌑 New Moon</div><div class="horo-month-value">'+(d.new_moons.join(', ')||'—')+'</div></div>';
+  html += '<div class="horo-month-card"><div class="horo-month-label">🌕 Full Moon</div><div class="horo-month-value">'+(d.full_moons.join(', ')||'—')+'</div></div>';
+  html += '</div>';
+  if(d.ingresses && d.ingresses.length) {
+    html += '<div class="horo-section-label">🚀 Sign Ingresses</div><div class="horo-ingresses">';
+    d.ingresses.forEach(function(i){
+      html += '<span class="horo-ingress-pill">'+i.planet+' → '+i.sign+' (Day '+i.day+')</span>';
+    });
+    html += '</div>';
+  }
+  c.innerHTML = html;
+}
+
+function renderLoveHoro(c, d) {
+  var html = '<div class="horo-title">💕 Love Horoscope</div>';
+  html += '<div class="horo-date">'+d.date+'</div>';
+  html += '<div class="horo-love-grid">';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">♀</div><div class="horo-planet-name">Venus</div><div class="horo-planet-pos">'+d.venus.sign+' '+d.venus.degree+'°</div></div>';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">♂</div><div class="horo-planet-name">Mars</div><div class="horo-planet-pos">'+d.mars.sign+' '+d.mars.degree+'°</div></div>';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">☽</div><div class="horo-planet-name">Moon</div><div class="horo-planet-pos">'+d.moon_sign+'</div></div>';
+  html += '</div>';
+  html += d.venus_mars_aspect ? '<div class="horo-love-aspect">♀ '+d.venus_mars_aspect+' ♂ ('+d.venus_mars_orb+'° orb)</div>' : '<div class="horo-love-aspect minor">No major Venus-Mars aspect today</div>';
+  if(d.interpretation) { html += '<div class="horo-interp">'+d.interpretation+'</div>'; }
+  c.innerHTML = html;
+}
+
+function renderCareerHoro(c, d) {
+  var html = '<div class="horo-title">💼 Career & Money</div>';
+  html += '<div class="horo-date">'+d.date+'</div>';
+  html += '<div class="horo-love-grid">';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">♄</div><div class="horo-planet-name">Saturn</div><div class="horo-planet-pos">'+d.saturn.sign+' '+d.saturn.degree+'°</div></div>';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">♃</div><div class="horo-planet-name">Jupiter</div><div class="horo-planet-pos">'+d.jupiter.sign+' '+d.jupiter.degree+'°</div></div>';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">☿</div><div class="horo-planet-name">Mercury</div><div class="horo-planet-pos">'+d.mercury.sign+' '+d.mercury.degree+'°</div></div>';
+  html += '</div>';
+  html += d.jupiter_saturn_aspect ? '<div class="horo-love-aspect">♃ '+d.jupiter_saturn_aspect+' ♄ ('+d.jupiter_saturn_orb+'° orb)</div>' : '<div class="horo-love-aspect minor">No major Jupiter-Saturn aspect today</div>';
+  if(d.interpretation) { html += '<div class="horo-interp">'+d.interpretation+'</div>'; }
+  c.innerHTML = html;
+}
+
+function renderHealthHoro(c, d) {
+  var html = '<div class="horo-title">🌿 Health & Wellness</div>';
+  html += '<div class="horo-date">'+d.date+'</div>';
+  html += '<div class="horo-love-grid">';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">☽</div><div class="horo-planet-name">Moon</div><div class="horo-planet-pos">'+d.moon.sign+' '+d.moon.degree+'°</div></div>';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">♂</div><div class="horo-planet-name">Mars</div><div class="horo-planet-pos">'+d.mars.sign+' '+d.mars.degree+'°</div></div>';
+  html += '<div class="horo-planet-card"><div class="horo-planet-symbol">♄</div><div class="horo-planet-name">Saturn</div><div class="horo-planet-pos">'+d.saturn.sign+' '+d.saturn.degree+'°</div></div>';
+  html += '</div>';
+  html += '<div class="horo-love-aspect">'+d.moon_phase+'</div>';
+  if(d.interpretation) { html += '<div class="horo-interp">'+d.interpretation+'</div>'; }
+  c.innerHTML = html;
+}
+
+function renderCompatHoro(c, d) {
+  var signs = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+  var glyphs = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+  var elems = {Aries:'Fire',Taurus:'Earth',Gemini:'Air',Cancer:'Water',Leo:'Fire',Virgo:'Earth',Libra:'Air',Scorpio:'Water',Sagittarius:'Fire',Capricorn:'Earth',Aquarius:'Air',Pisces:'Water'};
+  var elemColors = {Fire:'#ff6b35',Earth:'#8b6914',Air:'#87ceeb',Water:'#4a90d9'};
+  // Score + color for pair
+  function getScore(s1,s2) {
+    var e1=elems[s1],e2=elems[s2];
+    if(s1===s2) return {score:70,note:'Familiar energy — comfortable but can stagnate',cat:'harmonious'};
+    if(e1===e2) return {score:88,note:'Natural harmony — same element understanding',cat:'natural'};
+    if((e1==='Fire'&&e2==='Air')||(e1==='Air'&&e2==='Fire')) return {score:82,note:'Complementary — energizing and passionate',cat:'harmonious'};
+    if((e1==='Earth'&&e2==='Water')||(e1==='Water'&&e2==='Earth')) return {score:85,note:'Nurturing bond — mutual growth',cat:'natural'};
+    if((e1==='Fire'&&e2==='Water')||(e1==='Water'&&e2==='Fire')) return {score:42,note:'Challenging — requires patience & compromise',cat:'volatile'};
+    if((e1==='Air'&&e2==='Earth')||(e1==='Earth'&&e2==='Air')) return {score:48,note:'Different worlds — effort needed',cat:'volatile'};
+    if((e1==='Fire'&&e2==='Earth')||(e1==='Earth'&&e2==='Fire')) return {score:65,note:'Balanced with effort — steady warmth',cat:'moderate'};
+    if((e1==='Air'&&e2==='Water')||(e1==='Water'&&e2==='Air')) return {score:60,note:'Mind meets heart — can flow or flood',cat:'moderate'};
+    return {score:55,note:'Neutral — takes conscious work',cat:'moderate'};
+  }
+  var catColor = {natural:'#9b59b6',harmonious:'#e67e22',moderate:'#3498db',volatile:'#e74c3c'};
+  var catLabel = {natural:'Natural Partners',harmonious:'Harmonious',moderate:'Good Balance',volatile:'Challenging'};
+
+  var html = '<div class="horo-title">💖 Compatibility</div>';
+  html += '<div class="horo-date">'+d.date+'</div>';
+
+  // Legend
+  html += '<div class="horo-compat-legend">';
+  Object.keys(catColor).forEach(function(cat){
+    html += '<span class="horo-legend-item"><span class="horo-legend-dot" style="background:'+catColor[cat]+'"></span>'+catLabel[cat]+'</span>';
+  });
+  html += '</div>';
+
+  // Matrix
+  html += '<div class="horo-matrix-wrap"><table class="horo-matrix"><thead><tr><th></th>';
+  signs.forEach(function(s,i){html+='<th>'+glyphs[i]+'</th>'});
+  html += '</tr></thead><tbody>';
+  signs.forEach(function(s1,i){
+    html += '<tr><th>'+glyphs[i]+' '+s1+'</th>';
+    signs.forEach(function(s2,j){
+      var r = getScore(s1,s2);
+      var color = catColor[r.cat];
+      var hearts = r.score >= 80 ? 4 : r.score >= 65 ? 3 : r.score >= 50 ? 2 : 1;
+      var heartStr = '💕'.repeat(hearts);
+      html += '<td class="horo-matrix-cell" style="background:'+color+'22;border-color:'+color+'" data-s1="'+s1+'" data-s2="'+s2+'" data-score="'+r.score+'" data-note="'+esc(r.note)+'" onclick="showCompatDetail(this)"><span class="horo-cell-hearts">'+heartStr+'</span><span class="horo-cell-pct">'+r.score+'%</span></td>';
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+
+  // Detail panel
+  html += '<div id="compat-detail" class="horo-compat-detail" style="display:none"></div>';
+
+  // Element harmony
+  html += '<div class="horo-section-label">🔥 Element Harmony</div><div class="horo-compat-elements">';
+  var elemEmoji = {Fire:'🔥',Earth:'🌍',Air:'💨',Water:'💧'};
+  Object.keys(d.elements).forEach(function(elem){
+    var ed = d.elements[elem];
+    html += '<div class="horo-elem-card"><div class="horo-elem-name">'+elemEmoji[elem]+' '+elem+'</div><div class="horo-elem-best">Best: '+ed.best.join(', ')+'</div><div class="horo-elem-chal">Challenging: '+(ed.challenging.join(', ')||'—')+'</div></div>';
+  });
+  html += '</div>';
+
+  c.innerHTML = html;
+}
+
+function showCompatDetail(el) {
+  var s1 = el.dataset.s1, s2 = el.dataset.s2, score = el.dataset.score, note = el.dataset.note;
+  var color = parseInt(score) >= 80 ? '#9b59b6' : parseInt(score) >= 65 ? '#e67e22' : '#e74c3c';
+  document.getElementById('compat-detail').style.display = 'block';
+  document.getElementById('compat-detail').innerHTML =
+    '<div class="horo-detail-score" style="color:'+color+'">'+score+'%</div>' +
+    '<div class="horo-detail-signs">'+s1+' 💕 '+s2+'</div>' +
+    '<div class="horo-detail-note">'+note+'</div>' +
+    '<div class="horo-detail-advice">'+getCompatAdvice(s1,s2,parseInt(score))+'</div>';
+}
+
+function getCompatAdvice(s1,s2,score) {
+  if(score >= 85) return 'A deeply natural connection. Communication flows easily and mutual understanding comes effortlessly. Nurture this bond with gratitude.';
+  if(score >= 70) return 'Strong potential with some effort needed. Focus on appreciating your differences — they complement rather than divide.';
+  if(score >= 55) return 'This pairing requires conscious work. Practice patience and active listening. The growth you experience together is the reward.';
+  return 'A challenging but transformative match. Set clear boundaries, communicate honestly, and remember that opposites can attract — with mutual respect.';
 }
 
 function simplySelect(idx) {

@@ -1846,6 +1846,502 @@ def api_library_reference(ref_id):
 
 # ─── Home Route ───────────────────────────────────────────────────────
 
+# ─── Horoscopes ───────────────────────────────────────────────────────
+# Swiss Ephemeris → planetary positions → astrology engine → Lilly interprets
+
+def _get_current_planets():
+    """Get current planetary positions from Swiss Ephemeris."""
+    now_utc = datetime.now(timezone.utc)
+    jd = swe.julday(now_utc.year, now_utc.month, now_utc.day,
+                    now_utc.hour + now_utc.minute / 60 + now_utc.second / 3600)
+    bodies = [
+        ('Sun', swe.SUN), ('Moon', swe.MOON), ('Mercury', swe.MERCURY),
+        ('Venus', swe.VENUS), ('Mars', swe.MARS), ('Jupiter', swe.JUPITER),
+        ('Saturn', swe.SATURN), ('Uranus', swe.URANUS), ('Neptune', swe.NEPTUNE),
+        ('Pluto', swe.PLUTO),
+    ]
+    positions = {}
+    for name, sid in bodies:
+        try:
+            lon = swe.calc_ut(jd, sid)[0][0]
+        except swe.Error:
+            continue
+        sign_idx = int(lon / 30) % 12
+        SIGNS_LIST = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces']
+        GLYPHS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓']
+        positions[name] = {
+            'longitude': round(lon, 2),
+            'sign': SIGNS_LIST[sign_idx],
+            'sign_symbol': GLYPHS[sign_idx],
+            'degree': round(lon % 30, 2),
+        }
+    return positions, jd
+
+
+def _calc_aspects(positions):
+    """Calculate aspects between planet positions."""
+    aspect_defs = [
+        ('Conjunction', 0, 8), ('Opposition', 180, 8), ('Trine', 120, 7),
+        ('Square', 90, 7), ('Sextile', 60, 5),
+    ]
+    aspects = []
+    names = list(positions.keys())
+    for i, n1 in enumerate(names):
+        for n2 in names[i + 1:]:
+            p1, p2 = positions[n1]['longitude'], positions[n2]['longitude']
+            diff = abs(p1 - p2) % 360
+            orb = min(diff, 360 - diff)
+            for aname, aDegree, aOrb in aspect_defs:
+                if orb <= aOrb:
+                    aspects.append({
+                        'aspect': aname,
+                        'planet1': n1, 'planet2': n2,
+                        'orb': round(abs(orb - aDegree) if aDegree > 0 else orb, 1),
+                        'degree': aDegree,
+                    })
+                    break
+    return sorted(aspects, key=lambda x: x['orb'])
+
+
+_ZODIAC_SIGNS_FULL = [
+    ('Aries', '♈', 'Mars', 'Cardinal', 'Fire'),
+    ('Taurus', '♉', 'Venus', 'Fixed', 'Earth'),
+    ('Gemini', '♊', 'Mercury', 'Mutable', 'Air'),
+    ('Cancer', '♋', 'Moon', 'Cardinal', 'Water'),
+    ('Leo', '♌', 'Sun', 'Fixed', 'Fire'),
+    ('Virgo', '♍', 'Mercury', 'Mutable', 'Earth'),
+    ('Libra', '♎', 'Venus', 'Cardinal', 'Air'),
+    ('Scorpio', '♏', 'Mars', 'Fixed', 'Water'),
+    ('Sagittarius', '♐', 'Jupiter', 'Mutable', 'Fire'),
+    ('Capricorn', '♑', 'Saturn', 'Cardinal', 'Earth'),
+    ('Aquarius', '♒', 'Saturn', 'Fixed', 'Air'),
+    ('Pisces', '♓', 'Jupiter', 'Mutable', 'Water'),
+]
+
+_SIGNS_LIST = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces']
+_GLYPHS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓']
+
+# ── Interpretation knowledge base ──
+_PLANET_MEANINGS = {
+    'Sun': {'identity': 'self-expression, vitality, purpose', 'transit': 'spotlights your identity and creative force'},
+    'Moon': {'identity': 'emotions, instincts, inner needs', 'transit': 'heightens emotional sensitivity and intuition'},
+    'Mercury': {'identity': 'communication, thinking, learning', 'transit': 'activates communication and mental activity'},
+    'Venus': {'identity': 'love, beauty, values, harmony', 'transit': 'brings love, beauty, and pleasure to the forefront'},
+    'Mars': {'identity': 'action, desire, courage, assertion', 'transit': 'energizes ambition and drives action'},
+    'Jupiter': {'identity': 'growth, wisdom, expansion, luck', 'transit': 'expands opportunities and invites abundance'},
+    'Saturn': {'identity': 'discipline, structure, responsibility', 'transit': 'calls for maturity, patience, and hard work'},
+    'Uranus': {'identity': 'innovation, freedom, sudden change', 'transit': 'brings unexpected shifts and breakthroughs'},
+    'Neptune': {'identity': 'dreams, spirituality, compassion', 'transit': 'dissolves boundaries and heightens intuition'},
+    'Pluto': {'identity': 'transformation, power, rebirth', 'transit': 'triggers deep transformation and inner alchemy'},
+}
+
+_ASPECT_MEANINGS = {
+    'Conjunction': {'nature': 'intense blending', 'advice': 'These energies merge powerfully — channel them consciously.'},
+    'Opposition': {'nature': 'polarity and tension', 'advice': 'Seek balance between two opposing forces. Awareness is key.'},
+    'Trine': {'nature': 'natural harmony', 'advice': 'Energy flows easily — use this grace to move forward.'},
+    'Square': {'nature': 'dynamic friction', 'advice': 'Challenges push you to grow. Action is required.'},
+    'Sextile': {'nature': 'gentle opportunity', 'advice': 'Small openings await your initiative. Stay alert.'},
+}
+
+_SIGN_THEMES = {
+    'Aries': 'leadership, courage, new beginnings, independence',
+    'Taurus': 'stability, sensuality, finances, self-worth',
+    'Gemini': 'communication, learning, social connections, curiosity',
+    'Cancer': 'home, family, emotional security, nurturing',
+    'Leo': 'creativity, self-expression, romance, recognition',
+    'Virgo': 'health, service, organization, daily routines',
+    'Libra': 'relationships, balance, beauty, justice',
+    'Scorpio': 'transformation, intimacy, shared resources, depth',
+    'Sagittarius': 'travel, philosophy, higher learning, freedom',
+    'Capricorn': 'career, ambition, structure, long-term goals',
+    'Aquarius': 'community, innovation, friendship, humanitarian ideals',
+    'Pisces': 'spirituality, dreams, compassion, artistic inspiration',
+}
+
+_MOON_PHASE_THEMES = {
+    'New Moon 🌑': 'A time for setting intentions and planting seeds. What do you wish to grow?',
+    'Waxing Crescent 🌒': 'Take first steps toward your goals. Momentum is building.',
+    'First Quarter 🌓': 'Make decisions and take action. Overcome obstacles with determination.',
+    'Waxing Gibbous 🌔': 'Refine and adjust your approach. Fine-tune your plans.',
+    'Full Moon 🌕': 'Illumination and culmination. Celebrate achievements and release what no longer serves.',
+    'Waning Gibbous 🌖': 'Gratitude and sharing. Give back from your abundance.',
+    'Last Quarter 🌗': 'Release and let go. Forgive, declutter, and clear space.',
+    'Waning Crescent 🌘': 'Rest, reflect, and surrender. Prepare for the next cycle.',
+}
+
+
+def _moon_phase_text(moon_lon, sun_lon):
+    phase_deg = (moon_lon - sun_lon) % 360
+    if phase_deg < 45: return 'New Moon 🌑'
+    elif phase_deg < 90: return 'Waxing Crescent 🌒'
+    elif phase_deg < 135: return 'First Quarter 🌓'
+    elif phase_deg < 180: return 'Waxing Gibbous 🌔'
+    elif phase_deg < 225: return 'Full Moon 🌕'
+    elif phase_deg < 270: return 'Waning Gibbous 🌖'
+    elif phase_deg < 315: return 'Last Quarter 🌗'
+    else: return 'Waning Crescent 🌘'
+
+
+def _interpret_sign_transit(sign, transiting_planets):
+    """Generate a Lilly-style interpretation for transits in a sign."""
+    if not transiting_planets:
+        return f"A quiet day for {sign}. The cosmic spotlight is elsewhere — use this time for reflection and gentle self-care."
+    parts = []
+    for pname in transiting_planets:
+        info = _PLANET_MEANINGS.get(pname, {})
+        meaning = info.get('transit', f'influences {sign} today')
+        parts.append(f"{pname} {meaning}")
+    theme = _SIGN_THEMES.get(sign, '')
+    return f"Today's energy for {sign}: {'; '.join(parts)}. Themes of {theme} are highlighted."
+
+
+def _interpret_aspect(aspect, p1, p2, orb):
+    """Generate interpretation for an aspect."""
+    info = _ASPECT_MEANINGS.get(aspect, {})
+    nature = info.get('nature', 'influences')
+    advice = info.get('advice', 'Stay aware of these energies.')
+    return f"{p1} {aspect} {p2} ({orb}° orb): {nature.capitalize()}. {advice}"
+
+
+@app.route("/api/horoscope/daily")
+def api_horoscope_daily():
+    """Daily horoscope — Swiss Ephemeris → positions → Lilly interprets."""
+    now = datetime.now(TZ)
+    positions, jd = _get_current_planets()
+    aspects = _calc_aspects(positions)
+
+    moon_lon = positions.get('Moon', {}).get('longitude', 0)
+    sun_lon = positions.get('Sun', {}).get('longitude', 0)
+    moon_phase = _moon_phase_text(moon_lon, sun_lon)
+    moon_theme = _MOON_PHASE_THEMES.get(moon_phase, '')
+
+    today = now.strftime('%A, %B %d, %Y')
+    weekday = now.strftime('%A')
+
+    # Build per-sign readings with interpretations
+    daily_readings = []
+    for sign_name, glyph, ruler, modality, element in _ZODIAC_SIGNS_FULL:
+        sign_idx = _SIGNS_LIST.index(sign_name)
+        transiting = []
+        for pname, pdata in positions.items():
+            p_sign_idx = int(pdata['longitude'] / 30) % 12
+            if p_sign_idx == sign_idx:
+                transiting.append(pname)
+        interpretation = _interpret_sign_transit(sign_name, transiting)
+        daily_readings.append({
+            'sign': sign_name,
+            'glyph': glyph,
+            'element': element,
+            'modality': modality,
+            'transiting': transiting,
+            'interpretation': interpretation,
+        })
+
+    # Interpret top aspects
+    aspect_readings = []
+    for a in aspects[:5]:
+        aspect_readings.append(_interpret_aspect(a['aspect'], a['planet1'], a['planet2'], a['orb']))
+
+    # Overall daily energy summary
+    overall = f"Today the Moon travels through {moon_phase.split(' ')[-1] if ' ' in moon_phase else moon_phase} — {moon_theme} "
+    if aspects:
+        overall += f"The tightest aspect is {aspects[0]['planet1']} {aspects[0]['aspect']} {aspects[0]['planet2']} at {aspects[0]['orb']}° orb, bringing {_ASPECT_MEANINGS.get(aspects[0]['aspect'],{}).get('nature','cosmic energy')}. "
+
+    return jsonify({
+        'date': today,
+        'weekday': weekday,
+        'moon_phase': moon_phase,
+        'moon_theme': moon_theme,
+        'moon_longitude': round(moon_lon, 2),
+        'sun_longitude': round(sun_lon, 2),
+        'top_aspects': aspects[:5],
+        'aspect_readings': aspect_readings,
+        'signs': daily_readings,
+        'overall': overall,
+        'generated_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+    })
+
+
+@app.route("/api/horoscope/weekly")
+def api_horoscope_weekly():
+    """Weekly horoscope overview."""
+    now = datetime.now(TZ)
+    week_start = now
+    week_end = now + timedelta(days=6)
+
+    # Key transits this week — check each day
+    weekly_transits = []
+    for day_offset in range(7):
+        day = now + timedelta(days=day_offset)
+        day_utc = day.astimezone(timezone.utc)
+        jd = swe.julday(day_utc.year, day_utc.month, day_utc.day, 12.0)
+        try:
+            sun = swe.calc_ut(jd, swe.SUN)[0][0]
+            moon = swe.calc_ut(jd, swe.MOON)[0][0]
+        except swe.Error:
+            continue
+        sign_idx = int(moon / 30) % 12
+        nak_idx = int(moon // 13.333333333333334)
+        weekly_transits.append({
+            'day': day.strftime('%A'),
+            'date': day.strftime('%b %d'),
+            'moon_sign': ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'][sign_idx],
+            'moon_glyph': ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'][sign_idx],
+            'nakshatra': nak_idx,
+        })
+
+    return jsonify({
+        'week_of': week_start.strftime('%B %d') + ' – ' + week_end.strftime('%B %d, %Y'),
+        'daily_moon': weekly_transits,
+        'generated_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+    })
+
+
+@app.route("/api/horoscope/monthly")
+def api_horoscope_monthly():
+    """Monthly horoscope overview."""
+    now = datetime.now(TZ)
+    year, month = now.year, now.month
+    import calendar as cal
+    days_in_month = cal.monthrange(year, month)[1]
+
+    # New & Full moons this month
+    new_moons = []
+    full_moons = []
+    sign_ingresses = []
+
+    for day in range(1, days_in_month + 1):
+        dt_utc = datetime(year, month, day, 12, 0, tzinfo=TZ).astimezone(timezone.utc)
+        jd = swe.julday(dt_utc.year, dt_utc.month, dt_utc.day, 12.0)
+        try:
+            sun = swe.calc_ut(jd, swe.SUN)[0][0]
+            moon = swe.calc_ut(jd, swe.MOON)[0][0]
+        except swe.Error:
+            continue
+        phase = (moon - sun) % 360
+        if phase < 10:
+            new_moons.append(f"{day}")
+        elif 175 < phase < 185:
+            full_moons.append(f"{day}")
+
+        # Check sign ingresses (compare with previous day)
+        if day > 1:
+            dt_prev = datetime(year, month, day - 1, 12, 0, tzinfo=TZ).astimezone(timezone.utc)
+            jd_prev = swe.julday(dt_prev.year, dt_prev.month, dt_prev.day, 12.0)
+            try:
+                sun_prev = swe.calc_ut(jd_prev, swe.SUN)[0][0]
+                moon_prev = swe.calc_ut(jd_prev, swe.MOON)[0][0]
+            except swe.Error:
+                continue
+            if int(sun / 30) != int(sun_prev / 30):
+                sign_name = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'][int(sun / 30) % 12]
+                sign_ingresses.append({'day': day, 'planet': 'Sun', 'sign': sign_name})
+            if int(moon / 30) != int(moon_prev / 30):
+                sign_name = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'][int(moon / 30) % 12]
+                sign_ingresses.append({'day': day, 'planet': 'Moon', 'sign': sign_name})
+
+    return jsonify({
+        'month': now.strftime('%B %Y'),
+        'new_moons': new_moons,
+        'full_moons': full_moons,
+        'ingresses': sign_ingresses,
+        'generated_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+    })
+
+
+@app.route("/api/horoscope/love")
+def api_horoscope_love():
+    """Love & relationship horoscope — Venus/Mars/7th house with Lilly's interpretation."""
+    now = datetime.now(TZ)
+    now_utc = now.astimezone(timezone.utc)
+    jd = swe.julday(now_utc.year, now_utc.month, now_utc.day,
+                    now_utc.hour + now_utc.minute / 60)
+
+    try:
+        venus = swe.calc_ut(jd, swe.VENUS)[0][0]
+        mars = swe.calc_ut(jd, swe.MARS)[0][0]
+        moon = swe.calc_ut(jd, swe.MOON)[0][0]
+        jupiter = swe.calc_ut(jd, swe.JUPITER)[0][0]
+    except swe.Error:
+        return jsonify({'error': 'ephemeris missing'}), 500
+
+    venus_sign = _SIGNS_LIST[int(venus / 30) % 12]
+    mars_sign = _SIGNS_LIST[int(mars / 30) % 12]
+    moon_sign = _SIGNS_LIST[int(moon / 30) % 12]
+
+    # Venus-Mars aspect
+    vm_diff = abs(venus - mars) % 360
+    vm_orb = min(vm_diff, 360 - vm_diff)
+    if vm_orb < 8: vm_aspect = 'Conjunction'
+    elif abs(vm_diff - 180) < 8: vm_aspect = 'Opposition'
+    elif abs(vm_diff - 120) < 7: vm_aspect = 'Trine'
+    elif abs(vm_diff - 90) < 7: vm_aspect = 'Square'
+    elif abs(vm_diff - 60) < 5: vm_aspect = 'Sextile'
+    else: vm_aspect = None
+
+    # ── Lilly's Love Interpretation ──
+    love_interp = f"Venus in {venus_sign} colors your love life with {_SIGN_THEMES.get(venus_sign, '')} energy. "
+    love_interp += f"Mars in {mars_sign} drives your desires toward {_SIGN_THEMES.get(mars_sign, '')} pursuits. "
+    if vm_aspect:
+        asp_info = _ASPECT_MEANINGS.get(vm_aspect, {})
+        love_interp += f"The Venus-Mars {vm_aspect.lower()} ({vm_orb}° orb) creates {asp_info.get('nature', 'notable')} energy between giving and receiving love. {asp_info.get('advice', '')} "
+    else:
+        love_interp += "Venus and Mars are not in major aspect today — romantic energy is steady rather than intense. "
+    love_interp += f"The Moon in {moon_sign} reveals your emotional needs: {_SIGN_THEMES.get(moon_sign, '')}. "
+
+    return jsonify({
+        'date': now.strftime('%A, %B %d, %Y'),
+        'venus': {'sign': venus_sign, 'degree': round(venus % 30, 2), 'longitude': round(venus, 2)},
+        'mars': {'sign': mars_sign, 'degree': round(mars % 30, 2), 'longitude': round(mars, 2)},
+        'venus_mars_aspect': vm_aspect,
+        'venus_mars_orb': round(vm_orb, 1),
+        'moon_sign': moon_sign,
+        'interpretation': love_interp,
+        'generated_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+    })
+
+
+@app.route("/api/horoscope/career")
+def api_horoscope_career():
+    """Career & money — Saturn/Jupiter/Mercury with Lilly's interpretation."""
+    now = datetime.now(TZ)
+    now_utc = now.astimezone(timezone.utc)
+    jd = swe.julday(now_utc.year, now_utc.month, now_utc.day,
+                    now_utc.hour + now_utc.minute / 60)
+
+    try:
+        saturn = swe.calc_ut(jd, swe.SATURN)[0][0]
+        jupiter = swe.calc_ut(jd, swe.JUPITER)[0][0]
+        mercury = swe.calc_ut(jd, swe.MERCURY)[0][0]
+    except swe.Error:
+        return jsonify({'error': 'ephemeris missing'}), 500
+
+    saturn_sign = _SIGNS_LIST[int(saturn / 30) % 12]
+    jupiter_sign = _SIGNS_LIST[int(jupiter / 30) % 12]
+    mercury_sign = _SIGNS_LIST[int(mercury / 30) % 12]
+
+    js_diff = abs(jupiter - saturn) % 360
+    js_orb = min(js_diff, 360 - js_diff)
+    if js_orb < 8: js_aspect = 'Conjunction'
+    elif abs(js_diff - 180) < 8: js_aspect = 'Opposition'
+    elif abs(js_diff - 120) < 7: js_aspect = 'Trine'
+    elif abs(js_diff - 90) < 7: js_aspect = 'Square'
+    elif abs(js_diff - 60) < 5: js_aspect = 'Sextile'
+    else: js_aspect = None
+
+    # ── Lilly's Career Interpretation ──
+    career_interp = f"Saturn in {saturn_sign} demands discipline around {_SIGN_THEMES.get(saturn_sign, '')}. "
+    career_interp += f"Jupiter in {jupiter_sign} expands opportunities in {_SIGN_THEMES.get(jupiter_sign, '')}. "
+    career_interp += f"Mercury in {mercury_sign} sharpens your mind for {_SIGN_THEMES.get(mercury_sign, '')}. "
+    if js_aspect:
+        asp_info = _ASPECT_MEANINGS.get(js_aspect, {})
+        career_interp += f"The Jupiter-Saturn {js_aspect.lower()} ({js_orb}° orb) brings {asp_info.get('nature', 'significant')} energy to your public life. {asp_info.get('advice', '')}"
+
+    return jsonify({
+        'date': now.strftime('%A, %B %d, %Y'),
+        'saturn': {'sign': saturn_sign, 'degree': round(saturn % 30, 2), 'longitude': round(saturn, 2)},
+        'jupiter': {'sign': jupiter_sign, 'degree': round(jupiter % 30, 2), 'longitude': round(jupiter, 2)},
+        'mercury': {'sign': mercury_sign, 'degree': round(mercury % 30, 2), 'longitude': round(mercury, 2)},
+        'jupiter_saturn_aspect': js_aspect,
+        'jupiter_saturn_orb': round(js_orb, 1),
+        'interpretation': career_interp,
+        'generated_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+    })
+
+
+@app.route("/api/horoscope/health")
+def api_horoscope_health():
+    """Health & wellness — Moon/Mars/Saturn with Lilly's interpretation."""
+    now = datetime.now(TZ)
+    now_utc = now.astimezone(timezone.utc)
+    jd = swe.julday(now_utc.year, now_utc.month, now_utc.day,
+                    now_utc.hour + now_utc.minute / 60)
+
+    try:
+        moon = swe.calc_ut(jd, swe.MOON)[0][0]
+        mars = swe.calc_ut(jd, swe.MARS)[0][0]
+        sun = swe.calc_ut(jd, swe.SUN)[0][0]
+        saturn = swe.calc_ut(jd, swe.SATURN)[0][0]
+    except swe.Error:
+        return jsonify({'error': 'ephemeris missing'}), 500
+
+    moon_sign = _SIGNS_LIST[int(moon / 30) % 12]
+    moon_phase = _moon_phase_text(moon, sun)
+    mars_sign = _SIGNS_LIST[int(mars / 30) % 12]
+    saturn_sign = _SIGNS_LIST[int(saturn / 30) % 12]
+
+    # ── Lilly's Health Interpretation ──
+    health_interp = f"The Moon in {moon_sign} affects your emotional wellbeing — {_SIGN_THEMES.get(moon_sign, '')} influence your mood and body. "
+    health_interp += f"{moon_phase}: {_MOON_PHASE_THEMES.get(moon_phase, '')} "
+    health_interp += f"Mars in {mars_sign} governs your physical energy and drive. {_PLANET_MEANINGS.get('Mars',{}).get('transit','')} "
+    health_interp += f"Saturn in {saturn_sign} highlights areas requiring rest and discipline around {_SIGN_THEMES.get(saturn_sign, '')}. "
+
+    return jsonify({
+        'date': now.strftime('%A, %B %d, %Y'),
+        'moon': {'sign': moon_sign, 'degree': round(moon % 30, 2), 'longitude': round(moon, 2)},
+        'moon_phase': moon_phase,
+        'mars': {'sign': mars_sign, 'degree': round(mars % 30, 2), 'longitude': round(mars, 2)},
+        'saturn': {'sign': saturn_sign, 'degree': round(saturn % 30, 2)},
+        'interpretation': health_interp,
+        'generated_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+    })
+
+
+@app.route("/api/horoscope/compatibility")
+def api_horoscope_compatibility():
+    """Compatibility (synastry) overview — element/modality compatibility matrix."""
+    now = datetime.now(TZ)
+
+    # Element compatibility
+    elements = {
+        'Fire': {'best': ['Fire', 'Air'], 'challenging': ['Water'], 'neutral': ['Earth']},
+        'Earth': {'best': ['Earth', 'Water'], 'challenging': ['Air'], 'neutral': ['Fire']},
+        'Air': {'best': ['Air', 'Fire'], 'challenging': ['Earth'], 'neutral': ['Water']},
+        'Water': {'best': ['Water', 'Earth'], 'challenging': ['Fire'], 'neutral': ['Air']},
+    }
+
+    # Modality compatibility
+    modalities = {
+        'Cardinal': {'best': ['Cardinal'], 'challenging': ['Fixed'], 'neutral': ['Mutable']},
+        'Fixed': {'best': ['Fixed'], 'challenging': ['Cardinal'], 'neutral': ['Mutable']},
+        'Mutable': {'best': ['Mutable'], 'challenging': [], 'neutral': ['Cardinal', 'Fixed']},
+    }
+
+    # Sign pairings (simplified synastry)
+    sign_compat = []
+    for s1, g1, r1, m1, e1 in _ZODIAC_SIGNS_FULL:
+        for s2, g2, r2, m2, e2 in _ZODIAC_SIGNS_FULL:
+            if s1 == s2:
+                score = 70  # Same sign — comfortable but can stagnate
+                note = 'Comfortable, familiar energy'
+            elif e1 == e2:
+                score = 85  # Same element — natural harmony
+                note = 'Natural harmony and understanding'
+            elif (e1 in elements[e2]['best']):
+                score = 80  # Complementary elements
+                note = 'Complementary and energizing'
+            elif (e1 in elements[e2]['challenging']):
+                score = 45  # Challenging elements
+                note = 'Requires patience and understanding'
+            else:
+                score = 65
+                note = 'Balanced with effort'
+            sign_compat.append({
+                'sign1': s1, 'glyph1': g1,
+                'sign2': s2, 'glyph2': g2,
+                'score': score,
+                'note': note,
+            })
+
+    return jsonify({
+        'date': now.strftime('%A, %B %d, %Y'),
+        'elements': elements,
+        'modalities': modalities,
+        'compatibility': sign_compat,
+        'generated_at': now.strftime('%Y-%m-%d %H:%M:%S'),
+    })
+
+
 @app.route("/")
 def home():
     resp = make_response(render_template("index.html"))
