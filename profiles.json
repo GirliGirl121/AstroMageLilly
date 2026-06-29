@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "name": "Gigi ❤️",
+    "birth_date": "1981-10-30",
+    "birth_time": "03:06",
+    "location": "Cape Town, South Africa",
+    "latitude": -33.925,
+    "longitude": 18.424,
+    "timezone_offset": 2,
+    "is_default": false
+  },
+  {
+    "id": 2,
+    "name": "Test Profile",
+    "birth_date": "1990-05-15",
+    "birth_time": "14:30",
+    "location": "London, UK",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "timezone_offset": 0.0,
+    "notes": "Test profile for UI",
+    "avatar": "🌟",
+    "is_default": true
+  },
+  {
+    "id": 3,
+    "name": "Test Profile (Copy)",
+    "birth_date": "1990-05-15",
+    "birth_time": "14:30",
+    "location": "London, UK",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "timezone_offset": 0.0,
+    "notes": "Test profile for UI",
+    "avatar": "🌟",
+    "is_default": false
+  }
+]
