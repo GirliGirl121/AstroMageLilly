@@ -47,7 +47,9 @@ def _get_current_planets():
 
 
 def _calc_aspects(positions):
-    """Calculate aspects between all planets."""
+    """Calculate aspects between all planets.
+    Returns aspects with p1/p2 keys and capitalized aspect names
+    matching frontend expectations."""
     aspects_list = []
     major_orbs = {'conjunction': 8.0, 'sextile': 6.0, 'square': 8.0, 'trine': 8.0, 'opposition': 8.0}
     minor_orbs = {'semi-sextile': 2.0, 'semi-square': 2.0, 'quintile': 1.5, 'sesquiquadrate': 2.0, 'biquintile': 1.5, 'quincunx': 3.0}
@@ -69,11 +71,18 @@ def _calc_aspects(positions):
             for aspect_name, angle in aspect_angles.items():
                 orb = major_orbs.get(aspect_name, minor_orbs.get(aspect_name, 2.0))
                 if abs(diff - angle) <= orb:
+                    p1_name = p1['name']
+                    p2_name = p2['name']
                     aspects_list.append({
-                        'planet1': p1['name'], 'planet2': p2['name'],
-                        'aspect': aspect_name, 'symbol': aspect_symbols.get(aspect_name, ''),
+                        'p1': p1_name, 'p2': p2_name,
+                        'aspect': aspect_name.capitalize(),
+                        'symbol': aspect_symbols.get(aspect_name, ''),
                         'orb': round(abs(diff - angle), 2), 'angle': angle,
                         'applying': False,
+                        'p1_color': PLANET_COLORS.get(p1_name, '#fff'),
+                        'p2_color': PLANET_COLORS.get(p2_name, '#fff'),
+                        'p1_symbol': PLANET_SYMBOLS.get(p1_name, ''),
+                        'p2_symbol': PLANET_SYMBOLS.get(p2_name, ''),
                     })
                     break
     return aspects_list
@@ -165,19 +174,29 @@ def _calc_dasha(
 
 
 def _current_nakshatra() -> dict:
-    """Get current nakshatra from transit Moon."""
+    """Get current nakshatra from transit Moon with full data."""
     jd = _get_jd_now()
     moon_lon = swe.calc_ut(jd, swe.MOON)[0][0]
     n_idx = int(moon_lon / (360 / 27)) % 27
     pada = int((moon_lon % (360 / 27)) / (360 / 27 / 4)) + 1
     name = NAKSHATRAS_27[n_idx] if n_idx < len(NAKSHATRAS_27) else 'Unknown'
     lord = NAKSHATRA_LORDS[n_idx] if n_idx < len(NAKSHATRA_LORDS) else 'Unknown'
-    extra = NAKSHATRA_DATA.get(name, {}) if NAKSHATRA_DATA else {}
+    # Look up rich data from nakshatra_data.json list
+    extra = {}
+    if NAKSHATRA_DATA and isinstance(NAKSHATRA_DATA, dict):
+        naklist = NAKSHATRA_DATA.get('nakshatras', [])
+        for n in naklist:
+            if n.get('name') == name:
+                extra = n
+                break
     return {
         'name': name, 'pada': pada, 'lord': lord,
         'longitude': round(moon_lon, 2),
         'symbol': extra.get('symbol', ''),
         'deity': extra.get('deity', ''),
+        'sanskrit': extra.get('sanskrit', ''),
+        'gana': extra.get('gana', ''),
+        'guna': extra.get('guna', ''),
         'meaning': extra.get('meaning', ''),
     }
 
@@ -499,13 +518,16 @@ def api_nakshatra_now():
 @bp.route('/api/live')
 @bp.route('/api/transits')
 def api_live():
-    """Current planetary positions (aliased as /api/transits)."""
-    planets = _get_current_planets()
-    aspects = _calc_aspects(planets)
-    major_aspects = [a for a in aspects if a['aspect'] in ('conjunction','sextile','square','trine','opposition')]
+    """Current planetary positions (aliased as /api/transits).
+    Returns planets as a name-keyed object (not list) for front-end compatibility."""
+    planets_list = _get_current_planets()
+    aspects = _calc_aspects(planets_list)
+    major_aspects = [a for a in aspects if a['aspect'].lower() in ('conjunction','sextile','square','trine','opposition')]
+    # Frontend expects planets as {Sun:{...}, Moon:{...}} not [{...},{...}]
+    planets_dict = {p['name']: p for p in planets_list if 'name' in p}
     return jsonify({
-        'planets': planets,
-        'total_planets': len(planets),
+        'planets': planets_dict,
+        'total_planets': len(planets_dict),
         'aspects': major_aspects,
         'total_aspects': len(major_aspects),
     })

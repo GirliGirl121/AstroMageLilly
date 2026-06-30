@@ -3739,8 +3739,8 @@ body::before {
   min-width: 0;
 }
 .natal-wheel-canvas {
-  flex: 1; display: flex; align-items: center; justify-content: center;
-  min-height: 0;
+ flex: 1; display: flex; align-items: center; justify-content: center;
+ min-height: 480px;
 }
 
 /* Middle row: aspects + cusps */

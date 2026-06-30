@@ -1325,7 +1325,7 @@ async function loadNatal(chartId) {
   if (!nc) return;
   try {
     const body = chartId ? {chart_id: chartId} : {};
-    const data = await loadJSON('/api/natal-chart', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    const data = await loadJSON('/api/natal/chart', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
 
     currentNatalChartId = chartId || null;
     currentNatalData = data;
@@ -1704,7 +1704,7 @@ function switchHoro(type) {
   if(navItem) navItem.classList.add('active');
   var container = document.getElementById('horo-content');
   container.innerHTML = '<div class="horo-loading">Loading the stars...</div>';
-  var endpoints = {daily:'/api/horoscope/daily',weekly:'/api/horoscope/weekly',monthly:'/api/horoscope/monthly',love:'/api/horoscope/love',career:'/api/horoscope/career',health:'/api/horoscope/health',compat:'/api/horoscope/compatibility'};
+  var endpoints = {daily:'/api/horoscope/daily',weekly:'/api/horoscope/weekly',monthly:'/api/horoscope/monthly',love:'/api/horoscope/love',career:'/api/horoscope/career',health:'/api/horoscope/health',compat:'/api/horoscope/compatibility?sign1=Aries&sign2=Libra'};
   fetch(endpoints[type]).then(function(r){return r.json()}).then(function(data){
     if(type==='daily') renderDailyHoro(container, data);
     else if(type==='weekly') renderWeeklyHoro(container, data);
@@ -3615,7 +3615,7 @@ async function refreshNatalChartList() {
   const sel = document.getElementById('natal-chart-select');
   if(!sel) return;
   try {
-    const charts = await loadJSON('/api/natal-charts', {});
+    const charts = await loadJSON('/api/natal/charts', {});
     const curVal = sel.value;
     sel.innerHTML = '<option value="">Gigi (Default)</option>';
     charts.forEach(function(c) {
@@ -3687,13 +3687,13 @@ function natalShowSaveModal() {
     }
     try {
       if(currentNatalChartId) {
-        await fetch('/api/natal-chart/' + currentNatalChartId, {
+        await fetch('/api/natal/chart/' + currentNatalChartId, {
           method:'PUT',
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify(chartData)
         });
       } else {
-        const res = await fetch('/api/natal-chart/save', {
+        const res = await fetch('/api/natal/chart/save', {
           method:'POST',
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify(chartData)
@@ -3732,6 +3732,8 @@ function initNatalCRUD() {
       loadNatal(null);
       // Reset the select
       if(sel) sel.value = '';
+      // Open the save modal for new chart
+      natalShowSaveModal();
     });
   }
   if(btnSave) {
@@ -3745,7 +3747,7 @@ function initNatalCRUD() {
       }
       if(!confirm('Delete this saved chart? This cannot be undone.')) return;
       try {
-        await fetch('/api/natal-chart/' + currentNatalChartId, {method:'DELETE'});
+        await fetch('/api/natal/chart/' + currentNatalChartId, {method:'DELETE'});
         currentNatalChartId = null;
         await refreshNatalChartList();
         await loadNatal(null);
