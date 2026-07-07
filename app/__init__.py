@@ -41,6 +41,7 @@ def create_app(testing=False) -> Flask:
     from app.routes.natal import bp as natal_bp
     from app.routes.chat import bp as chat_bp
     from app.routes.horoscope import bp as horoscope_bp
+    from app.routes.celestial_library import bp as celestial_library_bp
 
     app.register_blueprint(home_bp)
     app.register_blueprint(simply_bp)
@@ -51,6 +52,7 @@ def create_app(testing=False) -> Flask:
     app.register_blueprint(natal_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(horoscope_bp)
+    app.register_blueprint(celestial_library_bp)
 
     # ─── Initialize library DB on startup ──────────────────────────────
     try:

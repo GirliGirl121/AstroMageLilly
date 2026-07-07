@@ -5350,3 +5350,36 @@ body::before {
 .tarot-learn-body p {
   margin: 8px 0;
 }
+
+/* ─── Phase 15: Lilly's Celestial Library index ─── */
+.celestial-index-panel { margin-bottom: 16px; }
+.celestial-index-card { padding: 0; }
+.celestial-filters { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 16px 0; }
+.celestial-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px; padding: 14px 16px;
+}
+.celestial-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(212,175,55,0.18);
+  border-radius: 12px; padding: 12px 14px;
+}
+.celestial-card h3 { color: #d4af37; font-size: 14px; margin-bottom: 4px; }
+.celestial-trad { font-size: 11px; color: #FF6F91; text-transform: uppercase; letter-spacing: 1px; }
+.celestial-work { font-size: 12px; opacity: 0.75; margin: 4px 0; font-style: italic; }
+.celestial-dom { font-size: 11px; opacity: 0.6; margin-top: 6px; }
+.celestial-note { font-size: 11px; opacity: 0.5; margin-top: 6px; }
+.celestial-badge { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 8px; margin-left: 6px; vertical-align: middle; }
+.celestial-badge.have { background: rgba(212,175,55,0.2); color: #d4af37; }
+.celestial-badge.gap { background: rgba(255,111,145,0.15); color: #FF6F91; }
+/* filter chips (shared) */
+.chip {
+  padding: 5px 12px; border: 1px solid rgba(212,175,55,0.4); border-radius: 18px;
+  background: rgba(212,175,55,0.06); color: #d4af37; font-size: 12px; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.chip:hover { background: rgba(212,175,55,0.14); }
+.chip.active { background: #d4af37; color: #0a0a0e; font-weight: 700; }
+.chip.dom { border-color: rgba(255,111,145,0.4); color: #FF6F91; background: rgba(255,111,145,0.06); }
+.chip.dom:hover { background: rgba(255,111,145,0.14); }
+.chip.dom.active { background: #FF6F91; color: #0a0a0e; }

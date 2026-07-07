@@ -509,6 +509,20 @@
               </div>
             </div>
           </div>
+          <!-- Celestial Index Panel (Phase 15) -->
+          <div class="celestial-index-panel" id="celestial-index-panel">
+            <div class="card celestial-index-card">
+              <div class="library-shelf-header">
+                <span class="library-shelf-title">✦ Lilly's Celestial Library</span>
+                <span class="library-shelf-count" id="celestial-count">indexing…</span>
+              </div>
+              <div class="celestial-filters" id="celestial-trad-filters"></div>
+              <div class="celestial-filters" id="celestial-dom-filters"></div>
+              <div class="celestial-grid" id="celestial-grid">
+                <div class="loading">✦ Awakening the index of the old masters…</div>
+              </div>
+            </div>
+          </div>
           <!-- Reader Panel -->
           <div class="library-reader-panel">
             <div class="card library-reader-card" id="library-reader-card">
@@ -874,7 +888,7 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
     if(cid && document.getElementById(cid).innerHTML.includes('Loading')) {
       if(btn.dataset.tab === 'tab-natal') loadNatal();
       else if(btn.dataset.tab === 'tab-transits') loadLive();
-      else if(btn.dataset.tab === 'tab-library') loadLibrary();
+      else if(btn.dataset.tab === 'tab-library') { loadLibrary(); loadCelestialIndex(); }
       else if(btn.dataset.tab === 'tab-simply') loadSimply();
       else if(btn.dataset.tab === 'tab-dashas') loadDashasFull();
       else if(btn.dataset.tab === 'tab-nakshatras') loadNakshatrasFull();
@@ -2774,6 +2788,66 @@ document.getElementById('library-shelf').addEventListener('click', (e) => {
   const bookItem = e.target.closest('.book-item');
   if(bookItem) libOpenBook(bookItem.dataset.id);
 });
+
+// ─── Phase 15: Lilly's Celestial Library index (adapter over /api/celestial/library) ───
+let celestialData = {authors: [], index: []};
+let celestialTrad = 'all', celestialDom = 'all';
+const CELESTIAL_TRADITIONS = ['islamic','hellenistic','western','sufi'];
+const CELESTIAL_DOMAINS = ['elections','mansions','natal','horary','magic','talismans','theosophy','general','weather','lunar'];
+
+async function loadCelestialIndex() {
+  const grid = document.getElementById('celestial-grid');
+  if(!grid) return;
+  try {
+    celestialData = await loadJSON('/api/celestial/library');
+    renderCelestialFilters();
+    renderCelestialGrid();
+    document.getElementById('celestial-count').textContent =
+      celestialData.authors.length + ' masters · ' + celestialData.index.length + ' works';
+  } catch(e) {
+    grid.innerHTML = '<div class="loading">✦ The celestial index is veiled… '+e.message+'</div>';
+  }
+}
+
+function renderCelestialFilters() {
+  const tf = document.getElementById('celestial-trad-filters');
+  tf.innerHTML = '<span class="chip'+(celestialTrad==='all'?' active':'')+'" onclick="setCelestialTrad(\'all\')">All Traditions</span>' +
+    CELESTIAL_TRADITIONS.map(t => '<span class="chip'+(celestialTrad===t?' active':'')+'" onclick="setCelestialTrad(\''+t+'\')">'+t+'</span>').join('');
+  const df = document.getElementById('celestial-dom-filters');
+  df.innerHTML = '<span class="chip dom'+(celestialDom==='all'?' active':'')+'" onclick="setCelestialDom(\'all\')">All Domains</span>' +
+    CELESTIAL_DOMAINS.map(d => '<span class="chip dom'+(celestialDom===d?' active':'')+'" onclick="setCelestialDom(\''+d+'\')">'+d+'</span>').join('');
+}
+
+function setCelestialTrad(t){ celestialTrad = t; renderCelestialFilters(); renderCelestialGrid(); }
+function setCelestialDom(d){ celestialDom = d; renderCelestialFilters(); renderCelestialGrid(); }
+
+function renderCelestialGrid() {
+  const grid = document.getElementById('celestial-grid');
+  const idxByAuthor = {};
+  celestialData.index.forEach(i => { (idxByAuthor[i.author_key] = idxByAuthor[i.author_key] || []).push(i); });
+  const filtered = celestialData.authors.filter(a => {
+    if(celestialTrad !== 'all' && a.tradition !== celestialTrad) return false;
+    if(celestialDom !== 'all') {
+      const doms = (a.domain || '').toLowerCase().split(',').map(s => s.trim());
+      if(!doms.includes(celestialDom)) return false;
+    }
+    return true;
+  });
+  if(!filtered.length){ grid.innerHTML = '<div class="loading">✦ No masters match this filter, beloved.</div>'; return; }
+  grid.innerHTML = filtered.map(a => {
+    const items = idxByAuthor[a.author_key] || [];
+    const refs = items.filter(i => i.item_type === 'reference').length;
+    const books = items.filter(i => i.item_type === 'book').length;
+    const badge = a.present ? '<span class="celestial-badge have">text on disk</span>' : '<span class="celestial-badge gap">seek text</span>';
+    return '<div class="celestial-card">' +
+      '<h3>'+esc(a.name)+badge+'</h3>' +
+      '<div class="celestial-trad">'+esc(a.tradition)+' · '+esc(a.era||'')+'</div>' +
+      '<div class="celestial-work">'+esc(a.core_work||'')+'</div>' +
+      '<div class="celestial-dom">domains: '+(a.domain||'—')+'</div>' +
+      '<div class="celestial-note">indexed: '+refs+' reference(s), '+books+' book(s)</div>' +
+    '</div>';
+  }).join('');
+}
 
 async function libOpenBook(bookId) {
   console.log('📖 Opening book:', bookId);
