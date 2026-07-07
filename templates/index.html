@@ -92,12 +92,6 @@
             <span class="icon">🕌</span> Quran
         </button>
         <button class="sidebar-nav-item" data-tab="tab-hadith">
-            <span class="icon">📜</span> Major Hadith
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-quran">
-          <span class="icon">🕌</span> Quran
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-hadith">
           <span class="icon">📜</span> Major Hadith
         </button>
         <button class="sidebar-nav-item" data-tab="tab-dashas">
@@ -3769,5 +3763,11 @@ document.getElementById('btn-refresh').addEventListener('click', loadHome);
 document.getElementById('btn-notif').addEventListener('click', () => alert('🔔 Notifications coming soon!'));
 });
 </script>
+
+<!-- Orphaned loaders: wire up real implementations for Quran/Hadith/Dashas/Nakshatras tabs.
+     These files define loadQuranFull, loadHadithFull, loadDashasFull, loadNakshatrasFull and
+     depend only on the inline loadJSON/esc globals (available before deferred scripts run). -->
+<script src="/static/js/quran-hadith.js" defer></script>
+<script src="/static/js/dashas-nakshatras.js" defer></script>
 </body>
 </html>
