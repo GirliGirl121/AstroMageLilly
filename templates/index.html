@@ -82,18 +82,17 @@
           <span class="badge">CRUD</span>
         </button>
         <button class="sidebar-nav-item" data-tab="tab-horoscope">
-          <span class="icon">💞</span> Horoscopes
-          <span class="badge">Comp.</span>
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-magi">
-          <span class="icon">📓</span> MagiJournal
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-library">
-          <span class="icon">📚</span> Library
-          <span class="badge">Sacred</span>
+            <span class="icon">💞</span> Horoscopes
+            <span class="badge">Comp.</span>
         </button>
         <button class="sidebar-nav-item" data-tab="tab-simply">
-          <span class="icon">🔭</span> SimplyAstrology
+            <span class="icon">🔭</span> SimplyAstrology
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-quran">
+            <span class="icon">🕌</span> Quran
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-hadith">
+            <span class="icon">📜</span> Major Hadith
         </button>
         <button class="sidebar-nav-item" data-tab="tab-quran">
           <span class="icon">🕌</span> Quran
@@ -868,13 +867,14 @@ document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
     const starsBtn = document.getElementById('btn-stars');
     if(starsBtn) starsBtn.textContent = (btn.dataset.tab === 'tab-home') ? '✨' : '🌙';
     if(window.innerWidth <= 900 && !sidebarPinned) closeSidebar();
-    // Lazy load
+    // Lazy load configuration
     const lazy = {
-      'tab-natal': 'natal-worksheet', 'tab-library': 'library-shelf',
-      'tab-quran': 'quran-full-content', 'tab-hadith': 'hadith-full-content',
-      'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content', 'tab-transits': 'live-content',
-      'tab-horoscope': 'horo-content', 'tab-magi': 'magi-astro-bar',
-      // 'tab-simply' removed from lazy — content is now static
+    'tab-natal': 'natal-worksheet', 'tab-library': 'library-shelf',
+    'tab-quran': 'quran-full-content', 'tab-hadith': 'hadith-full-content',
+    'tab-dashas': 'dashas-content', 'tab-nakshatras': 'nakshatras-full-content',
+    'tab-tarot': 'tab-tarot', 'tab-simply': 'simply-layout',
+    'tab-horoscope': 'horo-content', 'tab-magi': 'magi-astro-bar',
+    'tab-transits': 'live-content'
     };
     const cid = lazy[btn.dataset.tab];
     if(cid && document.getElementById(cid).innerHTML.includes('Loading')) {

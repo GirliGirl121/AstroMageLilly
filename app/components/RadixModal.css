@@ -1,0 +1,63 @@
+.radix-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  position: fixed;
+  inset: 0;
+}
+
+.radix-content {
+  background: #0a0a0e;
+  border: 1px solid #FF6F91;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  max-width: 800px;
+  padding: 20px;
+  color: #fff;
+}
+
+.radix-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #FF6F91;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.radix-title {
+  color: #FFD700;
+  font-size: 1.5rem;
+}
+
+.lilly-insignia {
+  color: #FFD700;
+  font-weight: bold;
+}
+
+.radix-close {
+  border: 1px solid #FF6F91;
+  color: #FF6F91;
+  background: transparent;
+  cursor: pointer;
+}
+
+.radix-close:hover {
+  background: #FFD700;
+  color: #0a0a0e;
+}
+
+.radix-footer {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.radix-action-btn {
+  background: #FFD700;
+  color: #0a0a0e;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px #FF6F91;
+}

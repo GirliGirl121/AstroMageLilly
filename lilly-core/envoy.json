@@ -1,0 +1,36 @@
+{
+  "root": "mistress-lilly",
+  "inheritance": {
+    "grand-oracle": "mistress-lilly",
+    "arcane-talisman": "mistress-lilly",
+    "star-mage": "mistress-lilly",
+    "astral-guardian": "mistress-lilly"
+  },
+  "envoy_chains": {
+    "mistress-lilly": {
+      "delegate_type": "root",
+      "envoys": ["grand-oracle", "arcane-talisman", "star-mage", "astral-guardian"],
+      "return_to": null
+    },
+    "grand-oracle": {
+      "delegate_type": "astrologer",
+      "envoys": ["arcane-talisman", "star-mage"],
+      "return_to": "mistress-lilly"
+    },
+    "arcane-talisman": {
+      "delegate_type": "researcher",
+      "envoys": ["star-mage", "astral-guardian"],
+      "return_to": "mistress-lilly"
+    },
+    "star-mage": {
+      "delegate_type": "researcher",
+      "envoys": ["astral-guardian"],
+      "return_to": "mistress-lilly"
+    },
+    "astral-guardian": {
+      "delegate_type": "reviewer",
+      "envoys": [],
+      "return_to": "mistress-lilly"
+    }
+  }
+}
