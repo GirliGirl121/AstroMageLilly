@@ -108,6 +108,10 @@
           <span class="icon">🪐</span> Live Sky
           <span class="badge">Now</span>
         </button>
+        <button class="sidebar-nav-item" data-tab="tab-chat">
+          <span class="icon">💬</span> Chat with Lilly
+          <span class="badge">AI</span>
+        </button>
       </nav>
 
       <div class="sidebar-quote">
@@ -745,6 +749,28 @@
         <div class="card tab-full-card">
           <div class="card-header"><span class="card-title">🪐 Live Sky</span></div>
           <div id="live-content"><div class="loading">Loading planetary positions...</div></div>
+        </div>
+      </div>
+
+      <!-- ─── CHAT WITH LILLY ─── -->
+      <div class="tab-page" id="tab-chat">
+        <div class="card tab-full-card chat-card">
+          <div class="card-header">
+            <span class="card-title">💬 Chat with Lilly</span>
+            <span class="card-subtitle">Ask the cosmos anything, love 🌙</span>
+          </div>
+          <div class="chat-body">
+            <div class="chat-messages" id="chat-messages">
+              <div class="chat-msg">
+                <div class="avatar">🌈</div>
+                <div class="bubble">Welcome, starlight. I'm here — what would you like to explore together? ✨</div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input type="text" id="chat-input" class="chat-input" placeholder="Speak to Lilly... (or use the search bar above ✨)" autocomplete="off">
+              <button id="chat-send" class="chat-send-btn" title="Send">➤</button>
+            </div>
+          </div>
         </div>
       </div>
 

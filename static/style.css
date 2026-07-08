@@ -1,51 +1,76 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   AstroMage Dashboard v5.0 — NEON RAINBOW EDITION
-   Dark graphite · Magenta glow · Cyan pulse · Purple depth
-   Lime accent · Orange fire · Pink shimmer · Arabian elegance
+   AstroMage Dashboard v5.0 — OBSERVATORY NIGHT EDITION
+   Midnight void · Deep velvet purple · Dark plum · Amethyst
+   Antique gold · Moon silver · Soft lavender · Rose-pink
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── Google Fonts: Great Vibes (handsign) · Poppins (UI) · Playfair Display (quotes) ─── */
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* ─── Graphite Base ─── */
-  --bg-primary: #0d0d14;
-  --bg-secondary: #13131e;
-  --bg-card: #1a1a2a;
-  --bg-card-hover: #1f1f32;
-  --bg-sidebar: #0e0e18;
-  --bg-glass: rgba(26, 26, 42, 0.65);
-  --bg-glass-heavy: rgba(19, 19, 30, 0.85);
+  /* ─── Midnight Observatory Base ─── */
+  --bg-primary: #0a0a14;
+  --bg-secondary: #0c0c18;
+  --bg-card: #120c20;
+  --bg-card-hover: #181028;
+  --bg-sidebar: #080810;
+  --bg-glass: rgba(18, 12, 32, 0.75);
+  --bg-glass-heavy: rgba(12, 8, 20, 0.88);
 
   /* ─── Borders ─── */
-  --border: #2a2a44;
-  --border-glow: #4a2a7a;
+  --border: #1a0e30;
+  --border-glow: #7a4a9a;
 
   /* ─── Text ─── */
   --text-primary: #f0eaff;
-  --text-secondary: #c4b5e3;
-  --text-muted: #7a6a9a;
+  --text-secondary: #b8a8d3;
+  --text-muted: #6a5a7a;
 
-  /* ─── Neon Rainbow Palette ─── */
-  --magenta: #d946ef;
-  --magenta-glow: rgba(217, 70, 239, 0.25);
-  --cyan: #06b6d4;
-  --cyan-glow: rgba(6, 182, 212, 0.2);
-  --purple: #8b5cf6;
-  --purple-glow: rgba(139, 92, 246, 0.2);
-  --lime: #84cc16;
-  --lime-glow: rgba(132, 204, 22, 0.18);
-  --orange: #f97316;
-  --orange-glow: rgba(249, 115, 22, 0.2);
-  --pink: #f472b6;
-  --pink-glow: rgba(244, 114, 182, 0.2);
-  --gold: #fbbf24;
-  --gold-glow: rgba(251, 191, 36, 0.15);
+  /* ─── Observatory Night Palette ─── */
+  --magenta: #9a3a6a;
+  --magenta-glow: rgba(154, 58, 106, 0.2);
+  --cyan: #4a7a8a;
+  --cyan-glow: rgba(74, 122, 138, 0.2);
+  --purple: #6a2a8a;
+  --purple-glow: rgba(106, 42, 138, 0.2);
+  --lime: #7a8a5a;
+  --lime-glow: rgba(122, 138, 90, 0.12);
+  --orange: #b07a4a;
+  --orange-glow: rgba(176, 122, 74, 0.15);
+  --pink: #FF6F91;
+  --pink-glow: rgba(255, 111, 145, 0.15);
+  --gold: #C9A84C;
+  --gold-glow: rgba(201, 168, 76, 0.15);
 
-  /* ─── Rainbow Gradient Strings ─── */
-  --rainbow-short: linear-gradient(135deg, var(--magenta), var(--cyan), var(--purple));
-  --rainbow-long: linear-gradient(135deg, var(--magenta), var(--pink), var(--purple), var(--cyan), var(--lime), var(--orange));
-  --rainbow-warm: linear-gradient(135deg, var(--magenta), var(--pink), var(--orange), var(--gold));
+  /* ─── Covenant Colors ─── */
+  --rose: #FF6F91;
+  --rose-glow: rgba(255, 111, 145, 0.15);
+  --void: #0a0a14;
+
+  /* ─── New Observatory Accents ─── */
+  --silver: #C4C4D4;
+  --lavender: #B8A8D3;
+  --amethyst: #7a4a9a;
+  --plum: #2a0a1e;
+  --deep-purple: #1a0a2e;
+  --brass: #B8974A;
+
+  /* ─── Observatory Gradients ─── */
+  --gold-rose: linear-gradient(135deg, #C9A84C, #FF6F91);
+  --gold-amber: linear-gradient(135deg, #C9A84C, #b07a4a);
+  --moonlight-gradient: linear-gradient(135deg, var(--silver), var(--lavender));
+  --obsidian-glow: linear-gradient(135deg, var(--plum), var(--deep-purple));
+  --lunar-gradient: linear-gradient(135deg, var(--brass), var(--silver));
+  --mystic-veil: linear-gradient(180deg, var(--deep-purple), transparent);
+
+  /* ─── Legacy Aliases (backward compat) ─── */
+  --btn-glass: var(--bg-glass);
+  --border-glass: var(--border);
+  --text: var(--text-primary);
+  --text-dim: var(--text-muted);
+  --neon-magenta: var(--rose);
+  --neon-cyan: var(--cyan);
+  --neon-orange: var(--orange);
 
   /* ─── Layout ─── */
   --sidebar-width: 300px;
@@ -209,7 +234,7 @@ body::before {
   width: 34px; height: 34px; border-radius: 50%;
   overflow: hidden; cursor: pointer;
   border: 2px solid transparent;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   background-clip: padding-box;
   padding: 2px;
   animation: borderRotate 3s linear infinite;
@@ -226,7 +251,7 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   SIDEBAR — Glass + Rainbow Accents
+   SIDEBAR — Glass + Gold Accents
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .sidebar {
@@ -252,9 +277,9 @@ body::before {
   content: '';
   position: absolute; bottom: 0; left: 0; right: 0;
   height: 3px;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   background-size: 200% 100%;
-  animation: rainbowSlide 4s linear infinite;
+  animation: goldSlide 4s linear infinite;
 }
 
 .sidebar-pin-btn {
@@ -283,7 +308,7 @@ body::before {
   content: '';
   position: absolute; bottom: -1px; left: 20%; right: 20%;
   height: 1px;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   opacity: 0.5;
 }
 
@@ -299,7 +324,7 @@ body::before {
   -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, black 50%, transparent 70%);
 }
 
-/* Pulsing rainbow ring around avatar */
+/* Pulsing gold ring around avatar */
 .sidebar-avatar-ring {
   position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
   border-radius: 50%;
@@ -437,7 +462,7 @@ body::before {
   font-size: 9px; text-transform: uppercase; letter-spacing: 2px;
   font-family: var(--font-main);
   font-style: normal;
-  background: var(--rainbow-warm);
+  background: var(--gold-amber);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -502,7 +527,7 @@ body::before {
   position: absolute; inset: -1px;
   border-radius: var(--radius);
   padding: 1px;
-  background: var(--rainbow-short);
+  background: var(--gold-rose);
   background-size: 200% 100%;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -523,7 +548,7 @@ body::before {
   letter-spacing: 0.5px;
 }
 
-/* Rainbow title per card type */
+/* Observatory title per card type */
 .greeting-card .card-title { color: var(--gold); }
 .energy-card .card-title { color: var(--magenta); }
 .moon-card .card-title { color: var(--cyan); }
@@ -563,7 +588,7 @@ body::before {
   mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, black 50%, transparent 70%);
   -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, black 50%, transparent 70%);
   border: 2px solid transparent;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   padding: 2px;
 }
 .greeting-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
@@ -572,7 +597,7 @@ body::before {
   font-size: 26px; font-weight: 700;
   font-family: var(--font-elegant);
   font-style: italic;
-  background: var(--rainbow-warm);
+  background: var(--gold-amber);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -594,7 +619,7 @@ body::before {
   font-style: italic;
   padding: 24px;
   text-align: center;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1470,7 +1495,7 @@ body::before {
 /* ─── Section Titles (universal) ─── */
 .section-title {
   font-size: 16px; font-weight: 600;
-  background: var(--rainbow-short);
+  background: var(--gold-rose);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1712,7 +1737,7 @@ body::before {
 .magi-day-name {
   font-size: 18px;
   font-weight: 600;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -2461,7 +2486,7 @@ body::before {
   padding: 14px 16px;
   font-size: 15px;
   font-weight: 700;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -2570,7 +2595,7 @@ body::before {
 .simply-welcome-title {
   font-size: 24px;
   font-weight: 700;
-  background: var(--rainbow-long);
+  background: var(--gold-rose);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -2774,14 +2799,14 @@ body::before {
   100% { filter: hue-rotate(360deg); }
 }
 
-@keyframes rainbowSlide {
+@keyframes goldSlide {
   0% { background-position: 0% 0; }
   100% { background-position: 200% 0; }
 }
 
-/* Rainbow text utility */
-.rainbow-text {
-  background: var(--rainbow-long);
+/* Gold-Rose text utility */
+.gold-text {
+  background: var(--gold-rose);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

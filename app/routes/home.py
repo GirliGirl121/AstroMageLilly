@@ -437,7 +437,7 @@ def api_home():
         'moon_sign': moon_sign,
         'moon_phase': moon['phase'],
         'moon_emoji': moon['emoji'],
-        'mansion': mansion,
+        'mansion': ia.get('mansion', {}),
         'nakshatra': hous,
         'mahadasha': mahadasha,
         'bhukti': bhukti,
