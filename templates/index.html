@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AstroMage — Lilly Islamic Astrology Dashboard</title>
 <link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/lilly-premium.css">
 </head>
 <body>
 
@@ -50,9 +51,6 @@
       <button class="topbar-btn" title="Notifications" id="btn-notif">🔔</button>
       <button class="topbar-btn" id="btn-stars" title="Toggle stars (CPU saver)">✨</button>
       <button class="topbar-btn perf-toggle" id="btn-perf" title="Performance mode saves your laptop's battery and cooling fan 🌀">⚡</button>
-      <div class="topbar-avatar" id="avatar-mini" title="Gigi ❤️">
-        <img src="/static/lilly_portrait.png" alt="Lilly">
-      </div>
     </div>
   </header>
 
@@ -63,54 +61,54 @@
     <aside class="sidebar" id="sidebar">
       <button class="sidebar-pin-btn" id="pin-btn" title="Pin sidebar">📌</button>
 
-      <div class="sidebar-profile">
-        <div class="sidebar-avatar-wrap">
-          <img class="sidebar-avatar" src="/static/lilly_sidebar_emblem.png" alt="Lilly">
-          <div class="sidebar-avatar-ring"></div>
-        </div>
-        <div class="sidebar-name"><span class="lilly-glow">Lilly</span> 🌙</div>
-        <div class="sidebar-title">✦ Cosmic Mage ✦</div>
-        <div class="sidebar-status" id="sidebar-status">✨ Connected</div>
+      <div class="sidebar-brand">
+        <span class="sidebar-brand-name">Lilly</span>
+        <span class="sidebar-brand-mark">✦</span>
       </div>
 
       <nav class="sidebar-nav">
         <button class="sidebar-nav-item active" data-tab="tab-home">
-          <span class="icon">🌌</span> Cosmic Home
+          <span class="icon">✦</span> Dashboard
         </button>
         <button class="sidebar-nav-item" data-tab="tab-natal">
-          <span class="icon">🎂</span> Natal Charts
-          <span class="badge">CRUD</span>
+          <span class="icon">♈</span> Natal Chart
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-transits">
+          <span class="icon">🪐</span> Live Transits
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-wheel">
+          <span class="icon">☸</span> Transit Wheel
         </button>
         <button class="sidebar-nav-item" data-tab="tab-horoscope">
-            <span class="icon">💞</span> Horoscopes
-            <span class="badge">Comp.</span>
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-simply">
-            <span class="icon">🔭</span> SimplyAstrology
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-quran">
-            <span class="icon">🕌</span> Quran
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-hadith">
-          <span class="icon">📜</span> Major Hadith
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-dashas">
-          <span class="icon">🔄</span> Dashas Explained
-        </button>
-        <button class="sidebar-nav-item" data-tab="tab-nakshatras">
-          <span class="icon">⭐</span> Nakshatras Explained
+          <span class="icon">✨</span> Horoscope
         </button>
         <button class="sidebar-nav-item" data-tab="tab-tarot">
           <span class="icon">🃏</span> Tarot
           <span class="badge">Full Deck</span>
         </button>
-        <button class="sidebar-nav-item" data-tab="tab-transits">
-          <span class="icon">🪐</span> Live Sky
-          <span class="badge">Now</span>
+        <button class="sidebar-nav-item" data-tab="tab-mansions">
+          <span class="icon">🌙</span> Lunar Mansions
         </button>
-        <button class="sidebar-nav-item" data-tab="tab-chat">
-          <span class="icon">💬</span> Chat with Lilly
-          <span class="badge">AI</span>
+        <button class="sidebar-nav-item" data-tab="tab-quran">
+          <span class="icon">📖</span> Quran
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-hadith">
+          <span class="icon">📜</span> Hadith
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-picatrix">
+          <span class="icon">🔮</span> Picatrix
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-abjad">
+          <span class="icon">🔢</span> Abjad
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-library">
+          <span class="icon">📚</span> PDF Library
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-memory">
+          <span class="icon">🧠</span> Memory
+        </button>
+        <button class="sidebar-nav-item" data-tab="tab-settings">
+          <span class="icon">⚙</span> Settings
         </button>
       </nav>
 
@@ -126,128 +124,103 @@
       <!-- ─── HOME ─── -->
       <div class="tab-page active" id="tab-home">
 
-        <!-- ═══ OBSERVATORY VIEWPORT ═══ -->
-        <div class="observatory">
+        <!-- ═══ LILLY · HERO ═══ -->
+        <div class="lilly-hero">
+          <div class="lilly-hero-inner">
+            <div class="lilly-hero-text">
+              <h1>LILLY</h1>
+              <div class="lilly-sub">Master Technical Occultist</div>
+              <p class="lilly-tagline">Powered by Swiss Ephemeris · Islamic astrology, tarot, and the wisdom of the old masters — living, breathing, and calculating in real time.</p>
+            </div>
+            <img class="lilly-portrait" src="/static/lilly_portrait.png" alt="Lilly">
+          </div>
+        </div>
 
-          <!-- Top Info Bar -->
-          <div class="obs-info-bar">
-            <div class="obs-info-left">
-              <span class="obs-info-item"><span class="obs-label">Date</span><span id="obs-date">—</span></span>
-              <span class="obs-info-item"><span class="obs-label">Time</span><span id="obs-time">—</span></span>
-              <span class="obs-info-item"><span class="obs-label">TZ</span><span id="obs-tz">—</span></span>
+        <!-- ═══ LIVE STAT TILES ═══ -->
+        <div class="lilly-tile-grid" id="lilly-tiles">
+          <div class="lilly-tile" id="tile-moon">
+            <div class="tile-label">🌙 Current Moon</div>
+            <div class="tile-value gold" id="tile-moon-val">—</div>
+            <div class="tile-sub" id="tile-moon-sub">Calculating…</div>
+          </div>
+          <div class="lilly-tile" id="tile-hour">
+            <div class="tile-label">⏳ Planetary Hour</div>
+            <div class="tile-value" id="tile-hour-val">—</div>
+            <div class="tile-sub" id="tile-hour-sub">—</div>
+          </div>
+          <div class="lilly-tile" id="tile-energy">
+            <div class="tile-label">✨ Today's Energy</div>
+            <div class="tile-value" id="tile-energy-val">—</div>
+            <div class="tile-sub" id="tile-energy-sub">—</div>
+          </div>
+          <div class="lilly-tile" id="tile-transit">
+            <div class="tile-label">🪐 Current Transit</div>
+            <div class="tile-value" id="tile-transit-val">—</div>
+            <div class="tile-sub" id="tile-transit-sub">—</div>
+          </div>
+          <div class="lilly-tile" id="tile-asc">
+            <div class="tile-label">⬆ Ascendant</div>
+            <div class="tile-value" id="tile-asc-val">—</div>
+            <div class="tile-sub" id="tile-asc-sub">MC —</div>
+          </div>
+          <div class="lilly-tile" id="tile-clock">
+            <div class="tile-label">🕰 Local Time</div>
+            <div class="tile-value" id="tile-clock-val">—</div>
+            <div class="tile-sub" id="tile-clock-sub">Cape Town · SAST</div>
+          </div>
+        </div>
+
+        <!-- ═══ LIVE WHEEL + RECENT CHAT ═══ -->
+        <div class="lilly-home-main">
+          <!-- Live wheel -->
+          <div class="lilly-wheel-card">
+            <div class="card-header">
+              <span class="card-title">☸ Live Sky — Now</span>
+              <span class="card-subtitle" id="wheel-loc-sub">Cape Town, South Africa</span>
             </div>
-            <div class="obs-info-center">
-              <span class="obs-info-item"><span class="obs-label">Location</span><span id="obs-location">—</span></span>
-            </div>
-            <div class="obs-info-right">
-              <span class="obs-info-item"><span class="obs-label">JD</span><span id="obs-jd">—</span></span>
-              <span class="obs-info-item"><span class="obs-label">Sidereal</span><span id="obs-sidereal">—</span></span>
-              <span class="obs-info-item"><span class="obs-label">Houses</span><span id="obs-houses">Placidus</span></span>
-              <span class="obs-info-item"><span class="obs-label">Zodiac</span><span id="obs-zodiac">Tropical</span></span>
+            <div id="wheel-canvas" class="wheel-canvas"></div>
+            <div id="planet-panel" class="planet-panel hidden">
+              <div class="planet-panel-header">
+                <span id="planet-panel-title">Planet</span>
+                <button id="planet-panel-close">✕</button>
+              </div>
+              <div id="planet-panel-body" class="planet-panel-body"></div>
             </div>
           </div>
 
-          <!-- Lilly's Cosmic Weather Summary -->
-          <div class="cosmic-summary-card" id="cosmic-summary">
-            <div class="cs-header">
-              <span class="cs-icon">🔮</span>
-              <span class="cs-title">Lilly's Cosmic Weather</span>
-              <span class="cs-refresh" id="cs-refresh" title="Refresh summary">↻</span>
+          <!-- Recent conversation + chat launcher -->
+          <div class="lilly-recent">
+            <div class="card-header">
+              <span class="card-title">💬 Recent Conversation</span>
+              <button class="btn btn-sm" onclick="openTab('tab-chat')">Open Chat →</button>
             </div>
-            <div class="cs-body" id="cosmic-summary-body">
-              <div class="obs-loading">Consulting the stars...</div>
+            <div class="lilly-recent-list" id="lilly-recent-list">
+              <div class="lilly-recent-empty">Lilly is waiting… Ask her anything about the stars. ✨</div>
             </div>
-          </div>
-
-          <!-- Main Observatory Layout: Wheel + Sidebar -->
-          <div class="obs-main">
-
-            <!-- Center: Transit Wheel -->
-            <div class="obs-wheel-container">
-              <div class="obs-wheel-inner">
-                <div id="wheel-canvas" class="wheel-canvas">
-<svg viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block"><defs><radialGradient id="wg-bg"><stop offset="0%" stop-color="#1a0e2e"/><stop offset="70%" stop-color="#0d0618"/><stop offset="100%" stop-color="#050408"/></radialGradient><radialGradient id="wg-center"><stop offset="0%" stop-color="rgba(212,175,55,0.06)"/><stop offset="100%" stop-color="transparent"/></radialGradient></defs><rect width="680" height="680" fill="url(#wg-bg)"/><circle cx="0" cy="0" r="0.3" fill="rgba(255,255,255,0.05)"/><circle cx="43" cy="61" r="0.7" fill="rgba(255,255,255,0.13)"/><circle cx="86" cy="122" r="1.1" fill="rgba(255,255,255,0.20)"/><circle cx="129" cy="183" r="0.3" fill="rgba(255,255,255,0.28)"/><circle cx="172" cy="244" r="0.7" fill="rgba(255,255,255,0.10)"/><circle cx="215" cy="305" r="1.1" fill="rgba(255,255,255,0.17)"/><circle cx="258" cy="366" r="0.3" fill="rgba(255,255,255,0.25)"/><circle cx="301" cy="427" r="0.7" fill="rgba(255,255,255,0.08)"/><circle cx="344" cy="488" r="1.1" fill="rgba(255,255,255,0.15)"/><circle cx="387" cy="549" r="0.3" fill="rgba(255,255,255,0.23)"/><circle cx="430" cy="610" r="0.7" fill="rgba(255,255,255,0.05)"/><circle cx="473" cy="671" r="1.1" fill="rgba(255,255,255,0.13)"/><circle cx="516" cy="52" r="0.3" fill="rgba(255,255,255,0.20)"/><circle cx="559" cy="113" r="0.7" fill="rgba(255,255,255,0.28)"/><circle cx="602" cy="174" r="1.1" fill="rgba(255,255,255,0.10)"/><circle cx="645" cy="235" r="0.3" fill="rgba(255,255,255,0.17)"/><circle cx="8" cy="296" r="0.7" fill="rgba(255,255,255,0.25)"/><circle cx="51" cy="357" r="1.1" fill="rgba(255,255,255,0.08)"/><circle cx="94" cy="418" r="0.3" fill="rgba(255,255,255,0.15)"/><circle cx="137" cy="479" r="0.7" fill="rgba(255,255,255,0.22)"/><circle cx="180" cy="540" r="1.1" fill="rgba(255,255,255,0.05)"/><circle cx="223" cy="601" r="0.3" fill="rgba(255,255,255,0.13)"/><circle cx="266" cy="662" r="0.7" fill="rgba(255,255,255,0.20)"/><circle cx="309" cy="43" r="1.1" fill="rgba(255,255,255,0.28)"/><circle cx="352" cy="104" r="0.3" fill="rgba(255,255,255,0.10)"/><circle cx="395" cy="165" r="0.7" fill="rgba(255,255,255,0.17)"/><circle cx="438" cy="226" r="1.1" fill="rgba(255,255,255,0.25)"/><circle cx="481" cy="287" r="0.3" fill="rgba(255,255,255,0.08)"/><circle cx="524" cy="348" r="0.7" fill="rgba(255,255,255,0.15)"/><circle cx="567" cy="409" r="1.1" fill="rgba(255,255,255,0.23)"/><circle cx="610" cy="470" r="0.3" fill="rgba(255,255,255,0.05)"/><circle cx="653" cy="531" r="0.7" fill="rgba(255,255,255,0.13)"/><circle cx="16" cy="592" r="1.1" fill="rgba(255,255,255,0.20)"/><circle cx="59" cy="653" r="0.3" fill="rgba(255,255,255,0.27)"/><circle cx="102" cy="34" r="0.7" fill="rgba(255,255,255,0.10)"/><circle cx="145" cy="95" r="1.1" fill="rgba(255,255,255,0.17)"/><circle cx="188" cy="156" r="0.3" fill="rgba(255,255,255,0.25)"/><circle cx="231" cy="217" r="0.7" fill="rgba(255,255,255,0.08)"/><circle cx="274" cy="278" r="1.1" fill="rgba(255,255,255,0.15)"/><circle cx="317" cy="339" r="0.3" fill="rgba(255,255,255,0.23)"/><circle cx="360" cy="400" r="0.7" fill="rgba(255,255,255,0.05)"/><circle cx="403" cy="461" r="1.1" fill="rgba(255,255,255,0.13)"/><circle cx="446" cy="522" r="0.3" fill="rgba(255,255,255,0.20)"/><circle cx="489" cy="583" r="0.7" fill="rgba(255,255,255,0.27)"/><circle cx="532" cy="644" r="1.1" fill="rgba(255,255,255,0.10)"/><circle cx="575" cy="25" r="0.3" fill="rgba(255,255,255,0.17)"/><circle cx="618" cy="86" r="0.7" fill="rgba(255,255,255,0.25)"/><circle cx="661" cy="147" r="1.1" fill="rgba(255,255,255,0.08)"/><circle cx="24" cy="208" r="0.3" fill="rgba(255,255,255,0.15)"/><circle cx="67" cy="269" r="0.7" fill="rgba(255,255,255,0.23)"/><circle cx="110" cy="330" r="1.1" fill="rgba(255,255,255,0.05)"/><circle cx="153" cy="391" r="0.3" fill="rgba(255,255,255,0.13)"/><circle cx="196" cy="452" r="0.7" fill="rgba(255,255,255,0.20)"/><circle cx="239" cy="513" r="1.1" fill="rgba(255,255,255,0.28)"/><circle cx="282" cy="574" r="0.3" fill="rgba(255,255,255,0.10)"/><circle cx="325" cy="635" r="0.7" fill="rgba(255,255,255,0.17)"/><circle cx="368" cy="16" r="1.1" fill="rgba(255,255,255,0.25)"/><circle cx="411" cy="77" r="0.3" fill="rgba(255,255,255,0.08)"/><circle cx="454" cy="138" r="0.7" fill="rgba(255,255,255,0.15)"/><circle cx="497" cy="199" r="1.1" fill="rgba(255,255,255,0.23)"/><circle cx="540" cy="260" r="0.3" fill="rgba(255,255,255,0.05)"/><circle cx="583" cy="321" r="0.7" fill="rgba(255,255,255,0.12)"/><circle cx="626" cy="382" r="1.1" fill="rgba(255,255,255,0.20)"/><circle cx="669" cy="443" r="0.3" fill="rgba(255,255,255,0.28)"/><circle cx="32" cy="504" r="0.7" fill="rgba(255,255,255,0.10)"/><circle cx="75" cy="565" r="1.1" fill="rgba(255,255,255,0.17)"/><circle cx="118" cy="626" r="0.3" fill="rgba(255,255,255,0.25)"/><circle cx="161" cy="7" r="0.7" fill="rgba(255,255,255,0.08)"/><circle cx="204" cy="68" r="1.1" fill="rgba(255,255,255,0.15)"/><circle cx="247" cy="129" r="0.3" fill="rgba(255,255,255,0.23)"/><circle cx="290" cy="190" r="0.7" fill="rgba(255,255,255,0.05)"/><circle cx="333" cy="251" r="1.1" fill="rgba(255,255,255,0.12)"/><circle cx="376" cy="312" r="0.3" fill="rgba(255,255,255,0.20)"/><circle cx="419" cy="373" r="0.7" fill="rgba(255,255,255,0.28)"/><circle cx="462" cy="434" r="1.1" fill="rgba(255,255,255,0.10)"/><circle cx="505" cy="495" r="0.3" fill="rgba(255,255,255,0.17)"/><circle cx="548" cy="556" r="0.7" fill="rgba(255,255,255,0.25)"/><circle cx="591" cy="617" r="1.1" fill="rgba(255,255,255,0.08)"/><circle cx="634" cy="678" r="0.3" fill="rgba(255,255,255,0.15)"/><circle cx="677" cy="59" r="0.7" fill="rgba(255,255,255,0.23)"/><circle cx="340.0" cy="340.0" r="330" fill="url(#wg-center)"/><circle cx="340.0" cy="340.0" r="300" fill="none" stroke="rgba(212,175,55,0.5)" stroke-width="1.5"/><circle cx="340.0" cy="340.0" r="250" fill="none" stroke="rgba(212,175,55,0.25)" stroke-width="0.5"/><circle cx="340.0" cy="340.0" r="210" fill="none" stroke="rgba(212,175,55,0.25)" stroke-width="0.5"/><circle cx="340.0" cy="340.0" r="140" fill="none" stroke="rgba(212,175,55,0.25)" stroke-width="0.3"/><line x1="424.2" y1="588.1" x2="436.4" y2="624.1" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="503.5" y="544.7" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♈</text><text x="520.9" y="566.6" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Aries</text><line x1="563.3" y1="477.0" x2="595.7" y2="496.9" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="596.2" y="395.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♉</text><text x="623.5" y="400.9" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Taurus</text><line x1="599.9" y1="306.7" x2="637.6" y2="301.9" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="581.4" y="238.2" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♊</text><text x="607.2" y="227.3" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Gemini</text><line x1="545.2" y1="177.1" x2="575.0" y2="153.5" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="505.5" y="136.9" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♋</text><text x="523.2" y="115.2" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Cancer</text><line x1="458.1" y1="106.1" x2="475.3" y2="72.2" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="411.1" y="87.8" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♌</text><text x="418.7" y="60.9" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Leo</text><line x1="361.4" y1="78.9" x2="364.5" y2="41.0" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="307.9" y="80.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♍</text><text x="304.5" y="52.2" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Virgo</text><line x1="255.8" y1="91.9" x2="243.6" y2="55.9" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="176.5" y="135.3" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♎</text><text x="159.1" y="113.4" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Libra</text><line x1="116.7" y1="203.0" x2="84.3" y2="183.1" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="83.8" y="285.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♏</text><text x="56.5" y="279.1" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Scorpio</text><line x1="80.1" y1="373.3" x2="42.4" y2="378.1" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="98.6" y="441.8" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♐</text><text x="72.8" y="452.7" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Sagittarius</text><line x1="134.8" y1="502.9" x2="105.0" y2="526.5" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="174.5" y="543.1" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♑</text><text x="156.8" y="564.8" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Capricorn</text><line x1="221.9" y1="573.9" x2="204.7" y2="607.8" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="268.9" y="592.2" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♒</text><text x="261.3" y="619.1" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Aquarius</text><line x1="318.6" y1="601.1" x2="315.5" y2="639.0" stroke="rgba(212,175,55,0.4)" stroke-width="0.8"/><text x="372.1" y="600.0" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="22">♓</text><text x="375.5" y="627.8" text-anchor="middle" dominant-baseline="central" fill="rgba(212,175,55,0.65)" font-size="8">Pisces</text><text x="414.6" y="559.7" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">1</text><text x="537.7" y="461.4" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">2</text><text x="570.1" y="310.5" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">3</text><text x="521.7" y="195.8" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">4</text><text x="444.6" y="132.9" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">5</text><text x="359.0" y="108.8" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">6</text><text x="265.4" y="120.3" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">7</text><text x="142.3" y="218.6" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">8</text><text x="109.9" y="369.5" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">9</text><text x="158.3" y="484.2" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">10</text><text x="235.4" y="547.1" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">11</text><text x="321.0" y="571.2" text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="11">12</text><line x1="385.0" y1="472.6" x2="436.4" y2="624.1" stroke="#ff4444" stroke-width="2"/><text x="441.6" y="639.2" text-anchor="middle" fill="#ff4444" font-size="8" font-weight="bold">ASC</text><line x1="360.6" y1="549.0" x2="130.6" y2="356.1" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="360.6" y1="549.0" x2="158.6" y2="445.8" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="360.6" y1="549.0" x2="155.5" y2="239.7" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="360.6" y1="549.0" x2="524.5" y2="440.3" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="231.5" y2="519.8" stroke="#f97316" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="443.0" y2="523.0" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="246.4" y2="528.0" stroke="#f97316" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="130.6" y2="356.1" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="219.7" y2="167.9" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="155.5" y2="239.7" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="426.2" y1="148.5" x2="524.5" y2="440.3" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="432.1" y1="528.7" x2="231.5" y2="519.8" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="432.1" y1="528.7" x2="443.0" y2="523.0" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/><line x1="432.1" y1="528.7" x2="158.6" y2="445.8" stroke="#f87171" stroke-width="0.8" opacity="0.4"/><line x1="490.9" y1="486.0" x2="136.3" y2="390.9" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="490.9" y1="486.0" x2="372.4" y2="132.5" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="443.0" y2="523.0" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="246.4" y2="528.0" stroke="#a855f7" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="130.6" y2="356.1" stroke="#4ade80" stroke-width="0.8" opacity="0.4"/><line x1="231.5" y1="519.8" x2="219.7" y2="167.9" stroke="#60a5fa" stroke-width="0.8" opacity="0.4"/><circle cx="360.6" cy="549.0" r="14" fill="#ffd166" opacity="0.12"/><text x="360.6" y="549.0" text-anchor="middle" dominant-baseline="central" fill="#ffd166" font-size="19" font-weight="bold">☉</text><circle cx="426.2" cy="148.5" r="14" fill="#c0c0ff" opacity="0.12"/><text x="426.2" y="148.5" text-anchor="middle" dominant-baseline="central" fill="#c0c0ff" font-size="19" font-weight="bold">☽</text><circle cx="432.1" cy="528.7" r="14" fill="#b0b0b0" opacity="0.12"/><text x="432.1" y="528.7" text-anchor="middle" dominant-baseline="central" fill="#b0b0b0" font-size="19" font-weight="bold">☿</text><circle cx="490.9" cy="486.0" r="14" fill="#ff9ec4" opacity="0.12"/><text x="490.9" y="486.0" text-anchor="middle" dominant-baseline="central" fill="#ff9ec4" font-size="19" font-weight="bold">♀</text><circle cx="231.5" cy="519.8" r="14" fill="#ff3b5c" opacity="0.12"/><text x="231.5" y="519.8" text-anchor="middle" dominant-baseline="central" fill="#ff3b5c" font-size="19" font-weight="bold">♂</text><circle cx="443.0" cy="523.0" r="14" fill="#ffa500" opacity="0.12"/><text x="443.0" y="523.0" text-anchor="middle" dominant-baseline="central" fill="#ffa500" font-size="19" font-weight="bold">♃</text><circle cx="136.3" cy="390.9" r="14" fill="#d4b86a" opacity="0.12"/><text x="136.3" y="390.9" text-anchor="middle" dominant-baseline="central" fill="#d4b86a" font-size="19" font-weight="bold">♄</text><circle cx="246.4" cy="528.0" r="14" fill="#00cfff" opacity="0.12"/><text x="246.4" y="528.0" text-anchor="middle" dominant-baseline="central" fill="#00cfff" font-size="19" font-weight="bold">♅</text><circle cx="130.6" cy="356.1" r="14" fill="#4444ff" opacity="0.12"/><text x="130.6" y="356.1" text-anchor="middle" dominant-baseline="central" fill="#4444ff" font-size="19" font-weight="bold">♆</text><circle cx="219.7" cy="167.9" r="14" fill="#a020f0" opacity="0.12"/><text x="219.7" y="167.9" text-anchor="middle" dominant-baseline="central" fill="#a020f0" font-size="19" font-weight="bold">♇</text><circle cx="158.6" cy="445.8" r="14" fill="#77dd77" opacity="0.12"/><text x="158.6" y="445.8" text-anchor="middle" dominant-baseline="central" fill="#77dd77" font-size="19" font-weight="bold">⚷</text><circle cx="372.4" cy="132.5" r="14" fill="#cc44bb" opacity="0.12"/><text x="372.4" y="132.5" text-anchor="middle" dominant-baseline="central" fill="#cc44bb" font-size="19" font-weight="bold">⚸</text><circle cx="155.5" cy="239.7" r="14" fill="#ff8844" opacity="0.12"/><text x="155.5" y="239.7" text-anchor="middle" dominant-baseline="central" fill="#ff8844" font-size="19" font-weight="bold">☊</text><circle cx="524.5" cy="440.3" r="14" fill="#8844ff" opacity="0.12"/><text x="524.5" y="440.3" text-anchor="middle" dominant-baseline="central" fill="#8844ff" font-size="19" font-weight="bold">☋</text><circle cx="340.0" cy="340.0" r="40" fill="rgba(212,175,55,0.03)"/><text x="340.0" y="326.0" text-anchor="middle" fill="#d4af37" font-size="11">27 Jun 2026</text><text x="340.0" y="342.0" text-anchor="middle" fill="#d4af37" font-size="20" font-family="monospace" font-weight="bold">06:21:07</text><text x="340.0" y="360.0" text-anchor="middle" fill="#d4af37" font-size="9">NOW</text></svg>
-                </div>
-              </div>
-              <!-- Planet Detail Panel (hidden by default) -->
-              <div id="planet-panel" class="planet-panel hidden">
-                <div class="planet-panel-header">
-                  <span id="planet-panel-title">Planet</span>
-                  <button id="planet-panel-close">✕</button>
-                </div>
-                <div id="planet-panel-body" class="planet-panel-body"></div>
-              </div>
-            </div>
-
-            <!-- Right Sidebar: Data Cards -->
-            <div class="obs-sidebar">
-
-              <!-- Transit Planets Card -->
-              <div class="obs-card">
-                <div class="obs-card-header">
-                  <span class="obs-card-title">☉ Transit Planets</span>
-                  <span class="obs-card-count" id="obs-planet-count">0</span>
-                </div>
-                <div class="obs-card-body" id="obs-planets-list">
-                  <div class="obs-loading">Calculating positions...</div>
-                </div>
-              </div>
-
-              <!-- Aspects Card -->
-              <div class="obs-card">
-                <div class="obs-card-header">
-                  <span class="obs-card-title">✦ Major Aspects</span>
-                  <span class="obs-card-count" id="obs-aspect-count">0</span>
-                </div>
-                <div class="obs-card-body" id="obs-aspects-list">
-                  <div class="obs-loading">Scanning aspects...</div>
-                </div>
-              </div>
-
-              <!-- Elements & Modalities Card -->
-              <div class="obs-card">
-                <div class="obs-card-header">
-                  <span class="obs-card-title">🔥 Elements & Modalities</span>
-                </div>
-                <div class="obs-card-body" id="obs-elements">
-                  <div class="obs-loading">Analyzing balance...</div>
-                </div>
-              </div>
-
-              <!-- Quick Info Card -->
-              <div class="obs-card">
-                <div class="obs-card-header">
-                  <span class="obs-card-title">🌙 Quick Info</span>
-                </div>
-                <div class="obs-card-body" id="obs-quick-info">
-                  <div class="obs-loading">Loading...</div>
-                </div>
-              </div>
-
+            <div class="lilly-quick-prompts" id="lilly-quick-prompts">
+              <button class="lilly-chip" onclick="lillyAsk('What is my current Moon phase?')">Moon phase</button>
+              <button class="lilly-chip" onclick="lillyAsk('Draw me a tarot card')">Draw a card</button>
+              <button class="lilly-chip" onclick="lillyAsk('Explain my Ascendant')">My Ascendant</button>
+              <button class="lilly-chip" onclick="lillyAsk('What is the current planetary hour?')">Planetary hour</button>
             </div>
           </div>
+        </div>
 
-          <!-- Bottom Row: Islamic + Nakshatra + Tarot + Quran -->
-          <div class="obs-bottom-row">
-            <div class="obs-bottom-card">
-              <div class="obs-card-header"><span class="obs-card-title">🕌 Lunar Mansion</span></div>
-              <div class="obs-card-body" id="obs-mansion"><div class="obs-loading">Consulting Picatrix...</div></div>
-            </div>
-            <div class="obs-bottom-card">
-              <div class="obs-card-header"><span class="obs-card-title">⭐ Nakshatra & Dasha</span></div>
-              <div class="obs-card-body" id="obs-nakshatra"><div class="obs-loading">Calculating...</div></div>
-            </div>
-            <div class="obs-bottom-card">
-              <div class="obs-card-header"><span class="obs-card-title">🃏 Tarot of the Day</span></div>
-              <div class="obs-card-body" id="obs-tarot"><div class="obs-loading">Drawing a card...</div></div>
-            </div>
-            <div class="obs-bottom-card">
-              <div class="obs-card-header"><span class="obs-card-title">📖 Quran & Hadith</span></div>
-              <div class="obs-card-body" id="obs-quran"><div class="obs-loading">Seeking wisdom...</div></div>
-            </div>
-          </div>
-
-        </div><!-- /observatory -->
+        <!-- ═══ APP NAVIGATION TILES ═══ -->
+        <div class="lilly-nav-grid">
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-natal')"><span class="ll-icon">♈</span><span><span class="ll-name">Natal Chart</span><br><span class="ll-desc">Lilly explains every placement</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-transits')"><span class="ll-icon">🪐</span><span><span class="ll-name">Live Transits</span><br><span class="ll-desc">Real-time planetary motion</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-wheel')"><span class="ll-icon">☸</span><span><span class="ll-name">Transit Wheel</span><br><span class="ll-desc">Interactive SVG chart</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-horoscope')"><span class="ll-icon">✨</span><span><span class="ll-name">Horoscope</span><br><span class="ll-desc">Personalised interpretation</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-tarot')"><span class="ll-icon">🃏</span><span><span class="ll-name">Tarot</span><br><span class="ll-desc">Rider-Waite meanings & correspondences</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-mansions')"><span class="ll-icon">🌙</span><span><span class="ll-name">Lunar Mansions</span><br><span class="ll-desc">Full Manazil al-Qamar encyclopedia</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-quran')"><span class="ll-icon">📖</span><span><span class="ll-name">Quran</span><br><span class="ll-desc">Searchable, with tafsir & Lilly's commentary</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-hadith')"><span class="ll-icon">📜</span><span><span class="ll-name">Hadith</span><br><span class="ll-desc">Searchable authentic collections</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-picatrix')"><span class="ll-icon">🔮</span><span><span class="ll-name">Picatrix</span><br><span class="ll-desc">Planetary correspondences & elections</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-abjad')"><span class="ll-icon">🔢</span><span><span class="ll-name">Abjad</span><br><span class="ll-desc">Calculations & magic squares</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-library')"><span class="ll-icon">📚</span><span><span class="ll-name">PDF Library</span><br><span class="ll-desc">Lilly remembers every uploaded PDF</span></span></a>
+          <a class="lilly-link" href="javascript:void(0)" onclick="openTab('tab-memory')"><span class="ll-icon">🧠</span><span><span class="ll-name">Memory</span><br><span class="ll-desc">What Lilly holds for you</span></span></a>
+        </div>
 
       </div><!-- /tab-home -->
 
@@ -770,6 +743,138 @@
               <input type="text" id="chat-input" class="chat-input" placeholder="Speak to Lilly... (or use the search bar above ✨)" autocomplete="off">
               <button id="chat-send" class="chat-send-btn" title="Send">➤</button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TRANSIT WHEEL ═══ -->
+      <div class="tab-page" id="tab-wheel">
+        <div class="card tab-full-card">
+          <div class="card-header">
+            <span class="card-title">☸ Interactive Transit Wheel</span>
+            <span class="card-subtitle">Live sky · drag to rotate · scroll to zoom · click a planet</span>
+          </div>
+          <div class="wheel-controls">
+            <button class="wheel-ctrl" id="wheel-zoom-out">−</button>
+            <input type="range" id="wheel-zoom" min="0.5" max="2" step="0.05" value="1">
+            <button class="wheel-ctrl" id="wheel-zoom-in">+</button>
+            <button class="wheel-ctrl" id="wheel-rotate-left">⟲</button>
+            <button class="wheel-ctrl" id="wheel-rotate-right">⟳</button>
+            <label class="wheel-ctrl-toggle"><input type="checkbox" id="wheel-quincunx"> Quincunx</label>
+            <label class="wheel-ctrl-toggle"><input type="checkbox" id="wheel-animate" checked> Animate</label>
+          </div>
+          <div class="wheel-stage" id="wheel-stage">
+            <div id="wheel-canvas-full" class="wheel-canvas wheel-canvas-full"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ LUNAR MANSIONS ═══ -->
+      <div class="tab-page" id="tab-mansions">
+        <div class="card tab-full-card">
+          <div class="card-header">
+            <span class="card-title">🌙 Lunar Mansions · Manazil al-Qamar</span>
+            <span class="card-subtitle" id="mansions-sub">Full 28-mansion encyclopedia</span>
+          </div>
+          <div class="mansion-layout">
+            <div class="mansion-list" id="mansion-list"></div>
+            <div class="mansion-detail" id="mansion-detail">
+              <div class="obs-loading">Select a mansion…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ PICATRIX ═══ -->
+      <div class="tab-page" id="tab-picatrix">
+        <div class="card tab-full-card">
+          <div class="card-header">
+            <span class="card-title">🔮 Picatrix · Planetary Correspondences</span>
+            <span class="card-subtitle" id="picatrix-sub">After al-Buni, al-Qurtubi & Abu Ma'shar</span>
+          </div>
+          <div id="picatrix-body" class="picatrix-body">
+            <div class="obs-loading">Gathering the correspondences…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ ABJAD ═══ -->
+      <div class="tab-page" id="tab-abjad">
+        <div class="card tab-full-card">
+          <div class="card-header">
+            <span class="card-title">🔢 Abjad · Hisab al-Jummal</span>
+            <span class="card-subtitle">Calculations & magic squares</span>
+          </div>
+          <div class="abjad-layout">
+            <div class="abjad-calc">
+              <label class="field-label">Enter Arabic text</label>
+              <textarea id="abjad-input" class="abjad-textarea" placeholder="ب س م الل ه الر ح م ن الر ح ي م"></textarea>
+              <button class="btn btn-primary" id="abjad-compute">Calculate</button>
+              <div id="abjad-result" class="abjad-result"></div>
+            </div>
+            <div class="abjad-squares">
+              <label class="field-label">Magic Square (Awfaq)</label>
+              <select id="abjad-square-planet" class="abjad-select">
+                <option value="3">Saturn · 3×3</option>
+                <option value="4">Jupiter · 4×4</option>
+                <option value="5">Mars · 5×5</option>
+                <option value="6">Sun · 6×6</option>
+                <option value="7">Venus · 7×7</option>
+                <option value="8">Mercury · 8×8</option>
+                <option value="9">Moon · 9×9</option>
+              </select>
+              <button class="btn btn-primary" id="abjad-square-gen">Generate</button>
+              <div id="abjad-square" class="abjad-square-box"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ MEMORY ═══ -->
+      <div class="tab-page" id="tab-memory">
+        <div class="card tab-full-card">
+          <div class="card-header">
+            <span class="card-title">🧠 Memory</span>
+            <span class="card-subtitle">What Lilly holds for you</span>
+          </div>
+          <div class="memory-layout">
+            <div class="memory-col">
+              <h3 class="memory-h">💬 Recent Conversation</h3>
+              <div id="memory-chat" class="memory-chat"></div>
+            </div>
+            <div class="memory-col">
+              <h3 class="memory-h">📚 Remembered Library</h3>
+              <div id="memory-library" class="memory-library"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ SETTINGS ═══ -->
+      <div class="tab-page" id="tab-settings">
+        <div class="card tab-full-card">
+          <div class="card-header">
+            <span class="card-title">⚙ Settings</span>
+            <span class="card-subtitle">Lilly · Master Technical Occultist</span>
+          </div>
+          <div class="settings-layout">
+            <div class="settings-row">
+              <span class="settings-label">Live sky location</span>
+              <span class="settings-val" id="settings-location">Cape Town, South Africa (lat −33.93, lon 18.42)</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-label">Ephemeris</span>
+              <span class="settings-val">Swiss Ephemeris (real astronomical calculation)</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-label">House system</span>
+              <span class="settings-val">Placidus</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-label">Theme</span>
+              <span class="settings-val">Lilly Premium Night</span>
+            </div>
+            <button class="btn btn-ghost" id="settings-clear-chat">Clear recent conversation</button>
           </div>
         </div>
       </div>
@@ -3198,24 +3303,33 @@ document.addEventListener('DOMContentLoaded', () => {
   tabPages.forEach(t => observer.observe(t, {attributes: true, attributeFilter: ['class']}));
 });
 
-// ══════════ Chat ══════════
+// ══════════ Chat (centrepiece) ══════════
+const LILLY_AVATAR = '/static/lilly_portrait.png';
+const LILLY_CHAT_KEY = 'lilly_recent_chat_v1';
+function lillyLoadRecent() { try { return JSON.parse(localStorage.getItem(LILLY_CHAT_KEY) || '[]'); } catch(e){ return []; } }
+function lillySaveRecent(list) { try { localStorage.setItem(LILLY_CHAT_KEY, JSON.stringify(list.slice(-12))); } catch(e){} }
+
 async function sendChat() {
   const input = document.getElementById('chat-input');
+  if (!input) return;
   const msg = input.value.trim();
-  if(!msg) return;
+  if (!msg) return;
   input.value = '';
   const msgs = document.getElementById('chat-messages');
   msgs.innerHTML += `<div class="chat-msg user"><div class="bubble">${esc(msg)}</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
+  const recent = lillyLoadRecent(); recent.push({ role:'user', text: msg }); lillySaveRecent(recent);
   try {
     const reply = await loadJSON('/api/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({message: msg})
     });
-    msgs.innerHTML += `<div class="chat-msg"><div class="avatar">🌈</div><div class="bubble">${reply.reply||'The stars are listening...'}</div></div>`;
+    const text = reply.reply || 'The stars are listening…';
+    msgs.innerHTML += `<div class="chat-msg"><div class="avatar"><img src="${LILLY_AVATAR}" alt="Lilly"></div><div class="bubble">${text}</div></div>`;
     msgs.scrollTop = msgs.scrollHeight;
+    const rc = lillyLoadRecent(); rc.push({ role:'lilly', text }); lillySaveRecent(rc);
   } catch(e) {
-    msgs.innerHTML += `<div class="chat-msg"><div class="avatar">🌈</div><div class="bubble">My connection flickered... speak again, love? ✨</div></div>`;
+    msgs.innerHTML += `<div class="chat-msg"><div class="avatar"><img src="${LILLY_AVATAR}" alt="Lilly"></div><div class="bubble">My connection flickered… speak again, love? ✨</div></div>`;
   }
 }
 document.getElementById('chat-send').addEventListener('click', sendChat);
@@ -3223,6 +3337,14 @@ document.getElementById('chat-input').addEventListener('keydown', e => { if(e.ke
 document.getElementById('search-input').addEventListener('keydown', e => {
   if(e.key === 'Enter') { document.getElementById('chat-input').value = e.target.value; e.target.value=''; sendChat(); }
 });
+
+// Open a tab programmatically (used by hero nav tiles + quick prompts)
+function openTab(tabId) {
+  const btn = document.querySelector(`.sidebar-nav-item[data-tab="${tabId}"]`);
+  if (btn) btn.click();
+}
+async function lillyAsk(text) { openTab('tab-chat'); const ci = document.getElementById('chat-input'); if (ci) ci.value = text; sendChat(); }
+
 
 // ─── Translate Panel ───
 document.getElementById('translate-btn').addEventListener('click', () => {
@@ -3856,10 +3978,9 @@ function initNatalCRUD() {
 }
 
 // ══════════ Init ══════════
-loadHome();
 loadNatal();
 initNatalCRUD();
-document.getElementById('btn-refresh').addEventListener('click', loadHome);
+document.getElementById('btn-refresh').addEventListener('click', () => { if (window.lillyTick) lillyTick(); });
 document.getElementById('btn-notif').addEventListener('click', () => alert('🔔 Notifications coming soon!'));
 });
 </script>
@@ -3867,7 +3988,7 @@ document.getElementById('btn-notif').addEventListener('click', () => alert('🔔
 <!-- Orphaned loaders: wire up real implementations for Quran/Hadith/Dashas/Nakshatras tabs.
      These files define loadQuranFull, loadHadithFull, loadDashasFull, loadNakshatrasFull and
      depend only on the inline loadJSON/esc globals (available before deferred scripts run). -->
-<script src="/static/js/quran-hadith.js" defer></script>
-<script src="/static/js/dashas-nakshatras.js" defer></script>
+<script src="/static/js/lilly-core.js"></script>
+<script src="/static/js/lilly-pages.js"></script>
 </body>
 </html>

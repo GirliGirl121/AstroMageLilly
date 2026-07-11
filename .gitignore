@@ -38,3 +38,6 @@ picatrix_calendar.db
 
 # State files (regenerated each run)
 *.state.json
+
+# Generated transit/export dumps
+outputs/

@@ -8,60 +8,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* ─── Midnight Observatory Base ─── */
-  --bg-primary: #0a0a14;
-  --bg-secondary: #0c0c18;
-  --bg-card: #120c20;
-  --bg-card-hover: #181028;
-  --bg-sidebar: #080810;
-  --bg-glass: rgba(18, 12, 32, 0.75);
-  --bg-glass-heavy: rgba(12, 8, 20, 0.88);
+  /* ─── LILLY · Premium Night Palette (redesigned) ─── */
+  --bg-primary: #09070D;   /* deep void background */
+  --bg-secondary: #0d0a15;
+  --bg-card: #13101A;      /* card surface */
+  --bg-card-hover: #1a1626;
+  --bg-sidebar: #0b0810;
+  --bg-glass: rgba(19, 16, 26, 0.72);
+  --bg-glass-heavy: rgba(9, 7, 13, 0.92);
 
   /* ─── Borders ─── */
-  --border: #1a0e30;
-  --border-glow: #7a4a9a;
+  --border: rgba(109, 40, 217, 0.22);
+  --border-glow: #6D28D9;
 
   /* ─── Text ─── */
-  --text-primary: #f0eaff;
-  --text-secondary: #b8a8d3;
-  --text-muted: #6a5a7a;
+  --text-primary: #F4EFFF;
+  --text-secondary: #C9BEE6;
+  --text-muted: #6f6488;
 
-  /* ─── Observatory Night Palette ─── */
-  --magenta: #9a3a6a;
-  --magenta-glow: rgba(154, 58, 106, 0.2);
-  --cyan: #4a7a8a;
-  --cyan-glow: rgba(74, 122, 138, 0.2);
-  --purple: #6a2a8a;
-  --purple-glow: rgba(106, 42, 138, 0.2);
-  --lime: #7a8a5a;
-  --lime-glow: rgba(122, 138, 90, 0.12);
-  --orange: #b07a4a;
-  --orange-glow: rgba(176, 122, 74, 0.15);
-  --pink: #FF6F91;
-  --pink-glow: rgba(255, 111, 145, 0.15);
-  --gold: #C9A84C;
-  --gold-glow: rgba(201, 168, 76, 0.15);
+  /* ─── Primary Brand Colours ─── */
+  --purple: #6D28D9;            /* Lilly violet */
+  --purple-glow: rgba(109, 40, 217, 0.30);
+  --purple-soft: rgba(109, 40, 217, 0.15);   /* hover wash */
+  --rose: #FF6FAE;             /* soft rose */
+  --rose-glow: rgba(255, 111, 174, 0.28);
+  --gold: #D4AF37;             /* antique gold */
+  --gold-glow: rgba(212, 175, 55, 0.22);
 
-  /* ─── Covenant Colors ─── */
-  --rose: #FF6F91;
-  --rose-glow: rgba(255, 111, 145, 0.15);
-  --void: #0a0a14;
+  /* ─── Aliases kept for existing component references ─── */
+  --magenta: #FF6FAE;
+  --magenta-glow: rgba(255, 111, 174, 0.28);
+  --cyan: #7C9CC4;
+  --cyan-glow: rgba(124, 156, 196, 0.2);
+  --lime: #8AAE6A;
+  --lime-glow: rgba(138, 174, 106, 0.12);
+  --orange: #C98A55;
+  --orange-glow: rgba(201, 138, 85, 0.15);
+  --pink: #FF6FAE;
+  --pink-glow: rgba(255, 111, 174, 0.28);
+  --void: #09070D;
 
-  /* ─── New Observatory Accents ─── */
-  --silver: #C4C4D4;
-  --lavender: #B8A8D3;
-  --amethyst: #7a4a9a;
+  /* ─── Accents ─── */
+  --silver: #D7D2E8;
+  --lavender: #C9BEE6;
+  --amethyst: #8B5CF6;
   --plum: #2a0a1e;
   --deep-purple: #1a0a2e;
-  --brass: #B8974A;
+  --brass: #D4AF37;
 
-  /* ─── Observatory Gradients ─── */
-  --gold-rose: linear-gradient(135deg, #C9A84C, #FF6F91);
-  --gold-amber: linear-gradient(135deg, #C9A84C, #b07a4a);
-  --moonlight-gradient: linear-gradient(135deg, var(--silver), var(--lavender));
-  --obsidian-glow: linear-gradient(135deg, var(--plum), var(--deep-purple));
-  --lunar-gradient: linear-gradient(135deg, var(--brass), var(--silver));
-  --mystic-veil: linear-gradient(180deg, var(--deep-purple), transparent);
+  /* ─── Gradients ─── */
+  --gold-rose: linear-gradient(135deg, #D4AF37, #FF6FAE);
+  --gold-amber: linear-gradient(135deg, #D4AF37, #C98A55);
+  --moonlight-gradient: linear-gradient(135deg, #D7D2E8, #C9BEE6);
+  --obsidian-glow: linear-gradient(135deg, #1a0a2e, #09070D);
+  --lunar-gradient: linear-gradient(135deg, #D4AF37, #D7D2E8);
+  --mystic-veil: linear-gradient(180deg, #1a0a2e, transparent);
+  --lilly-veil: linear-gradient(135deg, rgba(109,40,217,0.35), rgba(255,111,174,0.18));
 
   /* ─── Legacy Aliases (backward compat) ─── */
   --btn-glass: var(--bg-glass);
@@ -71,13 +73,14 @@
   --neon-magenta: var(--rose);
   --neon-cyan: var(--cyan);
   --neon-orange: var(--orange);
+  --purple-old: #6a2a8a;
 
   /* ─── Layout ─── */
-  --sidebar-width: 300px;
-  --topbar-height: 56px;
-  --radius: 14px;
-  --radius-sm: 10px;
-  --radius-lg: 20px;
+  --sidebar-width: 270px;
+  --topbar-height: 58px;
+  --radius: 16px;
+  --radius-sm: 11px;
+  --radius-lg: 22px;
   /* ─── Typography ─── */
   --font-handwritten: 'Great Vibes', cursive, 'Segoe UI', sans-serif;
   --font-main: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif;

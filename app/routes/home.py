@@ -198,6 +198,7 @@ def _current_nakshatra() -> dict:
         'gana': extra.get('gana', ''),
         'guna': extra.get('guna', ''),
         'meaning': extra.get('meaning', ''),
+        'system': 'Hindu / Vedic (27 Nakshatra; lords cycle Ketu→Mercury, Rahu-ruled stations included)',
     }
 
 
@@ -272,6 +273,7 @@ def _islamic_astro() -> dict:
             'malefic': malefic,
             'best_activities': active_mansion.get('recommended_works', [])[:5],
             'avoid_activities': [active_mansion.get('forbidden_works', 'No specific prohibitions')],
+            'system': 'Arabic / Islamic (Manazil al-Qamar, 28-station Picatrix tradition)',
         }
 
     # ── Nakshatra ──
@@ -515,21 +517,100 @@ def api_nakshatra_now():
     return jsonify(_current_nakshatra())
 
 
+# ─── Default location for the LIVE sky (Gigi · Cape Town, South Africa) ───
+DEFAULT_LAT = -33.925
+DEFAULT_LON = 18.424
+DEFAULT_TZ_OFFSET = 2
+
+
+def _house_of(longitude: float, cusps: list) -> int:
+    """Return the 1-based house number containing a given ecliptic longitude."""
+    for i in range(12):
+        start = cusps[i]
+        end = cusps[(i + 1) % 12]
+        if end < start:  # house wraps past 360°
+            end += 360
+        lon = longitude
+        if lon < start:
+            lon += 360
+        if start <= lon < end:
+            return i + 1
+    return 1
+
+
+def _get_live_chart():
+    """Full live sky: planets, Ascendant, Midheaven, and 12 Placidus house cusps,
+    calculated with Swiss Ephemeris at the default location."""
+    jd = _get_jd_now()
+    # Use ET for house calculation (houses_ex expects Julian Ephemeris Day)
+    jd_et = jd + swe.deltat(jd)
+    planets_list = _get_current_planets()
+    try:
+        cusps, ascmc = swe.houses_ex(jd_et, DEFAULT_LAT, DEFAULT_LON, b'P')
+        cusps = [round(float(c), 4) for c in cusps]
+        asc = float(ascmc[0])
+        mc = float(ascmc[1])
+    except swe.Error:
+        cusps = [(asc + i * 30) % 360 for i in range(12)] if (asc := 0) else [0] * 12
+        asc = 0.0
+        mc = 0.0
+
+    # Attach house number to each planet
+    for p in planets_list:
+        p['house'] = _house_of(p['longitude'], cusps)
+
+    houses = {}
+    for i in range(12):
+        houses[f'house_{i+1}'] = get_sign_info(cusps[i])
+
+    return {
+        'planets': {p['name']: p for p in planets_list if 'name' in p},
+        'ascendant': round(asc, 4),
+        'midheaven': round(mc, 4),
+        'cusps': cusps,
+        'houses': houses,
+    }
+
+
 @bp.route('/api/live')
 @bp.route('/api/transits')
 def api_live():
-    """Current planetary positions (aliased as /api/transits).
+    """Current planetary positions, houses, aspects, Moon phase and planetary hour.
     Returns planets as a name-keyed object (not list) for front-end compatibility."""
-    planets_list = _get_current_planets()
+    chart = _get_live_chart()
+    planets_dict = chart['planets']
+    planets_list = list(planets_dict.values())
     aspects = _calc_aspects(planets_list)
     major_aspects = [a for a in aspects if a['aspect'].lower() in ('conjunction','sextile','square','trine','opposition')]
-    # Frontend expects planets as {Sun:{...}, Moon:{...}} not [{...},{...}]
-    planets_dict = {p['name']: p for p in planets_list if 'name' in p}
+
+    # Moon phase + planetary hour snapshots (cheap, fed from existing engines)
+    moon = get_moon_phase_obj()
+    try:
+        from calendar_engine import get_day_data
+        from app.config import get_current_hour as _get_hour
+        today = datetime.now(TZ).strftime('%Y-%m-%d')
+        day = get_day_data(today)
+        current_hour = _get_hour(day)
+    except Exception:
+        current_hour = None
+
     return jsonify({
         'planets': planets_dict,
         'total_planets': len(planets_dict),
         'aspects': major_aspects,
         'total_aspects': len(major_aspects),
+        'ascendant': chart['ascendant'],
+        'midheaven': chart['midheaven'],
+        'cusps': chart['cusps'],
+        'houses': chart['houses'],
+        'moon_phase': moon,
+        'planetary_hour': current_hour,
+        'location': {
+            'name': 'Cape Town, South Africa',
+            'lat': DEFAULT_LAT,
+            'lon': DEFAULT_LON,
+            'tz_offset': DEFAULT_TZ_OFFSET,
+        },
     })
 
 
@@ -743,3 +824,23 @@ def add_cors_headers(response):
     response.headers.setdefault('Access-Control-Allow-Headers', 'Content-Type')
     response.headers.setdefault('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
     return response
+
+
+# ─── Lilly · Lunar Mansions encyclopedia (full 28 Manazil al-Qamar) ───────
+@bp.route('/api/mansions/all')
+def api_mansions_all():
+    """Full 28-mansion encyclopedia drawn from the Picatrix mansion dataset."""
+    data = load_json('picatrix_mansions.json') or {}
+    mansions = data.get('mansions', data) if isinstance(data, dict) else data
+    return jsonify({'source': data.get('source') if isinstance(data, dict) else None, 'mansions': mansions})
+
+
+# ─── Lilly · Picatrix planetary correspondences ────────────────────────────
+@bp.route('/api/picatrix/correspondences')
+def api_picatrix_correspondences():
+    """Picatrix planetary correspondences (stones, incense, colours, nature, virtue)."""
+    data = load_json('picatrix_planetary_correspondences.json') or {}
+    return jsonify({
+        'source': data.get('source') if isinstance(data, dict) else None,
+        'planets': data.get('planets', {}) if isinstance(data, dict) else {},
+    })
