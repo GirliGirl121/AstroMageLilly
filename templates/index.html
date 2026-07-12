@@ -884,6 +884,8 @@
 </div><!-- /dashboard -->
 
 <script>
+// Global used by lilly-core.js / lilly-pages.js (must exist before they run)
+window.LILLY_AVATAR = '/static/lilly_portrait.png';
 // ══════════ Starfield ══════════
 // CPU-optimized: pauses when tab hidden, throttled to ~30fps, fewer stars
 (function(){
@@ -990,7 +992,7 @@ pinBtn.addEventListener('click', () => {
   if(sidebarPinned) openSidebar(); else closeSidebar();
   localStorage.setItem('sidebar_pinned', sidebarPinned);
 });
-document.getElementById('avatar-mini').addEventListener('click', openSidebar);
+document.getElementById('avatar-mini')?.addEventListener('click', openSidebar);
 
 // Tab switching
 document.querySelectorAll('.sidebar-nav-item').forEach(btn => {
@@ -1335,94 +1337,107 @@ if(!window._wheelRefreshTimer){
 }
 
 // ══════════ OBSERVATORY DATA LOADER ══════════
+// Null-safe setters: the Observatory markup may be absent on some templates,
+// so a missing element must not abort the whole load.
+function _set(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
+function _txt(id, text) { const el = document.getElementById(id); if (el) el.textContent = text; }
+
 async function loadObservatoryData() {
+  // The Observatory tab markup is not mounted in the current page; bail
+  // cleanly so we don't spam null-reference errors on every load.
+  if (!document.getElementById('obs-date')) return;
   try {
     const home = await loadJSON('/api/home');
     const live = await loadJSON('/api/live');
 
   // Top info bar
   const now = new Date();
-  document.getElementById('obs-date').textContent = now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
-  document.getElementById('obs-time').textContent = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  document.getElementById('obs-tz').textContent = 'SAST (UTC+2)';
-  document.getElementById('obs-location').textContent = 'Kariega, SA';
-  document.getElementById('obs-jd').textContent = live.jd || '—';
-  document.getElementById('obs-sidereal').textContent = live.sidereal || '—';
+  _txt('obs-date', now.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'}));
+  _txt('obs-time', now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'}));
+  _txt('obs-tz', 'SAST (UTC+2)');
+  _txt('obs-location', 'Kariega, SA');
+  _txt('obs-jd', live.jd || '—');
+  _txt('obs-sidereal', live.sidereal || '—');
 
   // Transit planets list
   const planets = live.planets || {};
-  const planetCount = Object.keys(planets).filter(n => n !== 'Sun' || true).length;
-  document.getElementById('obs-planet-count').textContent = planetCount;
+  const planetCount = Object.keys(planets).length;
+  _txt('obs-planet-count', planetCount);
   const pList = document.getElementById('obs-planets-list');
-  pList.innerHTML = '';
-  const pOrder = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune','Part of Spirit'];
-  for(const nm of pOrder){
-    const p = planets[nm]; if(!p) continue;
-    const col = PCOLORS[nm] || '#fff';
-    pList.innerHTML += `
-      <div class="planet-row" onclick="showPlanetPanel('${nm}')">
-        <span class="planet-glyph" style="color:${col}">${p.symbol}</span>
-        <span class="planet-name">${nm}</span>
-        <span class="planet-degree">${p.degree}</span>
-        <span class="planet-motion direct">D</span>
-      </div>`;
+  if (pList) {
+    pList.innerHTML = '';
+    const pOrder = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune','Part of Spirit'];
+    for(const nm of pOrder){
+      const p = planets[nm]; if(!p) continue;
+      const col = PCOLORS[nm] || '#fff';
+      pList.innerHTML += `
+        <div class="planet-row" onclick="showPlanetPanel('${nm}')">
+          <span class="planet-glyph" style="color:${col}">${p.symbol}</span>
+          <span class="planet-name">${nm}</span>
+          <span class="planet-degree">${p.degree}</span>
+          <span class="planet-motion direct">D</span>
+        </div>`;
+    }
+    if(pList.innerHTML === '') pList.innerHTML = '<div class="obs-loading">No data</div>';
   }
-  if(pList.innerHTML === '') pList.innerHTML = '<div class="obs-loading">No data</div>';
 
   // Aspects
   const aspD = await loadJSON('/api/aspects');
   const aspects = (aspD.aspects || []).filter(a => a.aspect !== 'Quincunx');
-  document.getElementById('obs-aspect-count').textContent = aspects.length;
+  _txt('obs-aspect-count', aspects.length);
   const aList = document.getElementById('obs-aspects-list');
-  aList.innerHTML = '';
-  const aspSym = {Conjunction:'☌', Sextile:'✶', Square:'□', Trine:'△', Opposition:'☍', Quincunx:'⚹'};
-  for(const a of aspects.slice(0, 12)){
-    const cls = a.aspect === 'Applying' ? 'applying' : 'separating';
-    const color = (ASPECT_STYLES[a.aspect]||{}).c || '#888';
-    aList.innerHTML += `
-      <div class="aspect-row">
-        <span class="aspect-symbol" style="color:${color}">${aspSym[a.aspect]||'∠'}</span>
-        <span class="aspect-planets">${a.p1} ${aspSym[a.aspect]} ${a.p2}</span>
-        <span class="aspect-orb">${a.orb.toFixed(1)}°</span>
-        <span class="${cls}">${a.applying ? 'app' : 'sep'}</span>
-      </div>`;
+  if (aList) {
+    aList.innerHTML = '';
+    const aspSym = {Conjunction:'☌', Sextile:'✶', Square:'□', Trine:'△', Opposition:'☍', Quincunx:'⚹'};
+    for(const a of aspects.slice(0, 12)){
+      const cls = a.applying ? 'applying' : 'separating';
+      const color = (ASPECT_STYLES[a.aspect]||{}).c || '#888';
+      aList.innerHTML += `
+        <div class="aspect-row">
+          <span class="aspect-symbol" style="color:${color}">${aspSym[a.aspect]||'∠'}</span>
+          <span class="aspect-planets">${a.p1} ${aspSym[a.aspect]} ${a.p2}</span>
+          <span class="aspect-orb">${a.orb.toFixed(1)}°</span>
+          <span class="${cls}">${a.applying ? 'app' : 'sep'}</span>
+        </div>`;
+    }
+    if(aList.innerHTML === '') aList.innerHTML = '<div class="obs-loading">No major aspects</div>';
   }
-  if(aList.innerHTML === '') aList.innerHTML = '<div class="obs-loading">No major aspects</div>';
 
   // Elements
   const en = home.energy || {};
   const el = document.getElementById('obs-elements');
-  const eb = en.elemental_balance || {};
-  el.innerHTML = '';
-  const elIcons = {Fire:'🔥', Earth:'🌍', Air:'🌬', Water:'💧'};
-  for(const [name, count] of Object.entries(eb)){
-    el.innerHTML += `<div class="element-item"><span class="element-icon">${elIcons[name]||'◉'}</span><span class="element-name">${name}</span><span class="element-count">${count}</span></div>`;
-  }
-  // Modalities
-  const mods = en.modalities || {};
-  if(Object.keys(mods).length > 0){
-    el.innerHTML += '<div class="modalities-grid">';
-    for(const [name, count] of Object.entries(mods)){
-      el.innerHTML += `<div class="modality-item"><span class="modality-name">${name}</span><span class="modality-count">${count}</span></div>`;
+  if (el) {
+    const eb = en.elemental_balance || {};
+    el.innerHTML = '';
+    const elIcons = {Fire:'🔥', Earth:'🌍', Air:'🌬', Water:'💧'};
+    for(const [name, count] of Object.entries(eb)){
+      el.innerHTML += `<div class="element-item"><span class="element-icon">${elIcons[name]||'◉'}</span><span class="element-name">${name}</span><span class="element-count">${count}</span></div>`;
     }
-    el.innerHTML += '</div>';
+    const mods = en.modalities || {};
+    if(Object.keys(mods).length > 0){
+      el.innerHTML += '<div class="modalities-grid">';
+      for(const [name, count] of Object.entries(mods)){
+        el.innerHTML += `<div class="modality-item"><span class="modality-name">${name}</span><span class="modality-count">${count}</span></div>`;
+      }
+      el.innerHTML += '</div>';
+    }
   }
 
   // Quick info
   const ia = home.islamic_astro || {};
   const mp = ia.mansion || {};
-  document.getElementById('obs-quick-info').innerHTML = `
+  _set('obs-quick-info', `
     <div class="quick-info-row"><span class="quick-info-label">Moon Phase</span><span class="quick-info-value">${(ia.moon_phase||{}).emoji||'🌙'} ${(ia.moon_phase||{}).phase||'—'}</span></div>
     <div class="quick-info-row"><span class="quick-info-label">Lunar Mansion</span><span class="quick-info-value">${mp.picatrix_name||'—'}</span></div>
     <div class="quick-info-row"><span class="quick-info-label">Day Ruler</span><span class="quick-info-value">${ia.day_ruler||'—'}</span></div>
     <div class="quick-info-row"><span class="quick-info-label">Polarity</span><span class="quick-info-value">${(home.energy||{}).polarity||'—'}</span></div>
-  `;
+  `);
 
   // Bottom cards
-  document.getElementById('obs-mansion').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${mp.picatrix_name||'—'}</strong><br>${mp.arabic_name||''}<br><em>${mp.meaning||''}</em><br><br>Nature: ${mp.nature||'—'}<br>Ruler: ${mp.planetary_ruler||'—'}<br>Spirit: ${mp.spirit||'—'}</div>`;
-  document.getElementById('obs-nakshatra').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(ia.nakshatra||{}).nakshatra||'—'}</strong><br>Lord: ${(ia.nakshatra||{}).lord||'—'}<br><br>${(ia.dasha||{}).current_dasha? `<strong>Mahadasha:</strong> ${(ia.dasha||{}).current_dasha.lord||'—'}` : ''}</div>`;
-  document.getElementById('obs-tarot').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.tarot||{}).name||'—'}</strong><br>${(home.tarot||{}).keywords?.join(', ') || ''}<br><br><em>${(home.tarot||{}).daily_message||''}</em></div>`;
-  document.getElementById('obs-quran').innerHTML = `<div style="font-size:11px;line-height:1.6"><strong>${(home.quran_hadith||{}).quran?.surahNameEn||'—'}</strong><br>${(home.quran_hadith||{}).quran?.translation?.substring(0,120)||''}...</div>`;
+  _set('obs-mansion', `<div style="font-size:11px;line-height:1.6"><strong>${mp.picatrix_name||'—'}</strong><br>${mp.arabic_name||''}<br><em>${mp.meaning||''}</em><br><br>Nature: ${mp.nature||'—'}<br>Ruler: ${mp.planetary_ruler||'—'}<br>Spirit: ${mp.spirit||'—'}</div>`);
+  _set('obs-nakshatra', `<div style="font-size:11px;line-height:1.6"><strong>${(ia.nakshatra||{}).nakshatra||'—'}</strong><br>Lord: ${(ia.nakshatra||{}).lord||'—'}<br><br>${(ia.dasha||{}).current_dasha? `<strong>Mahadasha:</strong> ${(ia.dasha||{}).current_dasha.lord||'—'}` : ''}</div>`);
+  _set('obs-tarot', `<div style="font-size:11px;line-height:1.6"><strong>${(home.tarot||{}).name||'—'}</strong><br>${(home.tarot||{}).keywords?.join(', ') || ''}<br><br><em>${(home.tarot||{}).daily_message||''}</em></div>`);
+  _set('obs-quran', `<div style="font-size:11px;line-height:1.6"><strong>${(home.quran_hadith||{}).quran?.surahNameEn||'—'}</strong><br>${(home.quran_hadith||{}).quran?.translation?.substring(0,120)||''}...</div>`);
 
   // ── Lilly's Cosmic Weather Summary ──
   try {
