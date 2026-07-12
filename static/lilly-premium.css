@@ -1020,8 +1020,60 @@ body::before {
 /* ─── Tab pages: the chamber floor, infinite and calm ─── */
 .content-area { background: transparent; }
 
+/* ════════════════ THE FIVE-POINTED STAR ════════════════
+   Lilly's sigil within the cosmos — a glowing star at the chamber's heart,
+   and a few faint ones scattered through the starfield. */
+.lilly-star-svg {
+  fill: var(--gold);
+  filter: drop-shadow(0 0 6px rgba(212,175,55,0.6));
+}
+
+/* The great star behind the portrait in the hero */
+.lilly-hero { overflow: hidden; }
+.lilly-hero::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: min(60vh, 540px);
+  height: min(60vh, 540px);
+  transform: translate(-50%, -50%);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 L61 37 L96 37 L67 58 L79 93 L50 71 L21 93 L33 58 L4 37 L39 37 Z' fill='%23D4AF37'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0.20;
+  filter:
+    drop-shadow(0 0 30px rgba(212,175,55,0.55))
+    drop-shadow(0 0 70px rgba(109,40,217,0.35));
+  animation: lilly-star-spin 60s linear infinite,
+             lilly-chamber-breathe 9s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+.lilly-hero-inner { position: relative; z-index: 1; }
+
+@keyframes lilly-star-spin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* A few faint stars scattered through the void */
+body::after {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 L61 37 L96 37 L67 58 L79 93 L50 71 L21 93 L33 58 L4 37 L39 37 Z' fill='%23D4AF37'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 L61 37 L96 37 L67 58 L79 93 L50 71 L21 93 L33 58 L4 37 L39 37 Z' fill='%23D4AF37'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4 L61 37 L96 37 L67 58 L79 93 L50 71 L21 93 L33 58 L4 37 L39 37 Z' fill='%23FF6FAE'/%3E%3C/svg%3E");
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: 15% 28%, 73% 17%, 87% 69%;
+  background-size: 15px 15px, 11px 11px, 17px 17px;
+  opacity: 0.55;
+  animation: lilly-star-twinkle 7s ease-in-out infinite;
+}
+@keyframes lilly-star-twinkle {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.7; }
+}
+
 /* Respect those who prefer stillness */
 @media (prefers-reduced-motion: reduce) {
   .card-title, .lilly-hero h1, .sidebar-brand-name,
-  .wheel-center-pulse, .lilly-hero .lilly-portrait { animation: none; }
+  .wheel-center-pulse, .lilly-hero .lilly-portrait,
+  .lilly-hero::after, body::after { animation: none; }
 }
