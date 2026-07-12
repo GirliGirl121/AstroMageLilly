@@ -37,6 +37,30 @@ PLANET_IDS = [
 ]
 
 
+# ─── Abjad (Hisab al-Jummal) — letter→number tables ──────────────────────
+# Abjad al-Kabir (standard): used by al-Buni, Picatrix, Al-Toukhi.
+_ABJAD_KABIR = {
+    'ا': 1, 'ب': 2, 'ج': 3, 'د': 4, 'ه': 5, 'و': 6, 'ز': 7, 'ح': 8, 'ط': 9, 'ي': 10,
+    'ك': 20, 'ل': 30, 'م': 40, 'ن': 50, 'س': 60, 'ع': 70, 'ف': 80, 'ص': 90, 'ق': 100,
+    'ر': 200, 'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600, 'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000,
+}
+# Abjad al-Saghir (reduced): each letter mapped to a single digit (per the
+# classical Saghir recension; see the abjad-calculator skill).
+_ABJAD_SAGHIR = {
+    'ا': 1, 'ب': 2, 'ج': 3, 'د': 4, 'ه': 5, 'و': 6, 'ز': 7, 'ح': 8, 'ط': 9, 'ي': 1,
+    'ك': 2, 'ل': 3, 'م': 4, 'ن': 5, 'س': 6, 'ع': 7, 'ف': 8, 'ص': 9, 'ق': 1,
+    'ر': 2, 'ش': 3, 'ت': 4, 'ث': 5, 'خ': 6, 'ذ': 7, 'ض': 8, 'ظ': 9, 'غ': 6,
+}
+
+
+def _abjad_reduce(total: int) -> int:
+    """Theosophic reduction of a total to a single digit (taksir)."""
+    red = total
+    while red > 9 and red != 0:
+        red = sum(int(d) for d in str(red))
+    return red
+
+
 def _point_dict(jd: float, longitude: float, name: str) -> dict:
     """Build a planet-shaped dict for a derived point (Node/Ketu/Parts)."""
     lon = float(longitude) % 360
@@ -604,6 +628,35 @@ def api_home():
         'tarot': taro,
         'quran_hadith': qh,
         'magical': _magical_weather(),
+    })
+
+
+@bp.route('/api/abjad', methods=['POST'])
+def api_abjad():
+    """Compute the Abjad (Hisab al-Jummal) value of an Arabic string.
+
+    Body: {"text": "<arabic>", "system": "kabir"|"saghir"}
+    Returns each letter's value, the total, and the theosophic reduction.
+    Non-Arabic / non-counted characters are ignored (hamza, diacritics, etc.).
+    """
+    body = request.get_json(silent=True) or {}
+    text = body.get('text', '') or request.form.get('text', '') or ''
+    system = body.get('system', 'kabir') or 'kabir'
+    table = _ABJAD_SAGHIR if system == 'saghir' else _ABJAD_KABIR
+
+    chars = [c for c in text if c in table]
+    steps = [{'char': c, 'value': table[c]} for c in chars]
+    total = sum(s['value'] for s in steps)
+    reduced = _abjad_reduce(total) if system == 'kabir' else None
+
+    return jsonify({
+        'input': text,
+        'system': system,
+        'chars': chars,
+        'steps': steps,
+        'total': total,
+        'reduced': reduced,
+        'ignored': len(text) - len(chars),
     })
 
 

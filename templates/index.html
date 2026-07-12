@@ -258,6 +258,26 @@
           <div class="remedy-grid" id="home-remedy">—</div>
         </div>
 
+        <!-- ═══ ABJAD CALCULATOR ═══ -->
+        <div class="lilly-section">
+          <div class="card-header">
+            <span class="card-title">🔢 Abjad Calculator — حساب الجمل</span>
+            <span class="card-subtitle">Hisab al-Jummal · the number behind the Names</span>
+          </div>
+          <div class="abjad-wrap">
+            <div class="abjad-controls">
+              <input id="abjad-input" class="abjad-input" type="text" dir="rtl" lang="ar"
+                     placeholder="اكتب اسماً عربياً…" value="الله" />
+              <select id="abjad-system" class="abjad-select">
+                <option value="kabir">Abjad al-Kabir (standard)</option>
+                <option value="saghir">Abjad al-Saghir (reduced)</option>
+              </select>
+              <button class="btn btn-sm" onclick="runAbjad()">Calculate ✶</button>
+            </div>
+            <div class="abjad-result" id="home-abjad">—</div>
+          </div>
+        </div>
+
         <!-- ═══ WHAT THE ISLAMIC SCHOLAR WOULD SAY ═══ -->
         <div class="lilly-section">
           <div class="card-header">

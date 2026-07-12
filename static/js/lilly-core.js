@@ -282,6 +282,35 @@ async function renderHomeChamber(){
     <p><strong>Abu Ma'shar</strong> would read the general elections of the day by this ruler; <strong>Al-Kindi</strong> would weigh the rays and influences falling upon Kariega; <strong>Al-Biruni</strong> would fix the mansion's precise degree and the Moon's latitude (${moonLat}). <strong>Al-Buni</strong> would trace the divine Names through the awfaq of ${esc(ruler)}; and <strong>Ibn Arabi</strong> would see in this hour a theophany — the Real disclosing Himself through the planet's light.</p>
     <p>The Moon is <em>${esc(moonPh.phase||'—')}</em>; the Moon's nakshatra is <strong>${esc(naks.name||'—')}</strong> (lord ${esc(naks.lord||'—')}, deity ${esc(naks.deity||'—')}). ${majors.length?('The chief aspect now is '+majors[0].p1+' '+majors[0].aspect+' '+majors[0].p2+'.'):'The planets move without pressing aspect.'}</p>`;
   setHTML('home-scholar', scholarHTML);
+
+  // ── ABJAD: auto-seed with the current mansion's Arabic name ──
+  const abjadSeed = (mp && mp.arabic_name) ? mp.arabic_name : 'الله';
+  const abjadInp = document.getElementById('abjad-input');
+  if (abjadInp) { abjadInp.value = abjadSeed; runAbjad(); }
+}
+
+// ── Abjad (Hisab al-Jummal) calculator ──
+async function runAbjad(){
+  const inp = document.getElementById('abjad-input');
+  const sel = document.getElementById('abjad-system');
+  if(!inp) return;
+  const text = inp.value;
+  const system = sel ? sel.value : 'kabir';
+  try {
+    const r = await fetch('/api/abjad', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text, system})});
+    if(!r.ok) throw new Error('abjad '+r.status);
+    renderAbjad(await r.json());
+  } catch(e){ setHTML('home-abjad', '<div class="obs-loading">The calculation faltered…</div>'); console.error(e); }
+}
+function renderAbjad(d){
+  if(!d || d.input===undefined) { setHTML('home-abjad','<div class="obs-loading">No data</div>'); return; }
+  const steps = d.steps||[];
+  const rows = steps.length ? steps.map(s=>`<span class="abjad-step">${esc(s.char)} = <b>${s.value}</b></span>`).join(' ') : '<span class="abjad-step">no Arabic letters counted</span>';
+  const red = (d.reduced!=null && d.system==='kabir') ? ` &nbsp;→&nbsp; reduced: <span class="gold">${d.reduced}</span>` : '';
+  setHTML('home-abjad', `
+    <div class="abjad-meta">System: <strong>${esc(d.system)}</strong> · ${steps.length} letter(s) counted · ${d.ignored} ignored</div>
+    <div class="abjad-steps">${rows}</div>
+    <div class="abjad-total">Total: <span class="gold">${d.total}</span>${red}</div>`);
 }
 
 // ─── Boot ───────────────────────────────────────────────────────────────────
