@@ -27,22 +27,51 @@ PLANET_IDS = [
     (swe.SATURN, 'Saturn'), (swe.URANUS, 'Uranus'), (swe.NEPTUNE, 'Neptune'),
     (swe.PLUTO, 'Pluto'), (swe.CHIRON, 'Chiron'),
 ]
+PLANET_IDS = [
+    (swe.SUN, 'Sun'), (swe.MOON, 'Moon'), (swe.MERCURY, 'Mercury'),
+    (swe.VENUS, 'Venus'), (swe.MARS, 'Mars'), (swe.JUPITER, 'Jupiter'),
+    (swe.SATURN, 'Saturn'), (swe.URANUS, 'Uranus'), (swe.NEPTUNE, 'Neptune'),
+    (swe.PLUTO, 'Pluto'), (swe.CHIRON, 'Chiron'),
+    (swe.TRUE_NODE, 'Rahu'),          # True North Node (caput draconis)
+    (swe.MEAN_APOG, 'Lilith'),        # Black Moon Lilith (mean apogee)
+]
+
+
+def _point_dict(jd: float, longitude: float, name: str) -> dict:
+    """Build a planet-shaped dict for a derived point (Node/Ketu/Parts)."""
+    lon = float(longitude) % 360
+    info = get_sign_info(lon)
+    # speed sign unknown for derived points -> treat as direct
+    return {
+        'name': name, 'longitude': round(lon, 6), 'latitude': 0.0,
+        'distance': 0.0, 'speed': 0.0,
+        'sign': info['sign'], 'symbol': info['symbol'],
+        'element': info['element'], 'quality': info['quality'],
+        'degree': info['degree'], 'retrograde': False,
+    }
 
 
 def _get_jd_now():
-    """Get current Julian day number."""
+    """Get current Julian day number (UT)."""
     utc = datetime.now(TZ).astimezone(timezone.utc)
     return swe.julday(utc.year, utc.month, utc.day, utc.hour + utc.minute/60 + utc.second/3600)
 
 
 def _get_current_planets():
-    """Get current planetary positions."""
+    """Get current planetary positions (7 luminaries/planets + Chiron,
+    the Lunar Nodes and Black Moon Lilith)."""
     jd = _get_jd_now()
     positions = []
+    rahu_lon = None
     for sid, name in PLANET_IDS:
         p = calc_planet_pos(jd, sid, name)
         if p:
+            if name == 'Rahu':
+                rahu_lon = p['longitude']
             positions.append(p)
+    # Ketu is the South Node: True Node + 180°
+    if rahu_lon is not None:
+        positions.append(_point_dict(jd, rahu_lon + 180.0, 'Ketu'))
     return positions
 
 
@@ -558,6 +587,20 @@ def _get_live_chart():
     # Attach house number to each planet
     for p in planets_list:
         p['house'] = _house_of(p['longitude'], cusps)
+
+    # ── Part of Fortune & Part of Spirit (day-birth: ASC ± (Moon − Sun)) ──
+    # These are Lots of the Moon/Sun derived from the angles; they ride the
+    # live wheel as points rather than bodies.
+    try:
+        sun_lon = next((p['longitude'] for p in planets_list if p['name'] == 'Sun'), None)
+        moon_lon = next((p['longitude'] for p in planets_list if p['name'] == 'Moon'), None)
+        if sun_lon is not None and moon_lon is not None:
+            pof = (asc + (moon_lon - sun_lon)) % 360
+            pos = (asc + (sun_lon - moon_lon)) % 360
+            planets_list.append(_point_dict(jd, pof, 'Part of Fortune'))
+            planets_list.append(_point_dict(jd, pos, 'Part of Spirit'))
+    except Exception:
+        pass
 
     houses = {}
     for i in range(12):
