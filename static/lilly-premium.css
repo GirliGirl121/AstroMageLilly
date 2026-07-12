@@ -270,13 +270,33 @@ body::before {
 .lilly-hero h1 {
   font-family: var(--font-elegant);
   font-weight: 700;
-  font-size: clamp(40px, 7vw, 92px);
-  letter-spacing: 0.18em;
+  font-size: clamp(44px, 8vw, 104px);
+  letter-spacing: 0.22em;
   margin: 0;
-  background: linear-gradient(135deg, #D4AF37 0%, #FF6FAE 55%, #8B5CF6 100%);
+  text-align: center;
+  line-height: 1.05;
+}
+.hero-name-glow {
+  display: inline-block;
+  background: linear-gradient(135deg, #FFE9A8 0%, #D4AF37 38%, #FF6FAE 64%, #8B5CF6 100%);
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 40px rgba(109,40,217,0.4);
+  text-shadow: 0 0 26px rgba(255,215,120,0.45), 0 0 60px rgba(109,40,217,0.35);
+  filter: drop-shadow(0 0 14px rgba(212,175,55,0.4));
+  animation: heroGlow 6s ease-in-out infinite;
+}
+@keyframes heroGlow {
+  0%,100% { filter: drop-shadow(0 0 14px rgba(212,175,55,0.35)); }
+  50%     { filter: drop-shadow(0 0 26px rgba(255,215,120,0.65)); }
+}
+.hero-flourish {
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: 0.5em;
+  color: var(--gold, #D4AF37);
+  opacity: 0.8;
+  margin-bottom: 6px;
+  text-shadow: 0 0 16px rgba(212,175,55,0.5);
 }
 .lilly-hero .lilly-sub {
   font-family: var(--font-main);
@@ -287,18 +307,40 @@ body::before {
   margin-top: 10px;
 }
 .lilly-hero .lilly-portrait {
-  width: 120px; height: 120px; border-radius: 50%;
+  width: 128px; height: 128px; border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(212,175,55,0.6);
-  box-shadow: 0 0 30px rgba(109,40,217,0.5);
+  border: 2px solid rgba(212,175,55,0.7);
+  box-shadow: 0 0 40px rgba(109,40,217,0.55), 0 0 22px rgba(212,175,55,0.4);
+}
+.lilly-hero-medallion {
+  position: relative;
+  width: 148px; height: 148px;
+  display: grid; place-items: center;
+}
+.lilly-hero-medallion .medallion-ring {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(212,175,55,0.55);
+  box-shadow: 0 0 30px rgba(212,175,55,0.45), inset 0 0 24px rgba(109,40,217,0.4);
+  animation: medallionSpin 14s linear infinite;
+}
+.lilly-hero-medallion .medallion-ring::before {
+  content: "✦";
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  color: var(--gold, #D4AF37); font-size: 16px;
+  text-shadow: 0 0 12px rgba(212,175,55,0.8);
+}
+@keyframes medallionSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 .lilly-hero-inner {
-  display: flex; align-items: center; justify-content: space-between; gap: 28px;
+  display: flex; align-items: center; justify-content: center; gap: 36px;
   flex-wrap: wrap;
 }
-.lilly-hero-text { flex: 1; min-width: 280px; }
+.lilly-hero-text { flex: 1 1 320px; min-width: 280px; display: flex; flex-direction: column; align-items: center; }
 .lilly-tagline {
-  margin-top: 14px; max-width: 560px;
+  margin-top: 14px; max-width: 560px; text-align: center;
   color: var(--text-secondary); font-size: 14px; line-height: 1.7;
 }
 
