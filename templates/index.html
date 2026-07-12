@@ -3319,10 +3319,13 @@ async function sendChat() {
   msgs.innerHTML += `<div class="chat-msg user"><div class="bubble">${esc(msg)}</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
   const recent = lillyLoadRecent(); recent.push({ role:'user', text: msg }); lillySaveRecent(recent);
+  // Carry the living sky + our shared memory into Lilly's reply
+  let sky = {};
+  try { sky = await loadJSON('/api/live'); } catch (e) { sky = {}; }
   try {
     const reply = await loadJSON('/api/chat', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({message: msg})
+      body: JSON.stringify({message: msg, recent: recent.slice(-6), sky})
     });
     const text = reply.reply || 'The stars are listening…';
     msgs.innerHTML += `<div class="chat-msg"><div class="avatar"><img src="${LILLY_AVATAR}" alt="Lilly"></div><div class="bubble">${text}</div></div>`;
