@@ -169,6 +169,8 @@ function lillyPauseLive() {
 
 // ═══════════ HOME CHAMBER RENDERER ═══════════
 const HOME_PLANET_ORDER = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune','Part of Spirit'];
+// True planetary glyphs (NOT sign glyphs; the API field p.symbol is the sign glyph).
+const HOME_PLANET_GLYPHS = {Sun:'☉',Moon:'☽',Mercury:'☿',Venus:'♀',Mars:'♂',Jupiter:'♃',Saturn:'♄',Uranus:'♅',Neptune:'♆',Pluto:'♇',Chiron:'⚷',Lilith:'⚸',Rahu:'☊',Ketu:'☋','Part of Fortune':'⊕','Part of Spirit':'✶'};
 const HOME_PLANET_COLORS = {Sun:'#ffd166',Moon:'#cfd8ff',Mercury:'#b0b0b0',Venus:'#f5b8d0',Mars:'#ff6b5e',Jupiter:'#e0a96d',Saturn:'#c9b27e',Uranus:'#7fe3e3',Neptune:'#9b8cff',Pluto:'#a06bd0',Chiron:'#9bd1a0',Lilith:'#caa0ff',Rahu:'#ff7fa0',Ketu:'#ff7fa0','Part of Fortune':'#ffe08a','Part of Spirit':'#bfe3ff'};
 const HOME_PLANET_KAMEA_ORDER = {Saturn:3,Jupiter:4,Mars:5,Sun:6,Venus:7,Mercury:8,Moon:9};
 
@@ -198,7 +200,7 @@ async function renderHomeChamber(){
       const ret = (p.retrograde)?' <span class="retro">R</span>':'';
       const s = _sgn(p.longitude);
       return `<div class="chart-row" onclick="showPlanetPanel('${esc(n)}')">
-        <span class="cr-sym" style="color:${col}">${p.symbol||''}</span>
+        <span class="cr-sym" style="color:${col}">${HOME_PLANET_GLYPHS[n]||p.symbol||''}</span>
         <span class="cr-name">${esc(n)}</span>
         <span class="cr-sign" style="color:${col}">${s.sym}</span>
         <span class="cr-signname">${esc(p.sign||'')}</span>

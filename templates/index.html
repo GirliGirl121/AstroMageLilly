@@ -1197,7 +1197,8 @@ const ASPECT_STYLES = {Conjunction:{c:'#a855f7',d:''},Sextile:{c:'#4ade80',d:'5,
 const PLANET_COLORS = { Sun:'#ffd166', Moon:'#c0c0ff', Mercury:'#b0b0b0', Venus:'#ff9ec4',
   Mars:'#ff3b5c', Jupiter:'#ffa500', Saturn:'#d4b86a', Uranus:'#00cfff', Neptune:'#4444ff', Pluto:'#a020f0' };
 const PLANET_SYMBOLS = { Sun:'☉', Moon:'☽', Mercury:'☿', Venus:'♀', Mars:'♂',
-  Jupiter:'♃', Saturn:'♄', Uranus:'♅', Neptune:'♆', Pluto:'♇' };
+  Jupiter:'♃', Saturn:'♄', Uranus:'♅', Neptune:'♆', Pluto:'♇',
+  Chiron:'⚷', Lilith:'⚸', Rahu:'☊', Ketu:'☋', 'Part of Fortune':'⊕', 'Part of Spirit':'✶' };
 
 // ══════════ PREMIUM TRANSIT WHEEL — Solar Fire / AstroGold Inspired ══════════
 const WHEEL = {
@@ -1235,7 +1236,18 @@ async function drawTransitWheel() {
     const S = 680, CX = S/2, CY = S/2;
     const OR = 300, signR = OR - 38, cuspR = 250, houseNumR = 232, planetR = 210, innerR = 140;
 
-    function lon2xy(lon, r) { const a = ((180-lon)%360+360)%360*Math.PI/180; return {x:CX+r*Math.cos(a), y:CY+r*Math.sin(a)}; }
+    // True planetary glyphs come from the global PLANET_SYMBOLS map (see top of script).
+    // p.symbol from the API is the SIGN glyph, which must NOT be used as a planet glyph.
+
+    // Chart geometry: rotate the ecliptic so the Ascendant sits at screen-left (9 o'clock),
+    // Midheaven at top (12 o'clock), Descendant at right, IC at bottom. Houses run counterclockwise.
+    // theta(L) = 180 - (L - ascLon)  [degrees], then to radians for SVG (y-down) cos/sin.
+    const asc = (typeof ascLon === 'number') ? ascLon : (cusps[0] != null ? cusps[0] : 0);
+    function lon2xy(lon, r) {
+      const deg = ((180 - (lon - asc)) % 360 + 360) % 360;
+      const a = deg * Math.PI / 180;
+      return {x: CX + r * Math.cos(a), y: CY + r * Math.sin(a)};
+    }
 
     let svg = `<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">`;
     svg += `<defs>`;
@@ -1254,42 +1266,45 @@ async function drawTransitWheel() {
     svg += `<circle cx="${CX}" cy="${CY}" r="${planetR}" class="wheel-ring-inner" stroke-width="0.4"/>`;
     svg += `<circle cx="${CX}" cy="${CY}" r="${innerR}" class="wheel-ring-inner" stroke-width="0.3"/>`;
 
-    // Zodiac signs
+    // Zodiac ring — 12 equal 30° sign sectors anchored to 0° Aries (true ecliptic),
+    // rotated with the Ascendant so the ring is astronomically oriented.
     const signWords = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
     const signSyms = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
     for(let i=0;i<12;i++){
-      const cusp = cusps[i] != null ? cusps[i] : (ascLon + i*30) % 360;
-      const next = cusps[(i+1)%12] != null ? cusps[(i+1)%12] : (ascLon + (i+1)*30) % 360;
-      const a1 = ((180-cusp)%360+360)%360*Math.PI/180;
-      const span = ((next-cusp)+360)%360;
-      svg += `<line x1="${CX+(OR-38)*Math.cos(a1)}" y1="${CY+(OR-38)*Math.sin(a1)}" x2="${CX+OR*Math.cos(a1)}" y2="${CY+OR*Math.sin(a1)}" class="wheel-cusp-line"/>`;
-      for(let d=0; d<span; d+=5){
-        const degLon=(cusp+d)%360, da=((180-degLon)%360+360)%360*Math.PI/180, tl=d%10===0?8:4;
-        svg += `<line x1="${CX+(OR-14)*Math.cos(da)}" y1="${CY+(OR-14)*Math.sin(da)}" x2="${CX+(OR-14+tl)*Math.cos(da)}" y2="${CY+(OR-14+tl)*Math.sin(da)}" stroke="rgba(212,175,55,0.3)" stroke-width="${d%10===0?0.8:0.4}"/>`;
+      const b0 = i*30, b1 = (i+1)*30, mid = i*30 + 15;
+      const p0 = lon2xy(b0, OR), p0i = lon2xy(b0, OR-38);
+      svg += `<line x1="${p0i.x}" y1="${p0i.y}" x2="${p0.x}" y2="${p0.y}" class="wheel-cusp-line"/>`;
+      for(let d=0; d<30; d+=5){
+        const degLon=(b0+d), tl=d%10===0?8:4;
+        const t0 = lon2xy(degLon, OR-14), t1 = lon2xy(degLon, OR-14+tl);
+        svg += `<line x1="${t0.x}" y1="${t0.y}" x2="${t1.x}" y2="${t1.y}" stroke="rgba(212,175,55,0.3)" stroke-width="${d%10===0?0.8:0.4}"/>`;
       }
-      const midAng=((180-(cusp+span/2))%360+360)%360*Math.PI/180;
-      svg += `<text x="${CX+signR*Math.cos(midAng)}" y="${CY+signR*Math.sin(midAng)}" text-anchor="middle" dominant-baseline="central" font-size="22" class="wheel-sign-label">${signSyms[i]}</text>`;
-      svg += `<text x="${CX+(OR-10)*Math.cos(midAng)}" y="${CY+(OR-10)*Math.sin(midAng)}" text-anchor="middle" dominant-baseline="central" font-size="8" fill="rgba(212,175,55,0.65)" font-family="Playfair Display,Georgia,serif">${signWords[i]}</text>`;
+      const pm = lon2xy(mid, signR), pw = lon2xy(mid, OR-10);
+      svg += `<text x="${pm.x}" y="${pm.y}" text-anchor="middle" dominant-baseline="central" font-size="22" class="wheel-sign-label">${signSyms[i]}</text>`;
+      svg += `<text x="${pw.x}" y="${pw.y}" text-anchor="middle" dominant-baseline="central" font-size="8" fill="rgba(212,175,55,0.65)" font-family="Playfair Display,Georgia,serif">${signWords[i]}</text>`;
     }
 
-    // House cusps + numbers
+    // House cusps + numbers (from the real house system)
     for(let i=0;i<12;i++){
-      const cusp=cusps[i]!=null?cusps[i]:(ascLon+i*30)%360;
-      const a=((180-cusp)%360+360)%360*Math.PI/180;
-      svg += `<line x1="${CX+innerR*Math.cos(a)}" y1="${CY+innerR*Math.sin(a)}" x2="${CX+cuspR*Math.cos(a)}" y2="${CY+cuspR*Math.sin(a)}" class="wheel-house-line"/>`;
-      svg += `<text x="${CX+houseNumR*Math.cos(a)}" y="${CY+houseNumR*Math.sin(a)}" text-anchor="middle" dominant-baseline="central" font-size="11" class="wheel-house-num">${i+1}</text>`;
+      const cusp=cusps[i]!=null?cusps[i]:(asc+i*30)%360;
+      const a=lon2xy(cusp, innerR), b=lon2xy(cusp, cuspR);
+      svg += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" class="wheel-house-line"/>`;
+      const n=lon2xy(cusp, houseNumR);
+      svg += `<text x="${n.x}" y="${n.y}" text-anchor="middle" dominant-baseline="central" font-size="11" class="wheel-house-num">${i+1}</text>`;
     }
 
-    // Angle lines
-    if(ascLon != null){
-      const ascA=((180-ascLon)%360+360)%360*Math.PI/180;
-      svg += `<line x1="${CX+(innerR+5)*Math.cos(ascA)}" y1="${CY+(innerR+5)*Math.sin(ascA)}" x2="${CX+OR*Math.cos(ascA)}" y2="${CY+OR*Math.sin(ascA)}" class="wheel-asc-line"/>`;
-      svg += `<text x="${CX+(OR+16)*Math.cos(ascA)}" y="${CY+(OR+16)*Math.sin(ascA)}" text-anchor="middle" dominant-baseline="central" fill="#ff4444" font-size="8" font-weight="bold">ASC</text>`;
-      const dcA=((180-(ascLon+180)%360)%360+360)%360*Math.PI/180;
-      svg += `<line x1="${CX+innerR*Math.cos(dcA)}" y1="${CY+innerR*Math.sin(dcA)}" x2="${CX+(OR-30)*Math.cos(dcA)}" y2="${CY+(OR-30)*Math.sin(dcA)}" class="wheel-dc-line"/>`;
-      svg += `<text x="${CX+(OR+16)*Math.cos(dcA)}" y="${CY+(OR+16)*Math.sin(dcA)}" text-anchor="middle" dominant-baseline="central" fill="#ff6666" font-size="7" font-weight="bold">DC</text>`;
-      if(cusps[9]!=null){const mcA=((180-cusps[9])%360+360)%360*Math.PI/180;svg+=`<line x1="${CX+(innerR+5)*Math.cos(mcA)}" y1="${CY+(innerR+5)*Math.sin(mcA)}" x2="${CX+OR*Math.cos(mcA)}" y2="${CY+OR*Math.sin(mcA)}" class="wheel-mc-line"/>`;svg+=`<text x="${CX+(OR+16)*Math.cos(mcA)}" y="${CY+(OR+16)*Math.sin(mcA)}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="8" font-weight="bold">MC</text>`;}
-      if(cusps[3]!=null){const icA=((180-cusps[3])%360+360)%360*Math.PI/180;svg+=`<line x1="${CX+innerR*Math.cos(icA)}" y1="${CY+innerR*Math.sin(icA)}" x2="${CX+(OR-30)*Math.cos(icA)}" y2="${CY+(OR-30)*Math.sin(icA)}" class="wheel-ic-line"/>`;svg+=`<text x="${CX+(OR+16)*Math.cos(icA)}" y="${CY+(OR+16)*Math.sin(icA)}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="7" font-weight="bold">IC</text>`;}
+    // Angle lines: ASC left, DC right, MC top, IC bottom
+    if(asc != null){
+      const ascP=lon2xy(asc, OR), ascI=lon2xy(asc, innerR+5);
+      svg += `<line x1="${ascI.x}" y1="${ascI.y}" x2="${ascP.x}" y2="${ascP.y}" class="wheel-asc-line"/>`;
+      const ascLab=lon2xy(asc, OR+16);
+      svg += `<text x="${ascLab.x}" y="${ascLab.y}" text-anchor="middle" dominant-baseline="central" fill="#ff4444" font-size="8" font-weight="bold">ASC</text>`;
+      const dcP=lon2xy(asc+180, OR-30), dcI=lon2xy(asc+180, innerR);
+      svg += `<line x1="${dcI.x}" y1="${dcI.y}" x2="${dcP.x}" y2="${dcP.y}" class="wheel-dc-line"/>`;
+      const dcLab=lon2xy(asc+180, OR+16);
+      svg += `<text x="${dcLab.x}" y="${dcLab.y}" text-anchor="middle" dominant-baseline="central" fill="#ff6666" font-size="7" font-weight="bold">DC</text>`;
+      if(cusps[9]!=null){const mcP=lon2xy(cusps[9],OR),mcI=lon2xy(cusps[9],innerR+5);svg+=`<line x1="${mcI.x}" y1="${mcI.y}" x2="${mcP.x}" y2="${mcP.y}" class="wheel-mc-line"/>`;const mcLab=lon2xy(cusps[9],OR+16);svg+=`<text x="${mcLab.x}" y="${mcLab.y}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="8" font-weight="bold">MC</text>`;}
+      if(cusps[3]!=null){const icP=lon2xy(cusps[3],OR-30),icI=lon2xy(cusps[3],innerR);svg+=`<line x1="${icI.x}" y1="${icI.y}" x2="${icP.x}" y2="${icP.y}" class="wheel-ic-line"/>`;const icLab=lon2xy(cusps[3],OR+16);svg+=`<text x="${icLab.x}" y="${icLab.y}" text-anchor="middle" dominant-baseline="central" fill="#d4af37" font-size="7" font-weight="bold">IC</text>`;}
     }
 
     // Aspect lines
@@ -1302,7 +1317,7 @@ async function drawTransitWheel() {
       svg+=`<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${st.c}" stroke-width="0.8" stroke-dasharray="${st.d}" opacity="${op}" class="wheel-aspect-line ${a.aspect.toLowerCase()}"/>`;
     }
 
-    // Planets with collision avoidance
+    // Planets with collision avoidance — use the TRUE planet glyph, not the sign glyph
     const order=['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Chiron','Lilith','Rahu','Ketu','Part of Fortune','Part of Spirit'];
     const placed=[];
     for(const nm of order){
@@ -1311,8 +1326,9 @@ async function drawTransitWheel() {
       for(const pp of placed){const dx=pos.x-pp.x,dy=pos.y-pp.y;if(Math.sqrt(dx*dx+dy*dy)<22){pos=lon2xy(p.longitude,planetR+18);break;}}
       placed.push(pos);
       const pc=PCOLORS[nm]||'#fff';
+      const glyph=PLANET_SYMBOLS[nm]||p.symbol;
       svg+=`<circle cx="${pos.x}" cy="${pos.y}" r="14" fill="${pc}" class="wheel-planet-glow"/>`;
-      svg+=`<text x="${pos.x}" y="${pos.y}" text-anchor="middle" dominant-baseline="central" fill="${pc}" font-size="19" data-planet="${nm}" class="wheel-planet-text" onmouseenter="highlightPlanet('${nm}')" onmouseleave="clearHighlight()">${p.symbol}</text>`;
+      svg+=`<text x="${pos.x}" y="${pos.y}" text-anchor="middle" dominant-baseline="central" fill="${pc}" font-size="19" data-planet="${nm}" class="wheel-planet-text" onmouseenter="highlightPlanet('${nm}')" onmouseleave="clearHighlight()">${glyph}</text>`;
       svg+=`<text x="${pos.x+(pos.x>CX?18:-18)}" y="${pos.y+10}" text-anchor="${pos.x>CX?'start':'end'}" font-size="8" fill="rgba(255,255,255,0.55)" font-family="Courier New,monospace">${p.degree}</text>`;
     }
 
@@ -1363,7 +1379,7 @@ document.addEventListener('click', async (e) => {
   const panel = document.getElementById('planet-panel');
   const title = document.getElementById('planet-panel-title');
   const body = document.getElementById('planet-panel-body');
-  title.textContent = `✦ ${nm} ${p.symbol}`;
+  title.textContent = `✦ ${nm} ${PLANET_SYMBOLS[nm] || p.symbol}`;
   const col = PCOLORS[nm] || '#fff';
   body.innerHTML = `
     <div class="pp-row"><span class="pp-label">Longitude</span><span class="pp-value">${p.longitude}°</span></div>
