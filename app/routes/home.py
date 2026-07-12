@@ -388,6 +388,123 @@ def _quran_hadith_daily() -> dict:
     }
 
 
+# ─── Lilly · Planetary magic squares (awfaq) ──────────────────────────
+# Canonical planetary squares of the Agrippa / al-Buni tradition.
+_MAGIC_SQUARE_ORDER = {
+    'Saturn': 3, 'Jupiter': 4, 'Mars': 5, 'Sun': 6,
+    'Venus': 7, 'Mercury': 8, 'Moon': 9,
+}
+_MAGIC_SQUARE_SUM = {
+    'Saturn': 15, 'Jupiter': 34, 'Mars': 65, 'Sun': 111,
+    'Venus': 175, 'Mercury': 260, 'Moon': 369,
+}
+
+
+def _planetary_magic_square(planet_name):
+    """Return the canonical n×n planetary magic square (awfaq) for a planet."""
+    order = _MAGIC_SQUARE_ORDER.get(planet_name)
+    if not order:
+        return None
+    n = order
+    if n % 2 == 1:  # odd-order Siamese method
+        sq = [[0] * n for _ in range(n)]
+        r, c = 0, n // 2
+        for num in range(1, n * n + 1):
+            sq[r][c] = num
+            r, c = (r - 1) % n, (c + 1) % n
+            if sq[r][c] != 0:
+                r = (r + 2) % n
+                c = (c - 1) % n
+        return {'planet': planet_name, 'order': n,
+                'constant_sum': _MAGIC_SQUARE_SUM.get(planet_name), 'square': sq}
+    return {'planet': planet_name, 'order': n,
+            'constant_sum': _MAGIC_SQUARE_SUM.get(planet_name),
+            'square': _agrippa_explicit(n)}
+
+
+def _agrippa_explicit(n):
+    """Explicit verified planetary squares (Agrippa, de Occulta Philosophia)."""
+    if n == 4:  # Jupiter — sum 34
+        return [[16, 3, 2, 13], [5, 10, 11, 8],
+                [9, 6, 7, 12], [4, 15, 14, 1]]
+    if n == 6:  # Sun — sum 111
+        return [[6, 32, 3, 34, 35, 1], [7, 11, 27, 28, 8, 30],
+                [19, 14, 16, 15, 23, 24], [18, 20, 22, 21, 17, 13],
+                [25, 29, 10, 9, 26, 12], [36, 5, 33, 4, 2, 31]]
+    if n == 8:  # Mercury — sum 260
+        return [[8, 58, 59, 5, 4, 62, 63, 1], [49, 15, 14, 52, 53, 11, 10, 56],
+                [41, 23, 22, 44, 45, 19, 18, 48], [32, 34, 35, 29, 28, 38, 39, 25],
+                [40, 26, 27, 37, 36, 30, 31, 33], [17, 47, 46, 20, 21, 43, 42, 24],
+                [9, 55, 54, 12, 13, 51, 50, 16], [64, 2, 3, 61, 60, 6, 7, 57]]
+    return [[(r * n + c + 1) for c in range(n)] for r in range(n)]
+
+
+def _extract_planet_name(ruler_str):
+    """'Mars/Aries (by sign); traditionally ruled by Mars...' -> 'Mars'."""
+    if not ruler_str:
+        return None
+    for p in ('Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'):
+        if p in ruler_str:
+            return p
+    return None
+
+
+def _magical_weather():
+    """Combine the active lunar mansion, its Picatrix planetary ruler,
+    colour/stone/incense, a recommended awfaq, and a scholar's reflection."""
+    ia = _islamic_astro()
+    mansion = ia.get('mansion') or {}
+    ruler_raw = mansion.get('planetary_ruler', '')
+    ruler = _extract_planet_name(ruler_raw) or 'Moon'
+
+    pic = load_json('picatrix_planetary_correspondences.json') or {}
+    pdata = (pic.get('planets', {}) or {}).get(ruler, {})
+    colors = pdata.get('colors', {}) or {}
+    stone = (pdata.get('stones_minerals') or ['(not specified)'])[0]
+    incense = (pdata.get('incenses_suffumigations') or ['(not specified)'])[0]
+    operations = pdata.get('associated_operations_works') or []
+
+    square = _planetary_magic_square(ruler)
+
+    rec = mansion.get('best_activities', [])
+    default_colour = "the planet's own hue"
+    remedy_lines = []
+    if operations:
+        remedy_lines.append(f"Picatrix assigns {ruler} to: {operations[0]}.")
+    if rec:
+        remedy_lines.append(f"This mansion favours: {rec[0]}.")
+    remedy_lines.append(
+        f"Talismanic colour: {colors.get('planet_color', default_colour)}. "
+        f"Stone: {stone}. Suffumigation: {incense}.")
+    remedy = " ".join(remedy_lines)
+
+    scholars = ia.get('scholars', [])
+    scholar = random.choice(scholars) if scholars else {'name': 'al-Buni', 'info': ''}
+    nature = mansion.get('nature', '')
+    day_ruler = ia.get('day_ruler', '')
+    scholar_view = (
+        f"{scholar['name']} would note that the Moon now lodges in "
+        f"mansion {mansion.get('number')} — {mansion.get('picatrix_name')} "
+        f"({mansion.get('arabic_name')}), whose nature is {nature}. "
+        f"Under the {day_ruler}-ruled day and the {ruler} spirit of this mansion, "
+        f"the wise turn toward {mansion.get('benefic', 'balanced works')}.")
+
+    return {
+        'mansion': mansion,
+        'ruling_planet': ruler,
+        'ruling_planet_raw': ruler_raw,
+        'colour': colors.get('planet_color', ''),
+        'garment_colour': colors.get('garment_colors', ''),
+        'stone': stone,
+        'incense': incense,
+        'operations': operations,
+        'magic_square': square,
+        'remedy': remedy,
+        'scholar': scholar,
+        'scholar_view': scholar_view,
+    }
+
+
 # ─── Routes ──────────────────────────────────────────────────────────────
 
 @bp.route('/')
@@ -486,6 +603,7 @@ def api_home():
         'energy': energy_flat,
         'tarot': taro,
         'quran_hadith': qh,
+        'magical': _magical_weather(),
     })
 
 

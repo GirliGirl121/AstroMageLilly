@@ -16,7 +16,11 @@ from core_engine import Engine
 
 
 def format_planet(name: str, info: Dict) -> str:
-    return f"{name}: {info['sign']} {info['degree']}  [{info['house']}]"
+    sign = info.get('sign', '?')
+    degree = info.get('degree', '?')
+    house = info.get('house', '')
+    suffix = f"  [{house}]" if house != '' else ""
+    return f"{name}: {sign} {degree}{suffix}"
 
 
 def cmd_live(_: list[str]) -> int:
@@ -30,7 +34,7 @@ def cmd_live(_: list[str]) -> int:
         print(format_planet(name, info))
     print()
     mansion = data.get("lunar_mansion", {})
-    print(f"Lunar Mansion: {mansion.get('name')} — {mansion.get('description')}")
+    print(f"Lunar Mansion: {mansion.get('name')}")
     hour = data.get("planetary_hour", {})
     print(f"Planetary Hour: {hour.get('planet')}  {hour.get('time')}")
     return 0
@@ -48,7 +52,8 @@ def cmd_aspects(_: list[str]) -> int:
 def cmd_transit(args: list[str]) -> int:
     days = int(args[0]) if args else 30
     engine = Engine()
-    # build a tiny dummy natal if we don't have one
+    # transit_calendar() ignores natal unless supplied; build a tiny dummy
+    # natal from current positions so transit-to-natal aspects are produced.
     natal = {
         "Sun": engine.planet("Sun"),
         "Moon": engine.planet("Moon"),
@@ -58,25 +63,29 @@ def cmd_transit(args: list[str]) -> int:
         "Jupiter": engine.planet("Jupiter"),
         "Saturn": engine.planet("Saturn"),
     }
-    data = engine.transits(natal, days=days)
+    # transit_calendar returns a list of transit-event dicts.
+    data = engine.transit_calendar(days=days, natal_planets=natal)
     out_path = Path("outputs") / f"transits_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     out_path.parent.mkdir(exist_ok=True)
     out_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"Transits written to {out_path}")
-    print(f"Total events: {len(data.get('transits', []))}")
+    print(f"Total events: {len(data)}")
     return 0
 
 
 def cmd_hour(_: list[str]) -> int:
     engine = Engine()
-    data = engine.planetary_hour()
+    # The Engine exposes the current planetary hour through live().
+    data = engine.live().get("planetary_hour", {})
     print(json.dumps(data, indent=2, ensure_ascii=False))
     return 0
 
 
 def cmd_mansion(_: list[str]) -> int:
     engine = Engine()
-    data = engine.mansion()
+    # The Engine tracks the lunar station as a nakshatra (27-station Vedic
+    # system). Use it for the mansion command.
+    data = engine.nakshatra()
     print(json.dumps(data, indent=2, ensure_ascii=False))
     return 0
 

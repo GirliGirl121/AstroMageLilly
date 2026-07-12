@@ -112,7 +112,7 @@ Al-Buni's system is deeply interwoven with the 99 Names:
   - **Invocation** — calling upon the divine attribute through the name
 
 **Example — Al-Qahhar (القهار), The Subduer:**
-- Abjad value: 306 (Alif=1 + Lam=30 + Qaf=100 + Ha=5 + Alif=1 + Ra=200 = 337? Let me recalculate: ا ل ق ه ا ر = 1+30+100+5+1+200 = 337)
+- Abjad value: 337 (ا=1 + ل=30 + ق=100 + ه=5 + ا=1 + ر=200 = 337)
 - Use: Breaking opposition, subduing enemies, cutting harmful bonds
 - Element: Fire
 - Planet: Mars

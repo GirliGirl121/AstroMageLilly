@@ -135,6 +135,20 @@ DAY_RULERS = {
 }
 
 # ─── Picatrix Spirits (from Picatrix Book II) ────────────────────────────────
+# PROVENANCE: These are the planetary spirits (ruhaniyyat) named in the
+# Picatrix (Ghayat al-Hakim), Book II — the table of the spirits, images,
+# and operations of the seven planets. The recension follows the English
+# translation by Greer & Warnock (WCER, 2010); spellings vary across
+# manuscripts and editions. Cross-check: Taphthartharath (Mercury) is the
+# canonical, widely-attested form (also in the Heptameron and other
+# grimoire traditions), confirming this is the Picatrix spirit-list and not
+# an invented one.
+# TERMINOLOGY: 'angel' here = the spirit's angelic regent as given in the
+# Picatrix table; it is distinct from the planet's own angel/intelligence.
+# NOTE: these are hardcoded (the picatrix_calendar.planetary_hours table is
+# empty) — they are NOT yet row-level sourced with a `source`/`confidence`
+# column like planetary_correspondences is. Accountability gap to close
+# when the calendar DB is regenerated.
 PICATRIX_SPIRITS = {
     'Sun':    {'name': 'Beydeluz',   'arabic': 'Bandalus بندلوس',    'angel': 'Nakkiel'},
     'Venus':  {'name': 'Deydez',    'arabic': 'Didas ديداس',        'angel': 'Beyteyl'},

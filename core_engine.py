@@ -33,7 +33,16 @@ class Engine:
     def live(self) -> Dict[str, Any]:
         planets = get_planet_positions()
         moon = get_moon_phase()
-        nakshatra = get_current_nakshatra()
+        lunar_mansion = get_current_nakshatra()
+        # calendar_engine.py lives in the MagiJournal/ subpackage. Make it
+        # importable whether core_engine is run from the project root (CLI)
+        # or from within the Flask app (where app/__init__.py already adds it).
+        import os as _os
+        import sys as _sys
+        from pathlib import Path as _Path
+        _magijournal = str(_Path(__file__).resolve().parent / "MagiJournal")
+        if _magijournal not in _sys.path:
+            _sys.path.insert(0, _magijournal)
         from calendar_engine import compute_planetary_hours, compute_moon_position
         from datetime import datetime, timezone, timedelta
         now = datetime.now(timezone(timedelta(hours=2)))
@@ -50,9 +59,12 @@ class Engine:
         hour = {
             'planet': current_hour.get('planet', ''),
             'planet_ar': current_hour.get('planet_ar', ''),
+            'spirit': current_hour.get('spirit_name', ''),
+            'spirit_angel': current_hour.get('spirit_angel', ''),
             'hour': now.hour,
             'minute': now.minute,
             'time': now.strftime('%H:%M'),
+            'system': "Chaldean planetary hours (sunrise-based unequal hours); spirit names from Picatrix Book II",
         }
 
         return {
@@ -60,7 +72,7 @@ class Engine:
             "location": self.location,
             "timezone": self.timezone,
             "timestamp": __import__('datetime').datetime.now().strftime('%Y-%m-%d %I:%M:%S %p'),
-            "lunar_mansion": {"name": nakshatra.get('nakshatra', '')},
+            "lunar_mansion": {"name": lunar_mansion.get('nakshatra', '')},
             "planetary_hour": hour,
             "planets": {p['name']: p for p in planets},
         }
@@ -81,9 +93,9 @@ class Engine:
             "aspects": calculate_aspects({p['name']: p for p in planets}),
         }
 
-    def transit_calendar(self, days: int = 30) -> Dict[str, Any]:
+    def transit_calendar(self, days: int = 30, natal_planets: Optional[dict] = None) -> list:
         from calculations.transits import get_transit_calendar
-        return get_transit_calendar(days=days)
+        return get_transit_calendar(days=days, natal_planets=natal_planets)
 
     def houses(self, birth_date: str, birth_time: str) -> Dict[str, Any]:
         return get_house_cusps(birth_date, birth_time, self.lat, self.lon, 'E', self.timezone)
