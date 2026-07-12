@@ -3985,6 +3985,26 @@ loadNatal();
 initNatalCRUD();
 document.getElementById('btn-refresh').addEventListener('click', () => { if (window.lillyTick) lillyTick(); });
 document.getElementById('btn-notif').addEventListener('click', () => alert('🔔 Notifications coming soon!'));
+
+// ─── Bring the living wheel to life on the home chamber ───
+function lillyAwakenWheel() {
+  if (typeof drawTransitWheel === 'function') {
+    drawTransitWheel().catch(() => {});
+  }
+  // Reflect Gigi's true sky in the subtitle
+  try {
+    loadJSON('/api/live').then(d => {
+      const loc = d && d.location;
+      const sub = document.getElementById('wheel-loc-sub');
+      if (sub && loc && loc.name) sub.textContent = loc.name;
+    }).catch(() => {});
+  } catch (e) {}
+}
+// Draw immediately, and refresh every minute so it turns with the real sky
+lillyAwakenWheel();
+if (!window._lillyWheelTimer) {
+  window._lillyWheelTimer = setInterval(lillyAwakenWheel, 60000);
+}
 });
 </script>
 

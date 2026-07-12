@@ -517,9 +517,9 @@ def api_nakshatra_now():
     return jsonify(_current_nakshatra())
 
 
-# ─── Default location for the LIVE sky (Gigi · Cape Town, South Africa) ───
-DEFAULT_LAT = -33.925
-DEFAULT_LON = 18.424
+# ─── Default location for the LIVE sky (Gigi · Kariega, Eastern Cape, South Africa) ───
+DEFAULT_LAT = -33.72
+DEFAULT_LON = 25.97
 DEFAULT_TZ_OFFSET = 2
 
 
@@ -606,7 +606,7 @@ def api_live():
         'moon_phase': moon,
         'planetary_hour': current_hour,
         'location': {
-            'name': 'Cape Town, South Africa',
+            'name': 'Kariega, Eastern Cape, South Africa',
             'lat': DEFAULT_LAT,
             'lon': DEFAULT_LON,
             'tz_offset': DEFAULT_TZ_OFFSET,
