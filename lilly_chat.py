@@ -274,7 +274,7 @@ def generate_lilly_response(prompt, history, image_path=None, pdf_text=None):
     lessons = load_markdown(LESSONS_FILE)
     
     # Load API key from environment or file (safer than hardcoding)
-    api_key = os.environ.get("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")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
         key_file = ROOT / ".openrouter_key"
         if key_file.exists():
