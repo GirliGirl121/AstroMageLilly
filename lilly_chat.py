@@ -286,6 +286,16 @@ def generate_lilly_response(prompt, history, image_path=None, pdf_text=None):
     sky = _get_sky_data()
     sky_str = _sky_line(sky)
     mem = load_memory()
+    # Load saved charts for context
+    from memory.chart_memory import load_charts, format_chart_for_ai
+    charts = load_charts()
+    charts_context = ""
+    if charts:
+        charts_context = "SAVED NATAL CHARTS (verified via Celestial Engine):\n\n"
+        for name, chart in charts.items():
+            charts_context += format_chart_for_ai(chart) + "\n\n"
+    else:
+        charts_context = "No saved natal charts. Use /natal to calculate and save a chart.\n"
 
     skills_str = ", ".join(mem.get("skills_and_tools_learned", []))
     memory_context = "Lilly's Permanent Memories of Gigi:\n- " + "\n- ".join(mem.get("facts", ["No memories recorded yet."]))
@@ -311,6 +321,8 @@ Current Kariega Sky State:
 {sky_str}
 
 {memory_context}
+
+{charts_context}
 
 Lilly's Adopted Skills & Cognitive Tools:
 [{skills_str}]
@@ -607,7 +619,7 @@ def cmd_natal(birth_date, birth_time, lat, lon, house_system="W"):
         from calculations.ephemeris import get_planet_positions
         import swisseph as swe
         import pytz
-        
+
         # Julian Day
         tz = pytz.timezone('Africa/Johannesburg')
         dt_str = f"{birth_date} {birth_time}"
@@ -616,7 +628,7 @@ def cmd_natal(birth_date, birth_time, lat, lon, house_system="W"):
         utc_dt = local_dt.astimezone(pytz.UTC)
         jd = swe.julday(utc_dt.year, utc_dt.month, utc_dt.day,
                         utc_dt.hour + utc_dt.minute/60 + utc_dt.second/3600)
-        
+
         # House system
         house_system = house_system.upper()
         if house_system == "W":
@@ -625,18 +637,18 @@ def cmd_natal(birth_date, birth_time, lat, lon, house_system="W"):
         else:
             house_data = get_house_cusps(birth_date, birth_time, lat, lon, house_system)
             sys_name = house_system
-        
+
         # Planets
         planets_list = get_planet_positions(jd)
         planets = {p["name"]: p for p in planets_list}
-        
+
         # Assign houses
         asc_sign_idx = int(house_data["ascendant"]["longitude"] / 30) % 12
-        
+
         for planet in planets.values():
             plon = planet.get("longitude", 0)
             planet_sign_idx = int(plon / 30) % 12
-            
+
             if house_system == "W":
                 house = ((planet_sign_idx - asc_sign_idx) % 12) + 1
             else:
@@ -647,7 +659,7 @@ def cmd_natal(birth_date, birth_time, lat, lon, house_system="W"):
                         house = i + 1
                         break
             planet["house"] = house
-        
+
         # Build output
         lines = [
             f"{C_WHITE}🌟 NATAL CHART",
@@ -659,7 +671,7 @@ def cmd_natal(birth_date, birth_time, lat, lon, house_system="W"):
             f"   MC:  {house_data['midheaven']['sign']} {house_data['midheaven']['degree']:.2f}°",
             "",
         ]
-        
+
         for name, info in planets.items():
             sign = info.get('sign', '?')
             degree = info.get('degree', '?')
@@ -668,12 +680,50 @@ def cmd_natal(birth_date, birth_time, lat, lon, house_system="W"):
             house = info.get('house', '?')
             retro = " ℞" if info.get('retrograde') else ""
             lines.append(f"   {glyph:<11} {sign:<11} {deg_str:<8}{retro}  H{house}")
-        
+
         lines.append(f"{C_RESET}")
         return "\n".join(lines)
-        
+
     except Exception as e:
         return f"{C_WHITE}The chart could not be cast: {e}{C_RESET}"
+
+
+def cmd_charts(arg=""):
+    """Manage saved natal charts."""
+    from memory.chart_memory import list_charts, get_chart, delete_chart, format_chart_for_ai 
+    
+    charts = list_charts()
+    
+    if not arg:
+        # List all charts
+        if not charts:
+            return f"{C_WHITE}No saved charts yet, love. Use /natal to cast and save one.{C_RESET}"
+        
+        lines = [
+            f"{C_WHITE}📜 Saved Natal Charts",
+            f"{C_BLUE}" + "━" * 30 + f"{C_RESET}",
+        ]
+        for i, name in enumerate(charts, 1):
+            chart = get_chart(name)
+            date = chart.get('birth_date', '?') if chart else '?'
+            lines.append(f"{C_WHITE}   {i}. {name} ({date}){C_RESET}")
+        lines.append(f"\n{C_WHITE}Use /charts <name> to show a chart, or /charts delete <name> to remove.{C_RESET}")
+        return "\n".join(lines)
+    
+    elif arg.startswith("delete "):
+        name = arg[7:].strip()
+        if delete_chart(name):
+            return f"{C_WHITE}✓ Chart '{name}' deleted.{C_RESET}"
+        else:
+            return f"{C_WHITE}Chart '{name}' not found.{C_RESET}"
+    
+    else:
+        # Show specific chart
+        chart = get_chart(arg)
+        if chart:
+            return format_chart_for_ai(chart)
+        return f"{C_WHITE}Chart '{arg}' not found. Use /charts to list all.{C_RESET}"
+    
 
 # ─── Live Dynamic Boot Sequence ────────────────────────────────────────────
 def boot_sequence():
@@ -791,7 +841,7 @@ def print_dashboard(sky):
     print("Commands")
     print("  /sky      /tarot      /hour")
     print("  /mansion  /transit    /abjad")
-    print("  /natal    /remember   /adopt")
+    print("  /natal    /charts     /remember")
     print("  /save     /clear      /quit")
     print()
     print(f"{C_PURPLE}🌙 I'm ready whenever you are, {G_TAG}. 💜{C_RESET}")
@@ -851,6 +901,9 @@ def main():
 
             elif cmd == 'transit':
                 print(f"\n{cmd_transit()}")
+
+            elif cmd == 'charts':
+                print(f"\n{cmd_charts(arg)}")
 
             elif cmd == 'abjad':
                 print(f"\n{cmd_abjad()}")
