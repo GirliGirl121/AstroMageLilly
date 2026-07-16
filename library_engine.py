@@ -5,7 +5,7 @@ For Gigi ❤️ — Handles PDF text extraction, OCR, indexing, and search.
 """
 from __future__ import annotations
 
-import fitz  # PyMuPDF
+from pypdf import PdfReader
 import json
 import os
 import re
@@ -131,7 +131,7 @@ def extract_text_from_pdf(pdf_path: str) -> Dict[str, Any]:
     }
     
     # Extract metadata
-    meta = doc.metadata
+    meta = reader.metadata or {}
     result["metadata"] = {
         "title": meta.get("title", ""),
         "author": meta.get("author", ""),
@@ -189,14 +189,16 @@ def extract_text_from_pdf(pdf_path: str) -> Dict[str, Any]:
 def convert_page_to_image(pdf_path: str, page_num: int, dpi: int = OCR_DPI) -> Optional[str]:
     """Convert a PDF page to an image for OCR."""
     try:
-        doc = fitz.open(pdf_path)
-        page = doc[page_num]
-        mat = fitz.Matrix(dpi/72, dpi/72)  # 72 is PDF default DPI
-        pix = page.get_pixmap(matrix=mat)
-        img_path = f"/tmp/ocr_page_{page_num}_{hashlib.md5(pdf_path.encode()).hexdigest()[:8]}.png"
-        pix.save(img_path)
-        doc.close()
-        return img_path
+        one_based_page = page_num + 1
+        img_prefix = f"/tmp/ocr_page_{page_num}_{hashlib.md5(str(pdf_path).encode()).hexdigest()[:8]}"
+        subprocess.run(
+            ["pdftoppm", "-f", str(one_based_page), "-l", str(one_based_page), "-r", str(dpi), "-png", str(pdf_path), img_prefix],
+            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        expected_path = f"{img_prefix}-{one_based_page}.png"
+        if not os.path.exists(expected_path):
+            expected_path = f"{img_prefix}-{str(one_based_page).zfill(2)}.png"
+        return expected_path if os.path.exists(expected_path) else None
     except Exception:
         return None
 
@@ -368,13 +370,17 @@ def process_pdf(pdf_path: str, book_id: Optional[str] = None, force_ocr: bool = 
     
     # Generate cover image (first page thumbnail)
     try:
-        doc = fitz.open(pdf_path)
-        page = doc[0]
-        mat = fitz.Matrix(150/72, 150/72)
-        pix = page.get_pixmap(matrix=mat)
+        cover_prefix = PROCESSED_DIR / f"{book_id}_cover_temp"
+        subprocess.run(
+            ["pdftoppm", "-f", "1", "-l", "1", "-r", "150", "-png", str(pdf_path), str(cover_prefix)],
+            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        generated_cover = Path(f"{cover_prefix}-1.png")
+        if not generated_cover.exists():
+            generated_cover = Path(f"{cover_prefix}-1.png")
         cover_path = PROCESSED_DIR / f"{book_id}_cover.png"
-        pix.save(str(cover_path))
-        doc.close()
+        if generated_cover.exists():
+            generated_cover.rename(cover_path)
     except Exception:
         cover_path = None
     

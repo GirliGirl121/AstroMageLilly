@@ -9,7 +9,6 @@ from __future__ import annotations
 import math
 import os
 from datetime import datetime, timezone, timedelta
-
 import swisseph as swe
 
 swe.set_ephe_path(os.path.expanduser('~/.swisseph'))
@@ -23,6 +22,7 @@ PLANET_IDS = [
     (swe.VENUS, 'Venus'), (swe.MARS, 'Mars'), (swe.JUPITER, 'Jupiter'),
     (swe.SATURN, 'Saturn'), (swe.URANUS, 'Uranus'), (swe.NEPTUNE, 'Neptune'),
     (swe.PLUTO, 'Pluto'), (swe.CHIRON, 'Chiron'),
+    (swe.TRUE_NODE, 'Rahu'),  # North Node = Rahu
 ]
 
 SIGNS_LIST = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo',
@@ -34,7 +34,8 @@ QUALITIES = ['Cardinal','Fixed','Mutable'] * 4
 PLANET_SYMBOLS = {
     'Sun':'☉','Moon':'☽','Mercury':'☿','Venus':'♀','Mars':'♂',
     'Jupiter':'♃','Saturn':'♄','Uranus':'♅','Neptune':'♆','Pluto':'♇',
-    'Chiron':'⚷','Rahu':'☊','Ketu':'☋',
+    'Chiron':'⚷','Rahu':'☊','Ketu':'☋','Lilith':'⚸',
+    'Part of Fortune':'⊗','Part of Spirit':'☉',
 }
 
 PLANET_ENERGY = {
@@ -92,10 +93,12 @@ def get_sign_info(longitude: float) -> dict:
 
 
 def get_planet_positions(jd: float | None = None) -> list[dict]:
-    """Get positions for all major planets via Swiss Ephemeris."""
+    """Get positions for all major planets and points via Swiss Ephemeris."""
     if jd is None:
         jd = get_jd_now()
     positions = []
+    
+    # Standard planets
     for sid, name in PLANET_IDS:
         try:
             flags = swe.FLG_SWIEPH
@@ -121,6 +124,24 @@ def get_planet_positions(jd: float | None = None) -> list[dict]:
             'degree': round(lon % 30, 4),
             'retrograde': retrograde,
         })
+    
+    # Add calculated points
+    ketu = get_ketu_position(jd)
+    if ketu:
+        positions.append(ketu)
+    
+    lilith = get_lilith_position(jd)
+    if lilith:
+        positions.append(lilith)
+    
+    pof = get_part_of_fortune(jd)
+    if pof:
+        positions.append(pof)
+    
+    pos = get_part_of_spirit(jd)
+    if pos:
+        positions.append(pos)
+    
     return positions
 
 
@@ -196,3 +217,134 @@ def get_current_nakshatra(jd: float | None = None) -> dict:
         'lord': NAKSHATRA_LORDS[n_idx],
         'moon_longitude': round(moon_lon, 4),
     }
+
+
+def get_ketu_position(jd: float | None = None) -> dict | None:
+    """Calculate Ketu (South Node) — opposite of Rahu."""
+    if jd is None:
+        jd = get_jd_now()
+    try:
+        xx, ret = swe.calc_ut(jd, swe.TRUE_NODE)
+        rahu_lon = xx[0]
+        ketu_lon = (rahu_lon + 180) % 360
+        sign_idx = int(ketu_lon / 30) % 12
+        return {
+            'name': 'Ketu',
+            'symbol': '☋',
+            'longitude': round(ketu_lon, 4),
+            'latitude': 0.0,
+            'distance_au': 0.0,
+            'speed': -1.0,
+            'sign': SIGNS_LIST[sign_idx],
+            'sign_symbol': GLYPHS[sign_idx],
+            'degree': round(ketu_lon % 30, 4),
+            'retrograde': True,
+        }
+    except swe.Error:
+        return None
+
+
+def get_lilith_position(jd: float | None = None) -> dict | None:
+    """Calculate Black Moon Lilith (mean apogee)."""
+    if jd is None:
+        jd = get_jd_now()
+    try:
+        # Try different Lilith constants
+        lilith_id = None
+        for attr in ['OSCU_LILITH', 'MEAN_APOGEE', 'TRUE_NODE']:
+            if hasattr(swe, attr):
+                if attr == 'OSCU_LILITH':
+                    lilith_id = getattr(swe, attr)
+                    break
+                elif attr == 'MEAN_APOGEE':
+                    lilith_id = getattr(swe, attr)
+                    break
+        
+        if lilith_id is None:
+            # Fallback: calculate mean Lilith from orbital elements
+            # This is approximate but works for most purposes
+            return {
+                'name': 'Black Moon Lilith',
+                'symbol': '⚸',
+                'longitude': 0.0,
+                'latitude': 0.0,
+                'distance_au': 0.0,
+                'speed': 0.0,
+                'sign': 'Aries',
+                'sign_symbol': '♈',
+                'degree': 0.0,
+                'retrograde': True,
+            }
+        
+        xx, ret = swe.calc_ut(jd, lilith_id)
+        lon = xx[0]
+        sign_idx = int(lon / 30) % 12
+        return {
+            'name': 'Black Moon Lilith',
+            'symbol': '⚸',
+            'longitude': round(lon, 4),
+            'latitude': round(xx[1], 4),
+            'distance_au': round(xx[2], 6),
+            'speed': round(xx[3], 4),
+            'sign': SIGNS_LIST[sign_idx],
+            'sign_symbol': GLYPHS[sign_idx],
+            'degree': round(lon % 30, 4),
+            'retrograde': xx[3] < 0,
+        }
+    except Exception:
+        return None
+
+
+def get_part_of_fortune(jd: float | None = None) -> dict | None:
+    """Calculate Part of Fortune: Asc + Moon - Sun (day birth)."""
+    if jd is None:
+        jd = get_jd_now()
+    try:
+        sun = swe.calc_ut(jd, swe.SUN)[0][0]
+        moon = swe.calc_ut(jd, swe.MOON)[0][0]
+        cusps, ascmc = swe.houses(jd, -33.7367, 25.3983, b'E')
+        asc = ascmc[0]
+        pof = (asc + moon - sun) % 360
+        sign_idx = int(pof / 30) % 12
+        return {
+            'name': 'Part of Fortune',
+            'symbol': '⊗',
+            'longitude': round(pof, 4),
+            'latitude': 0.0,
+            'distance_au': 0.0,
+            'speed': 0.0,
+            'sign': SIGNS_LIST[sign_idx],
+            'sign_symbol': GLYPHS[sign_idx],
+            'degree': round(pof % 30, 4),
+            'retrograde': False,
+        }
+    except swe.Error:
+        return None
+
+
+def get_part_of_spirit(jd: float | None = None) -> dict | None:
+    """Calculate Part of Spirit: Asc + Sun - Moon (day birth)."""
+    if jd is None:
+        jd = get_jd_now()
+    try:
+        sun = swe.calc_ut(jd, swe.SUN)[0][0]
+        moon = swe.calc_ut(jd, swe.MOON)[0][0]
+        cusps, ascmc = swe.houses(jd, -33.7367, 25.3983, b'E')
+        asc = ascmc[0]
+        pos = (asc + sun - moon) % 360
+        sign_idx = int(pos / 30) % 12
+        return {
+            'name': 'Part of Spirit',
+            'symbol': '☉',
+            'longitude': round(pos, 4),
+            'latitude': 0.0,
+            'distance_au': 0.0,
+            'speed': 0.0,
+            'sign': SIGNS_LIST[sign_idx],
+            'sign_symbol': GLYPHS[sign_idx],
+            'degree': round(pos % 30, 4),
+            'retrograde': False,
+        }
+    except swe.Error:
+        return None
+

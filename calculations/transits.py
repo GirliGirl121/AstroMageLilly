@@ -1,6 +1,6 @@
 """AstroMage — Transit calendar engine.
 
-Calculates upcoming transits between transit planets and natal chart
+)Calculates upcoming transits between transit planets and natal chart
 positions using Swiss Ephemeris.
 """
 from __future__ import annotations
@@ -116,3 +116,10 @@ def get_transit_calendar(
 
     transits.sort(key=lambda x: (x['date'], x['transit_planet']))
     return transits
+
+
+
+def get_major_transits(days=7, natal_planets=None):
+    """Alias for get_transit_calendar for backward compatibility."""
+    return get_transit_calendar(natal_planets=natal_planets, days=days)
+
