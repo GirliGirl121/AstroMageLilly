@@ -591,48 +591,24 @@ def cmd_abjad():
         lines.append(f"   Ignored: {result['ignored']} non-Arabic chars")
     return "\n".join(lines) + C_RESET
 
-def cmd_natal():
-    """Calculate a natal chart from user input."""
+def cmd_natal(birth_date, birth_time, lat, lon, house_system="W"):
+    """Calculate a natal chart from provided birth data."""
     if not ENGINE_AVAILABLE:
         return f"⚠️ {C_WHITE}The engine is resting, love. I cannot cast charts right now.{C_RESET}"
     
-    print(f"\n{C_WHITE}📜 Natal Chart Calculator{C_RESET}")
-    print(f"{C_BLUE}" + "━" * 40 + f"{C_RESET}")
-    
-    # Get birth data from user
-    print(f"{C_WHITE}Enter birth date (YYYY-MM-DD):{C_RESET}")
-    birth_date = input("   > ").strip()
-    
-    print(f"{C_WHITE}Enter birth time (HH:MM, 24-hour):{C_RESET}")
-    birth_time = input("   > ").strip()
-    
-    print(f"{C_WHITE}Enter latitude (e.g. -33.92 for Cape Town):{C_RESET}")
-    lat_str = input("   > ").strip()
-    
-    print(f"{C_WHITE}Enter longitude (e.g. 18.42 for Cape Town):{C_RESET}")
-    lon_str = input("   > ").strip()
-    
-    print(f"{C_WHITE}House system? [W]hole Sign (default), [P]lacidus, [E]qual:{C_RESET}")
-    house_sys = input("   > ").strip().upper() or "W"
-    
-    # Parse inputs
     try:
-        lat = float(lat_str)
-        lon = float(lon_str)
+        lat = float(lat)
+        lon = float(lon)
     except ValueError:
-        return f"{C_WHITE}Invalid coordinates, love. Please use decimal degrees.{C_RESET}"
-    
-    # Map house system
-    system_map = {"W": "W", "P": "P", "E": "E", "K": "K"}
-    house_system = system_map.get(house_sys, "W")
+        return f"{C_WHITE}Invalid coordinates, love. Please use decimal numbers.{C_RESET}"
     
     try:
         from calculations.houses import get_whole_sign_houses, get_house_cusps
-        from calculations.ephemeris import get_planet_positions, get_jd_now
+        from calculations.ephemeris import get_planet_positions
         import swisseph as swe
-        
-        # Calculate Julian Day
         import pytz
+        
+        # Julian Day
         tz = pytz.timezone('Africa/Johannesburg')
         dt_str = f"{birth_date} {birth_time}"
         local_dt = datetime.strptime(dt_str, '%Y-%m-%d %H:%M')
@@ -641,13 +617,16 @@ def cmd_natal():
         jd = swe.julday(utc_dt.year, utc_dt.month, utc_dt.day,
                         utc_dt.hour + utc_dt.minute/60 + utc_dt.second/3600)
         
-        # Get house data
+        # House system
+        house_system = house_system.upper()
         if house_system == "W":
             house_data = get_whole_sign_houses(birth_date, birth_time, lat, lon)
+            sys_name = "Whole Sign"
         else:
             house_data = get_house_cusps(birth_date, birth_time, lat, lon, house_system)
+            sys_name = house_system
         
-        # Get planet positions
+        # Planets
         planets_list = get_planet_positions(jd)
         planets = {p["name"]: p for p in planets_list}
         
@@ -655,8 +634,8 @@ def cmd_natal():
         asc_sign_idx = int(house_data["ascendant"]["longitude"] / 30) % 12
         
         for planet in planets.values():
-            lon = planet.get("longitude", 0)
-            planet_sign_idx = int(lon / 30) % 12
+            plon = planet.get("longitude", 0)
+            planet_sign_idx = int(plon / 30) % 12
             
             if house_system == "W":
                 house = ((planet_sign_idx - asc_sign_idx) % 12) + 1
@@ -664,7 +643,7 @@ def cmd_natal():
                 house_cusps = [h["longitude"] for h in house_data["houses"]]
                 house = 12
                 for i in range(11):
-                    if house_cusps[i] <= lon < house_cusps[i + 1]:
+                    if house_cusps[i] <= plon < house_cusps[i + 1]:
                         house = i + 1
                         break
             planet["house"] = house
@@ -674,14 +653,13 @@ def cmd_natal():
             f"{C_WHITE}🌟 NATAL CHART",
             f"{C_BLUE}" + "━" * 40 + f"{C_RESET}",
             f"{C_WHITE}📍 {birth_date} {birth_time} | Lat: {lat}° Lon: {lon}°",
-            f"🏠 House System: {house_system} ({'Whole Sign' if house_system == 'W' else house_system})",
+            f"🏠 House System: {sys_name}",
             "",
             f"   ASC: {house_data['ascendant']['sign']} {house_data['ascendant']['degree']:.2f}°",
             f"   MC:  {house_data['midheaven']['sign']} {house_data['midheaven']['degree']:.2f}°",
             "",
         ]
         
-        # Display planets
         for name, info in planets.items():
             sign = info.get('sign', '?')
             degree = info.get('degree', '?')
@@ -813,7 +791,7 @@ def print_dashboard(sky):
     print("Commands")
     print("  /sky      /tarot      /hour")
     print("  /mansion  /transit    /abjad")
-    print("  /remember /adopt")
+    print("  /natal    /remember   /adopt")
     print("  /save     /clear      /quit")
     print()
     print(f"{C_PURPLE}🌙 I'm ready whenever you are, {G_TAG}. 💜{C_RESET}")
@@ -876,6 +854,26 @@ def main():
 
             elif cmd == 'abjad':
                 print(f"\n{cmd_abjad()}")
+
+            elif cmd == 'natal':
+                print(f"\n{C_WHITE}📜 Natal Chart Calculator{C_RESET}")
+                print(f"{C_BLUE}" + "━" * 40 + f"{C_RESET}")
+                
+                birth_date = input(f"{C_WHITE}Enter birth date (YYYY-MM-DD):{C_RESET}\n   > ").strip()
+                birth_time_raw = input(f"{C_WHITE}Enter birth time (HH:MM, 24-hour):{C_RESET}\n   > ").strip()
+                birth_time = birth_time_raw.replace('o', '0').replace('O', '0')
+                
+                lat_raw = input(f"{C_WHITE}Enter latitude (decimal, e.g. -33.92):{C_RESET}\n   > ").strip()
+                lat_str = ''.join(c for c in lat_raw if c.isdigit() or c == '-' or c == '.')
+                
+                lon_raw = input(f"{C_WHITE}Enter longitude (decimal, e.g. 18.42):{C_RESET}\n   > ").strip()
+                lon_str = ''.join(c for c in lon_raw if c.isdigit() or c == '-' or c == '.')
+                
+                house_sys = input(f"{C_WHITE}House system? [W]hole Sign (default), [P]lacidus, [E]qual:{C_RESET}\n   > ").strip().upper() or "W"
+                
+                result = cmd_natal(birth_date, birth_time, lat_str, lon_str, house_sys)
+                if result:
+                    print(result)
 
             elif cmd == "remember":
                 if arg:
