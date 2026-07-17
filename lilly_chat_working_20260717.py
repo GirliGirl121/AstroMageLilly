@@ -20,7 +20,6 @@ from pathlib import Path
 from core_engine import Engine
 from brain import Brain
 from llm import ask_llm
-from memory_brain import MemoryBrain
 import requests
 
 # ─── Ensure project root is on path ────────────────────────────────────────
@@ -203,19 +202,14 @@ def load_charts_safe():
             pass
         return {}
 
-def add_chart_safe(name, chart_data):
-    """Add a chart with serialization protection."""
-    try:
-        safe_data = _make_serializable(chart_data)
-        safe_data["saved_at"] = datetime.now().isoformat()
-
-        charts = load_charts_safe()
-        charts[name] = safe_data
-        save_charts(charts)
-
-    except Exception as e:
-        print(f"Error saving chart: {e}")
-
+def _load_charts_inline():
+    if CHARTS_FILE.exists():
+        try:
+            with open(CHARTS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
 
 def _save_charts_inline(charts):
     CHARTS_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -226,6 +220,25 @@ def _save_charts_inline(charts):
             pass
     with open(CHARTS_FILE, 'w', encoding='utf-8') as f:
         json.dump(charts, f, indent=2, ensure_ascii=False)
+
+def add_chart_safe(name, chart_data):
+    """Add a chart with serialization protection."""
+    try:
+        safe_data = _make_serializable(chart_data)
+        safe_data['saved_at'] = datetime.now().isoformat()
+        if CHART_MEMORY_AVAILABLE:
+            charts = load_charts_safe()
+            charts[name] = safe_data
+            save_charts(charts)
+        else:
+            charts = _load_charts_inline()
+            charts[name] = safe_data
+            _save_charts_inline(charts)
+        return True
+    except Exception as e:
+        print(f"{C_WHITE}⚠ Error saving chart '{name}': {e}{C_RESET}")
+        traceback.print_exc()
+        return False
 
 def get_chart_safe(name):
     try:
@@ -465,7 +478,6 @@ def generate_lilly_response(prompt, history, image_path=None, pdf_text=None):
     sky = _get_sky_data()
     sky_str = _sky_line(sky)
     mem = load_memory()
-    memory_brain = MemoryBrain(mem)
     charts = load_charts_safe()
     charts_context = ""
     if charts:

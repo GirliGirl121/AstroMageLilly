@@ -17,10 +17,6 @@ import mimetypes
 import base64
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from core_engine import Engine
-from brain import Brain
-from llm import ask_llm
-from memory_brain import MemoryBrain
 import requests
 
 # ─── Ensure project root is on path ────────────────────────────────────────
@@ -203,19 +199,14 @@ def load_charts_safe():
             pass
         return {}
 
-def add_chart_safe(name, chart_data):
-    """Add a chart with serialization protection."""
-    try:
-        safe_data = _make_serializable(chart_data)
-        safe_data["saved_at"] = datetime.now().isoformat()
-
-        charts = load_charts_safe()
-        charts[name] = safe_data
-        save_charts(charts)
-
-    except Exception as e:
-        print(f"Error saving chart: {e}")
-
+def _load_charts_inline():
+    if CHARTS_FILE.exists():
+        try:
+            with open(CHARTS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
 
 def _save_charts_inline(charts):
     CHARTS_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -226,6 +217,25 @@ def _save_charts_inline(charts):
             pass
     with open(CHARTS_FILE, 'w', encoding='utf-8') as f:
         json.dump(charts, f, indent=2, ensure_ascii=False)
+
+def add_chart_safe(name, chart_data):
+    """Add a chart with serialization protection."""
+    try:
+        safe_data = _make_serializable(chart_data)
+        safe_data['saved_at'] = datetime.now().isoformat()
+        if CHART_MEMORY_AVAILABLE:
+            charts = load_charts_safe()
+            charts[name] = safe_data
+            save_charts(charts)
+        else:
+            charts = _load_charts_inline()
+            charts[name] = safe_data
+            _save_charts_inline(charts)
+        return True
+    except Exception as e:
+        print(f"{C_WHITE}⚠ Error saving chart '{name}': {e}{C_RESET}")
+        traceback.print_exc()
+        return False
 
 def get_chart_safe(name):
     try:
@@ -465,7 +475,6 @@ def generate_lilly_response(prompt, history, image_path=None, pdf_text=None):
     sky = _get_sky_data()
     sky_str = _sky_line(sky)
     mem = load_memory()
-    memory_brain = MemoryBrain(mem)
     charts = load_charts_safe()
     charts_context = ""
     if charts:
@@ -569,14 +578,31 @@ Be concise, beautiful, intellectually rigorous, and quietly compassionate.
         "X-Title": "AstroMageLilly Assistant"
     }
 
+    last_error = None
     models_to_try = [model_choice] + [m for m in FREE_MODELS if m != model_choice]
 
-    return ask_llm(
-        messages,
-        models_to_try,
-        api_key,
-        headers
-)
+    for model in models_to_try:
+        payload = {"model": model, "messages": messages}
+        try:
+            response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=30)
+            if response.status_code == 200:
+                data = response.json()
+                if 'choices' in data and len(data['choices']) > 0:
+                    return data['choices'][0]['message']['content']
+                last_error = f"Empty response from {model}"
+            else:
+                last_error = f"{model}: HTTP {response.status_code}"
+                if response.status_code in [429, 503, 404]:
+                    continue
+                return f"{C_PURPLE}My processors received an external error ({response.status_code}): {response.text} 🪐{C_RESET}"
+        except requests.exceptions.Timeout:
+            last_error = f"{model}: Timeout"
+            continue
+        except Exception as e:
+            last_error = f"{model}: {str(e)}"
+            continue
+
+    return f"{C_PURPLE}My communication array is down, {G_TAG}. All models failed. Last error: {last_error} 🪐{C_RESET}"
 
 # ─── Command Handlers ──────────────────────────────────────────────────────
 def cmd_sky(sky):
@@ -952,8 +978,6 @@ def main():
     conversation = []
     sky = _get_sky_data() if ENGINE_AVAILABLE else None
     mem = load_memory()
-
-    brain = Brain(Engine())
 
     boot_sequence()
     print_dashboard(sky)
