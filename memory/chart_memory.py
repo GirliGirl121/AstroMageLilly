@@ -25,7 +25,6 @@ def save_charts(charts: dict):
 def add_chart(name: str, chart_data: dict) -> bool:
     charts = load_charts()
     chart_data['saved_at'] = datetime.now().isoformat()
-    chart_data['name'] = name  # Use the user's chosen name, not the auto-generated one
     charts[name] = chart_data
     save_charts(charts)
     return True

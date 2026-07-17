@@ -42,3 +42,7 @@ picatrix_calendar.db
 # Generated transit/export dumps
 outputs/
 .openrouter_key
+.openrouter_key
+__pycache__/
+*.pyc
+charts/natal_charts.json
