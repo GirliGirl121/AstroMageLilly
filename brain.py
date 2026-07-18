@@ -85,6 +85,7 @@ class Brain:
         arg = parts[1] if len(parts) > 1 else ""
 
         command_map = {
+            # Core commands
             "sky": self.SKY,
             "tarot": self.TAROT,
             "hour": self.HOUR,
@@ -101,6 +102,16 @@ class Brain:
             "exit": self.QUIT,
             "q": self.QUIT,
             "bye": self.QUIT,
+            # Aliases — forgiving variations
+            "chart": self.CHARTS,
+            "horoscope": self.NATAL,
+            "card": self.TAROT,
+            "planet": self.SKY,
+            "skywatch": self.SKY,
+            "transits": self.TRANSIT,
+            "num": self.ABJAD,
+            "mem": self.REMEMBER,
+            "learn": self.ADOPT,
         }
 
         action = command_map.get(cmd, self.UNKNOWN)
