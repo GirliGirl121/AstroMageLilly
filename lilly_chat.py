@@ -51,7 +51,7 @@ from lilly.commands import (
     format_chart_for_ai_safe,
     sky_line,
 )
-
+from lilly.knowledge_base import offline_answer
 from brain import Brain
 from llm import ask_llm
 
@@ -118,11 +118,8 @@ def generate_lilly_response(
     # API key
     api_key = load_api_key()
     if not api_key:
-        return (
-            f"{Colors.PURPLE}My API key is missing, {G_TAG}. "
-            f"Please set OPENROUTER_API_KEY or create .openrouter_key "
-            f"in the project folder. 🪐{Colors.RESET}"
-        )
+        # Fallback to offline scholarly knowledge base
+        return offline_answer(prompt)
 
     # Celestial context
     sky = get_sky_data()
@@ -340,6 +337,10 @@ def main():
             else:
                 skills = list_skills(mem)
                 print(f"\n{Colors.WHITE}[System] Active Skills / Tools Adopted:\n" + "\n".join(f"- {s}" for s in skills) + f"{Colors.RESET}\n")
+            continue
+
+        elif intent.action == brain.KNOWLEDGE:
+            print(f"\n{offline_answer(intent.argument)}")
             continue
 
         elif intent.action == brain.FACT:

@@ -50,6 +50,7 @@ class Brain:
     REMEMBER = "remember"
     RECALL   = "recall"
     ADOPT    = "adopt"
+    KNOWLEDGE = "knowledge"
     SAVE     = "save"
     CLEAR    = "clear"
     QUIT     = "quit"
@@ -209,6 +210,14 @@ class Brain:
 
     def _route_keywords(self, text: str, message: str = "") -> Intent:
         """Route based on keywords in natural language."""
+
+        # Scholarly knowledge queries — asking what texts say about topics
+        if "what does" in text and "say about" in text:
+            return Intent(self.KNOWLEDGE, argument=message, confidence=0.9)
+        if "according to" in text:
+            return Intent(self.KNOWLEDGE, argument=message, confidence=0.85)
+        if "explain" in text and any(w in text for w in ["picatrix", "al-biruni", "al biruni", "al-buni", "al buni", "abu mashar", "tukhi", "ibn arabi", "shams al-maarif"]):
+            return Intent(self.KNOWLEDGE, argument=message, confidence=0.85)
 
         sky_words = [
             "sky", "stars", "heavens", "celestial", "planets",
