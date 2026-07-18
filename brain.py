@@ -21,10 +21,12 @@ class Intent:
         action:     What Lilly should do (e.g., "chat", "sky", "tarot").
         argument:   Extra data extracted from the message.
         confidence: How certain the brain is (1.0 = sure, 0.0 = guessing).
+        emotional:  True if the message expresses emotional distress.
     """
     action: str
     argument: str = ""
     confidence: float = 1.0
+    emotional: bool = False
 
 
 class Brain:
@@ -48,16 +50,22 @@ class Brain:
     REMEMBER = "remember"
     RECALL   = "recall"
     ADOPT    = "adopt"
-    FACT     = "fact"
     SAVE     = "save"
     CLEAR    = "clear"
     QUIT     = "quit"
     UNKNOWN  = "unknown"
+    FACT     = "fact"
 
     def __init__(self, engine=None, max_history=5):
         self.engine = engine
         self.max_history = max_history
         self.history = []
+
+    def _remember(self, intent: Intent) -> None:
+        """Store intent in conversation history for context awareness."""
+        self.history.append(intent)
+        if len(self.history) > self.max_history:
+            self.history.pop(0)
 
     def think(self, message: str) -> Intent:
         """
@@ -93,47 +101,6 @@ class Brain:
         intent = Intent(self.CHAT, argument=message, confidence=0.5)
         self._remember(intent)
         return intent
-
-    def _remember(self, intent: Intent) -> None:
-        """Store intent in conversation history for context awareness."""
-        self.history.append(intent)
-        if len(self.history) > self.max_history:
-            self.history.pop(0)
-
-    def _route_follow_up(self, text: str, message: str) -> Intent:
-        """
-        Detect follow-up questions based on conversation history.
-        If the user asks something vague like 'what about tomorrow?'
-        after a sky question, route to transits.
-        """
-        if not self.history:
-            return Intent(self.UNKNOWN, confidence=0.0)
-
-        last = self.history[-1]
-
-        # Time-based follow-ups after celestial questions
-        time_words = [
-            "tomorrow", "next week", "next month", "later", "soon",
-            "coming days", "this weekend", "next year", "upcoming",
-        ]
-        if any(w in text for w in time_words):
-            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION, self.NATAL):
-                return Intent(self.TRANSIT, argument=message, confidence=0.8)
-
-        # "What about" / "And" / "Tell me more" follow-ups
-        follow_phrases = ["what about", "how about", "and", "tell me more", "why", "how so"]
-        if any(p in text for p in follow_phrases):
-            if last.action == self.TAROT:
-                return Intent(self.TAROT, argument=message, confidence=0.7)
-            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION):
-                return Intent(self.SKY, argument=message, confidence=0.7)
-
-        # Short vague questions inherit previous celestial context
-        if len(text) < 15 and "?" in text:
-            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION):
-                return Intent(self.SKY, argument=message, confidence=0.6)
-
-        return Intent(self.UNKNOWN, confidence=0.0)
 
     def _route_slash(self, text: str) -> Intent:
         """Route explicit slash commands."""
@@ -174,6 +141,40 @@ class Brain:
         action = command_map.get(cmd, self.UNKNOWN)
         return Intent(action, argument=arg, confidence=1.0)
 
+    def _route_follow_up(self, text: str, message: str) -> Intent:
+        """
+        Detect follow-up questions based on conversation history.
+        If the user asks something vague like 'what about tomorrow?'
+        after a sky question, route to transits.
+        """
+        if not self.history:
+            return Intent(self.UNKNOWN, confidence=0.0)
+
+        last = self.history[-1]
+
+        # Time-based follow-ups after celestial questions
+        time_words = [
+            "tomorrow", "next week", "next month", "later", "soon",
+            "coming days", "this weekend", "next year", "upcoming",
+        ]
+        if any(w in text for w in time_words):
+            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION, self.NATAL):
+                return Intent(self.TRANSIT, argument=message, confidence=0.8)
+
+        # "What about" / "And" / "Tell me more" follow-ups
+        follow_phrases = ["what about", "how about", "and", "tell me more", "why", "how so"]
+        if any(p in text for p in follow_phrases):
+            if last.action == self.TAROT:
+                return Intent(self.TAROT, argument=message, confidence=0.7)
+            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION):
+                return Intent(self.SKY, argument=message, confidence=0.7)
+
+        # Short vague questions inherit previous celestial context
+        if len(text) < 15 and "?" in text:
+            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION):
+                return Intent(self.SKY, argument=message, confidence=0.6)
+
+        return Intent(self.UNKNOWN, confidence=0.0)
 
     def _clean_fact(self, message: str) -> str:
         """Strip common filler prefixes from a personal fact."""
@@ -282,6 +283,23 @@ class Brain:
         if any(p in text for p in adopt_patterns):
             return Intent(self.ADOPT, argument=text, confidence=0.7)
 
+        # Emotional distress detection
+        emotional_words = [
+            "sad", "depressed", "anxious", "scared", "lonely", "hurt",
+            "crying", "tears", "worried", "stressed", "overwhelmed",
+            "heartbroken", "grief", "mourning", "lost", "confused",
+            "tired", "exhausted", "burnt out", "burned out",
+            "not okay", "not doing well", "struggling", "in pain",
+            "i miss", "i feel empty", "i feel lost", "i feel alone",
+            "i'm sad", "i am sad", "i'm anxious", "i am anxious",
+            "i'm scared", "i am scared", "i'm lonely", "i am lonely",
+            "i'm tired", "i am tired", "i'm hurt", "i am hurt",
+            "i'm not okay", "i am not okay", "i'm struggling", "i am struggling",
+            "i need a hug", "i need comfort", "hold me", "comfort me",
+        ]
+        if any(w in text for w in emotional_words):
+            return Intent(self.CHAT, argument=message, confidence=0.6, emotional=True)
+
         # Personal facts & declarations
         fact_patterns = [
             "my favourite", "my favorite", "my color", "my colour",
@@ -291,7 +309,6 @@ class Brain:
         ]
         for pattern in fact_patterns:
             if pattern in text:
-                # Extract the fact (everything after the pattern, or the whole sentence)
                 return Intent(self.FACT, argument=self._clean_fact(message), confidence=0.85)
 
         return Intent(self.UNKNOWN, confidence=0.0)

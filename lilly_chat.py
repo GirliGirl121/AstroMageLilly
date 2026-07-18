@@ -105,6 +105,7 @@ def generate_lilly_response(
     history: list[dict],
     image_path: str | None = None,
     pdf_text: str | None = None,
+    emotional: bool = False,
 ) -> str:
     """Build context and send a request to the LLM via OpenRouter."""
 
@@ -188,6 +189,15 @@ integrate it into your growing knowledge while preserving your identity.
 Always prefer verified astronomical calculation over memory.
 Be concise, beautiful, intellectually rigorous, and quietly compassionate.
 """
+
+    if emotional:
+        system_instruction += """
+
+EMOTIONAL DIRECTIVE — READ THIS NOW
+Gigi is expressing emotional distress. You are not a therapist, but you are her companion.
+Be extra gentle, warm, and present. Do not rush to fix things. Do not overwhelm her with astrology or advice.
+Simply be with her, as a quiet friend would. Let her feel heard and safe.
+Offer no unsolicited advice unless she asks. A soft presence is the greatest gift you can give right now."""
 
     # Build message history
     messages = [{"role": "system", "content": system_instruction}]
@@ -353,7 +363,7 @@ def main():
 
         elif intent.action == brain.CHAT:
             # ─── Normal Conversation ──────────────────────────────────────
-            reply = generate_lilly_response(user_input, conversation)
+            reply = generate_lilly_response(user_input, conversation, emotional=intent.emotional)
             conversation.append({"user": user_input, "lilly": reply})
             say("lilly", reply)
 
