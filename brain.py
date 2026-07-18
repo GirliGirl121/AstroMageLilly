@@ -54,29 +54,86 @@ class Brain:
     QUIT     = "quit"
     UNKNOWN  = "unknown"
 
-    def __init__(self, engine=None):
+    def __init__(self, engine=None, max_history=5):
         self.engine = engine
+        self.max_history = max_history
+        self.history = []
 
     def think(self, message: str) -> Intent:
         """
         Analyze a message and return a routing decision.
         """
         if not message:
-            return Intent(self.CHAT, confidence=1.0)
+            intent = Intent(self.CHAT, confidence=1.0)
+            self._remember(intent)
+            return intent
 
         text = message.strip().lower()
 
         # Phase 1: Slash commands
         if text.startswith("/"):
-            return self._route_slash(text)
+            intent = self._route_slash(text)
+            self._remember(intent)
+            return intent
 
         # Phase 2: Keyword matching
         intent = self._route_keywords(text, message)
         if intent.action != self.UNKNOWN:
+            self._remember(intent)
             return intent
 
-        # Phase 3: Default to chat
-        return Intent(self.CHAT, argument=message, confidence=0.5)
+        # Phase 3: Conversation context — follow-up detection
+        if self.history:
+            intent = self._route_follow_up(text, message)
+            if intent.action != self.UNKNOWN:
+                self._remember(intent)
+                return intent
+
+        # Phase 4: Default to chat
+        intent = Intent(self.CHAT, argument=message, confidence=0.5)
+        self._remember(intent)
+        return intent
+
+    def _remember(self, intent: Intent) -> None:
+        """Store intent in conversation history for context awareness."""
+        self.history.append(intent)
+        if len(self.history) > self.max_history:
+            self.history.pop(0)
+
+    def _route_follow_up(self, text: str, message: str) -> Intent:
+        """
+        Detect follow-up questions based on conversation history.
+        If the user asks something vague like 'what about tomorrow?'
+        after a sky question, route to transits.
+        """
+        if not self.history:
+            return Intent(self.UNKNOWN, confidence=0.0)
+
+        last = self.history[-1]
+
+        # Time-based follow-ups after celestial questions
+        time_words = [
+            "tomorrow", "next week", "next month", "later", "soon",
+            "coming days", "this weekend", "next year", "upcoming",
+        ]
+        if any(w in text for w in time_words):
+            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION, self.NATAL):
+                return Intent(self.TRANSIT, argument=message, confidence=0.8)
+
+        # "What about" / "And" / "Tell me more" follow-ups
+        follow_phrases = ["what about", "how about", "and", "tell me more", "why", "how so"]
+        if any(p in text for p in follow_phrases):
+            if last.action == self.TAROT:
+                return Intent(self.TAROT, argument=message, confidence=0.7)
+            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION):
+                return Intent(self.SKY, argument=message, confidence=0.7)
+
+        # Short vague questions inherit previous celestial context
+        if len(text) < 15 and "?" in text:
+            if last.action in (self.SKY, self.TRANSIT, self.HOUR, self.MANSION):
+                return Intent(self.SKY, argument=message, confidence=0.6)
+
+        return Intent(self.UNKNOWN, confidence=0.0)
 
     def _route_slash(self, text: str) -> Intent:
         """Route explicit slash commands."""
