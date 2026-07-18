@@ -51,6 +51,7 @@ class Brain:
     RECALL   = "recall"
     ADOPT    = "adopt"
     PDF      = "pdf"
+    WEB      = "web"
     KNOWLEDGE = "knowledge"
     SAVE     = "save"
     CLEAR    = "clear"
@@ -230,6 +231,16 @@ class Brain:
         ]
         if any(p in text for p in pdf_patterns):
             return Intent(self.PDF, argument=message, confidence=0.9)
+
+        # Web search requests
+        web_patterns = [
+            "search", "look up", "find out", "what is", "who is", "where is",
+            "how do i", "how does", "how to", "learn about", "tell me about",
+            "explain", "what are", "when did", "why is", "latest news",
+            "current events", "recent", "update on", "information about",
+        ]
+        if any(p in text for p in web_patterns):
+            return Intent(self.WEB, argument=message, confidence=0.85)
 
         sky_words = [
             "sky", "stars", "heavens", "celestial", "planets",

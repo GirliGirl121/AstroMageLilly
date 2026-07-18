@@ -53,6 +53,7 @@ from lilly.commands import (
 )
 from lilly.knowledge_base import offline_answer
 from lilly.pdf_reader import read_pdf_for_llm, find_pdf, is_available
+from lilly.web_search import search_and_summarize
 from brain import Brain
 from llm import ask_llm
 
@@ -400,6 +401,34 @@ def main():
                         print(f"\n{Colors.WHITE}I am offline, Gigi. I can show you the text, but I cannot synthesize it without the LLM. When the stars return, ask me again and I shall weave it into wisdom.{Colors.RESET}")
             except Exception as e:
                 print(f"\n{Colors.WHITE}⚠ Could not read PDF: {e}{Colors.RESET}")
+            continue
+
+        elif intent.action == brain.WEB:
+            query = intent.argument.strip()
+            if not query:
+                print(f"\n{Colors.WHITE}⚠ What shall I search for, Gigi?{Colors.RESET}")
+                continue
+
+            print(f"\n{Colors.WHITE}🔍 Searching the web for: '{query}'...{Colors.RESET}")
+            try:
+                web_results = search_and_summarize(query, max_results=3)
+                print(f"{Colors.WHITE}   Found results. Synthesizing...{Colors.RESET}")
+
+                # Check if API is available
+                api_key = load_api_key()
+                if api_key:
+                    reply = generate_lilly_response(
+                        f"Gigi asked me to search the web for this topic. Here are the results. Please synthesize them into a warm, scholarly answer. Be accurate, cite sources, and admit uncertainty if the results are unclear.\n\n{web_results}",
+                        conversation,
+                    )
+                    conversation.append({"user": f"[Web search: {query}]", "lilly": reply})
+                    say("lilly", reply)
+                else:
+                    # Offline: show raw results
+                    print(f"\n{Colors.WHITE}{web_results}{Colors.RESET}")
+                    print(f"\n{Colors.WHITE}I am offline, Gigi. I can show you what I found, but I cannot synthesize it without the LLM.{Colors.RESET}")
+            except Exception as e:
+                print(f"\n{Colors.WHITE}⚠ Web search failed: {e}{Colors.RESET}")
             continue
 
         elif intent.action == brain.KNOWLEDGE:
