@@ -106,6 +106,38 @@ class Brain:
         action = command_map.get(cmd, self.UNKNOWN)
         return Intent(action, argument=arg, confidence=1.0)
 
+
+    def _clean_fact(self, message: str) -> str:
+        """Strip common filler prefixes from a personal fact."""
+        text = message.strip()
+        prefixes = [
+            "just so you know",
+            "just so you know,",
+            "just to let you know",
+            "just to let you know,",
+            "by the way",
+            "by the way,",
+            "for your information",
+            "for your information,",
+            "i want you to know",
+            "i want you to know,",
+            "i want you to know that",
+            "i want you to know that,",
+            "remember that",
+            "remember,",
+            "remember",
+            "fyi",
+            "fyi,",
+        ]
+        lower = text.lower()
+        for prefix in prefixes:
+            if lower.startswith(prefix):
+                text = text[len(prefix):].strip()
+                if text.lower().startswith("that"):
+                    text = text[4:].strip()
+                break
+        return text.strip(" .,;:!?")
+
     def _route_keywords(self, text: str, message: str = "") -> Intent:
         """Route based on keywords in natural language."""
 
@@ -192,6 +224,6 @@ class Brain:
         for pattern in fact_patterns:
             if pattern in text:
                 # Extract the fact (everything after the pattern, or the whole sentence)
-                return Intent(self.FACT, argument=message.strip(), confidence=0.85)
+                return Intent(self.FACT, argument=self._clean_fact(message), confidence=0.85)
 
         return Intent(self.UNKNOWN, confidence=0.0)
