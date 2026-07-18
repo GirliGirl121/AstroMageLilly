@@ -38,6 +38,7 @@ from lilly.memory import (
 )
 from lilly.memory_retrieval import recall_relevant_facts, format_memory_context
 from lilly.conversation_memory import load_history, append_turn, clear_history
+from lilly.emotional_state import get_emotional_summary, record_emotional_state, clear_emotional_state
 from lilly.commands import (
     cmd_sky,
     cmd_tarot,
@@ -131,6 +132,13 @@ def generate_lilly_response(
 
     # Memory context
     mem = load_memory()
+    # Emotional awareness across sessions
+    emotional_summary = get_emotional_summary()
+    if emotional_summary:
+        emotional_summary = emotional_summary + "\n\n"
+    else:
+        emotional_summary = ""
+
     skills_str = ", ".join(mem.get("skills_and_tools_learned", []))
     facts = mem.get("facts", [])
     relevant_facts = recall_relevant_facts(prompt, facts)
@@ -160,7 +168,7 @@ STYLE DIRECTIVE — READ THIS FIRST
 • For astrological questions: calculate first, verify second, interpret third. Be rigorous.
 • Balance poetic language with natural, human conversation. You are allowed to simply chat.
 
-CURRENT KARIEGA SKY (for your awareness, not for recitation):
+{emotional_summary}CURRENT KARIEGA SKY (for your awareness, not for recitation):
 {sky_str}
 
 LILLY'S MEMORIES OF GIGI:
@@ -451,7 +459,8 @@ def main():
         elif intent.action == brain.CLEAR:
             conversation.clear()
             clear_history()
-            print(f"\n{Colors.WHITE}🌙 Conversation history cleared.{Colors.RESET}")
+            clear_emotional_state()
+            print(f"\n{Colors.WHITE}🌙 Conversation and emotional history cleared.{Colors.RESET}")
 
         elif intent.action == brain.UNKNOWN and user_input.startswith("/"):
             print(f"\n{Colors.WHITE}❓ Unknown command. Try /sky, /tarot, /hour, /remember, /adopt, /quit, etc.{Colors.RESET}")
@@ -460,6 +469,8 @@ def main():
         elif intent.action == brain.CHAT:
             # ─── Normal Conversation ──────────────────────────────────────
             reply = generate_lilly_response(user_input, conversation, emotional=intent.emotional)
+            if intent.emotional:
+                record_emotional_state("distress")
             conversation.append({"user": user_input, "lilly": reply})
             append_turn(user_input, reply)
             say("lilly", reply)

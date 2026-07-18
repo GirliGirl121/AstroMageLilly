@@ -50,3 +50,6 @@ charts/natal_charts.json
 # Lilly conversation logs — user data, not code
 lilly_conversation_*.txt
 
+memory/conversations/
+memory/emotional_state.json
+lilly_conversation_*.txt
