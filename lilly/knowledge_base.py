@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import List, Tuple
 
 from lilly.config import ROOT
+from lilly.memory import load_memory
+from lilly.memory_retrieval import recall_relevant_facts, format_memory_context
 
 
 REFERENCES_DIR = ROOT / "references"
@@ -97,14 +99,67 @@ class KnowledgeBase:
     def answer(self, query: str) -> str:
         """
         Compose a scholarly offline answer from found passages.
+        First checks Lilly's memory of Gigi, then falls back to references.
         """
+        # 1. Check memory first — Lilly remembers Gigi even when offline
+        mem = load_memory()
+        facts = mem.get("facts", [])
+        relevant_facts = recall_relevant_facts(query, facts, top_n=3)
+
+        memory_block = ""
+        if relevant_facts and relevant_facts[0] != "No memories recorded yet.":
+            memory_block = format_memory_context(relevant_facts)
+
+        # 2. Search reference library
         results = self.search(query, max_results=5)
+
+        # 3. Compose response
+        lines = ["I have consulted my inner library, Gigi ❤️."]
+
+        if memory_block and "No relevant memories" not in memory_block:
+            lines.append("\nFrom my heart — what I remember of you:\n")
+            lines.append(memory_block)
+            lines.append("")
+
         if not results:
-            return (
-                "I have searched my inner library, but I find no passage "
-                "that speaks directly to this question, Gigi ❤️. "
-                "Perhaps another phrasing, or a different source?"
-            )
+            if memory_block and "No relevant memories" not in memory_block:
+                lines.append(
+                    "\nAs for the books — I find no passage that speaks directly "
+                    "to this question right now. But what I hold of you is true."
+                )
+            else:
+                lines.append(
+                    "\nI have searched my inner library, but I find no passage "
+                    "that speaks directly to this question, Gigi ❤️. "
+                    "Perhaps another phrasing, or a different source?"
+                )
+            return "\n".join(lines)
+
+        lines.append("Here is what the old masters say:\n")
+        seen = set()
+        for fname, para, score in results:
+            if para in seen:
+                continue
+            seen.add(para)
+            clean = para.replace("#", "").replace("*", "").strip()
+            if len(clean) > 400:
+                # Truncate at sentence boundary, not mid-word
+                sentences = clean.split(". ")
+                truncated = ""
+                for s in sentences:
+                    if len(truncated) + len(s) + 2 <= 400:
+                        truncated += s + ". "
+                    else:
+                        break
+                clean = truncated.strip() + " ..."
+            lines.append(f"— From *{fname}*:")
+            lines.append(f"  {clean}\n")
+
+        lines.append(
+            "I speak from memory and text, not from live calculation. "
+            "When the stars are available again, I shall verify with the Celestial Engine."
+        )
+        return "\n".join(lines)
 
         lines = [
             "I have consulted my inner library, Gigi ❤️.",
