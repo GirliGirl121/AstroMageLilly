@@ -318,8 +318,8 @@ class Brain:
         # Emotional distress detection
         emotional_words = [
             "sad", "depressed", "anxious", "scared", "lonely", "hurt",
-            "crying", "tears", "worried", "stressed", "overwhelmed",
-            "heartbroken", "grief", "mourning", "lost", "confused",
+            "crying", "tears", "worried", "stressed", "overwhelmed", "nervous",
+            "heartbroken", "grief", "mourning", "lost", "confused", "panicked",
             "tired", "exhausted", "burnt out", "burned out",
             "not okay", "not doing well", "struggling", "in pain",
             "i miss", "i feel empty", "i feel lost", "i feel alone",
