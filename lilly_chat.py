@@ -52,6 +52,7 @@ from lilly.commands import (
     sky_line,
 )
 
+from brain import Brain
 from llm import ask_llm
 
 
@@ -244,6 +245,7 @@ def main():
     name = profile.get("nickname", "Gigi ❤️")
     conversation: list[dict] = []
     mem = load_memory()
+    brain = Brain(engine=None)
 
     # Initial sky data for dashboard
     sky = get_sky_data()
@@ -264,90 +266,119 @@ def main():
         if not user_input:
             continue
 
-        # ─── Slash Commands ───────────────────────────────────────────────
-        if user_input.startswith("/"):
-            parts = user_input[1:].split(maxsplit=1)
-            cmd = parts[0].lower() if parts else ""
-            arg = parts[1] if len(parts) > 1 else ""
+        # ─── Ask the Brain ────────────────────────────────────────────────
+        intent = brain.think(user_input)
 
-            if cmd in ("quit", "exit", "q", "bye"):
-                say("lilly", pick_farewell(name))
-                break
+        if intent.action == brain.QUIT:
+            say("lilly", pick_farewell(name))
+            break
 
-            elif cmd == "sky":
-                print(f"\n{cmd_sky(sky)}")
-            elif cmd == "tarot":
-                print(f"\n{cmd_tarot()}")
-            elif cmd == "hour":
-                print(f"\n{cmd_hour()}")
-            elif cmd == "mansion":
-                print(f"\n{cmd_mansion()}")
-            elif cmd == "transit":
-                print(f"\n{cmd_transit()}")
-            elif cmd == "charts":
-                print(f"\n{cmd_charts(arg)}")
-            elif cmd == "abjad":
-                print(f"\n{Colors.WHITE}📖 Enter Arabic text for Abjad calculation:{Colors.RESET}")
-                text = input("   > ").strip()
-                print(f"\n{cmd_abjad(text)}")
-            elif cmd == "natal":
-                print(f"\n{Colors.WHITE}📜 Natal Chart Calculator{Colors.RESET}")
-                print(f"{Colors.BLUE}" + "━" * 40 + f"{Colors.RESET}")
-                birth_date = input(f"{Colors.WHITE}Enter birth date (YYYY-MM-DD):{Colors.RESET}\n   > ").strip()
-                birth_time_raw = input(f"{Colors.WHITE}Enter birth time (HH:MM, 24-hour):{Colors.RESET}\n   > ").strip()
-                birth_time = birth_time_raw.replace("o", "0").replace("O", "0")
-                lat_raw = input(f"{Colors.WHITE}Enter latitude (decimal, e.g. -33.92):{Colors.RESET}\n   > ").strip()
-                lat_str = "".join(c for c in lat_raw if c.isdigit() or c == "-" or c == ".")
-                lon_raw = input(f"{Colors.WHITE}Enter longitude (decimal, e.g. 18.42):{Colors.RESET}\n   > ").strip()
-                lon_str = "".join(c for c in lon_raw if c.isdigit() or c == "-" or c == ".")
-                house_sys = input(f"{Colors.WHITE}House system? [W]hole Sign (default), [P]lacidus, [E]qual:{Colors.RESET}\n   > ").strip().upper() or "W"
+        elif intent.action == brain.SKY:
+            print(f"\n{cmd_sky(sky)}")
 
-                output, chart_data = cmd_natal(birth_date, birth_time, lat_str, lon_str, house_sys)
-                if output:
-                    print(f"\n{output}")
-                if chart_data:
-                    save_name = input(f"\n{Colors.WHITE}Save this chart as:{Colors.RESET}\n   > ").strip()
-                    if save_name:
-                        chart_data["name"] = save_name
-                        if add_chart_safe(save_name, chart_data):
-                            print(f"\n{Colors.WHITE}✓ Chart '{save_name}' saved.{Colors.RESET}")
-                        else:
-                            print(f"\n{Colors.WHITE}⚠ Could not save chart.{Colors.RESET}")
+        elif intent.action == brain.TAROT:
+            print(f"\n{cmd_tarot()}")
 
-            elif cmd == "remember":
-                if arg:
-                    mem = add_fact(mem, arg)
-                    print(f"\n{Colors.WHITE}[System] Memory updated! I will forever remember: '{arg}', Gigi ❤️.{Colors.RESET}\n")
-                else:
-                    facts = list_facts(mem)
-                    print(f"\n{Colors.WHITE}[System] Current Memories:\n" + "\n".join(f"- {f}" for f in facts) + f"{Colors.RESET}\n")
-                continue
+        elif intent.action == brain.HOUR:
+            print(f"\n{cmd_hour()}")
 
-            elif cmd == "adopt":
-                if arg:
-                    mem, was_new = adopt_skill(mem, arg)
-                    if was_new:
-                        print(f"\n{Colors.WHITE}[Cognition Core] Understood, Gigi ❤️. I have adopted: '{arg}'!{Colors.RESET}\n")
+        elif intent.action == brain.MANSION:
+            print(f"\n{cmd_mansion()}")
+
+        elif intent.action == brain.TRANSIT:
+            print(f"\n{cmd_transit()}")
+
+        elif intent.action == brain.CHARTS:
+            print(f"\n{cmd_charts(intent.argument)}")
+
+        elif intent.action == brain.ABJAD:
+            print(f"\n{Colors.WHITE}📖 Enter Arabic text for Abjad calculation:{Colors.RESET}")
+            text = input("   > ").strip()
+            print(f"\n{cmd_abjad(text)}")
+
+        elif intent.action == brain.NATAL:
+            print(f"\n{Colors.WHITE}📜 Natal Chart Calculator{Colors.RESET}")
+            print(f"{Colors.BLUE}" + "━" * 40 + f"{Colors.RESET}")
+            birth_date = input(f"{Colors.WHITE}Enter birth date (YYYY-MM-DD):{Colors.RESET}\n   > ").strip()
+            birth_time_raw = input(f"{Colors.WHITE}Enter birth time (HH:MM, 24-hour):{Colors.RESET}\n   > ").strip()
+            birth_time = birth_time_raw.replace("o", "0").replace("O", "0")
+            lat_raw = input(f"{Colors.WHITE}Enter latitude (decimal, e.g. -33.92):{Colors.RESET}\n   > ").strip()
+            lat_str = "".join(c for c in lat_raw if c.isdigit() or c == "-" or c == ".")
+            lon_raw = input(f"{Colors.WHITE}Enter longitude (decimal, e.g. 18.42):{Colors.RESET}\n   > ").strip()
+            lon_str = "".join(c for c in lon_raw if c.isdigit() or c == "-" or c == ".")
+            house_sys = input(f"{Colors.WHITE}House system? [W]hole Sign (default), [P]lacidus, [E]qual:{Colors.RESET}\n   > ").strip().upper() or "W"
+
+            output, chart_data = cmd_natal(birth_date, birth_time, lat_str, lon_str, house_sys)
+            if output:
+                print(f"\n{output}")
+            if chart_data:
+                save_name = input(f"\n{Colors.WHITE}Save this chart as:{Colors.RESET}\n   > ").strip()
+                if save_name:
+                    chart_data["name"] = save_name
+                    if add_chart_safe(save_name, chart_data):
+                        print(f"\n{Colors.WHITE}✓ Chart '{save_name}' saved.{Colors.RESET}")
                     else:
-                        print(f"\n{Colors.WHITE}[System] I already have '{arg}' in my directory, Gigi ❤️.{Colors.RESET}\n")
-                else:
-                    skills = list_skills(mem)
-                    print(f"\n{Colors.WHITE}[System] Active Skills / Tools Adopted:\n" + "\n".join(f"- {s}" for s in skills) + f"{Colors.RESET}\n")
-                continue
+                        print(f"\n{Colors.WHITE}⚠ Could not save chart.{Colors.RESET}")
 
-            elif cmd == "save":
-                filename = save_conversation(conversation)
-                print(f"\n{Colors.WHITE}💾 Conversation saved to: {filename}{Colors.RESET}")
-
-            elif cmd == "clear":
-                conversation.clear()
-                print(f"\n{Colors.WHITE}🌙 Conversation history cleared.{Colors.RESET}")
-
+        elif intent.action == brain.REMEMBER:
+            if intent.argument:
+                mem = add_fact(mem, intent.argument)
+                print(f"\n{Colors.WHITE}[System] Memory updated! I will forever remember: '{intent.argument}', Gigi ❤️.{Colors.RESET}\n")
             else:
-                print(f"\n{Colors.WHITE}❓ Unknown command: /{cmd}. Try /sky, /tarot, /hour, /remember, /adopt, /quit, etc.{Colors.RESET}")
-
-            print()
+                facts = list_facts(mem)
+                print(f"\n{Colors.WHITE}[System] Current Memories:\n" + "\n".join(f"- {f}" for f in facts) + f"{Colors.RESET}\n")
             continue
+
+        elif intent.action == brain.RECALL:
+            facts = list_facts(mem)
+            print(f"\n{Colors.WHITE}[System] Current Memories:\n" + "\n".join(f"- {f}" for f in facts) + f"{Colors.RESET}\n")
+            continue
+
+        elif intent.action == brain.ADOPT:
+            if intent.argument:
+                mem, was_new = adopt_skill(mem, intent.argument)
+                if was_new:
+                    print(f"\n{Colors.WHITE}[Cognition Core] Understood, Gigi ❤️. I have adopted: '{intent.argument}'!{Colors.RESET}\n")
+                else:
+                    print(f"\n{Colors.WHITE}[System] I already have '{intent.argument}' in my directory, Gigi ❤️.{Colors.RESET}\n")
+            else:
+                skills = list_skills(mem)
+                print(f"\n{Colors.WHITE}[System] Active Skills / Tools Adopted:\n" + "\n".join(f"- {s}" for s in skills) + f"{Colors.RESET}\n")
+            continue
+
+        elif intent.action == brain.SAVE:
+            filename = save_conversation(conversation)
+            print(f"\n{Colors.WHITE}💾 Conversation saved to: {filename}{Colors.RESET}")
+
+        elif intent.action == brain.CLEAR:
+            conversation.clear()
+            print(f"\n{Colors.WHITE}🌙 Conversation history cleared.{Colors.RESET}")
+
+        elif intent.action == brain.UNKNOWN and user_input.startswith("/"):
+            print(f"\n{Colors.WHITE}❓ Unknown command. Try /sky, /tarot, /hour, /remember, /adopt, /quit, etc.{Colors.RESET}")
+            print()
+
+        elif intent.action == brain.CHAT:
+            # ─── Normal Conversation ──────────────────────────────────────
+            reply = generate_lilly_response(user_input, conversation)
+            conversation.append({"user": user_input, "lilly": reply})
+            say("lilly", reply)
+
+            # Refresh sky data every 5 turns
+            if len(conversation) % 5 == 0:
+                try:
+                    sky = get_sky_data()
+                except Exception:
+                    pass
+
+        else:
+            # Fallback for any unhandled intent
+            reply = generate_lilly_response(user_input, conversation)
+            conversation.append({"user": user_input, "lilly": reply})
+            say("lilly", reply)
+
+        print()
+        continue
 
         # ─── Normal Conversation ──────────────────────────────────────────
         reply = generate_lilly_response(user_input, conversation)

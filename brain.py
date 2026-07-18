@@ -1,81 +1,184 @@
 """
 brain.py
-LILLY Cognitive Brain
+Lilly's Cognitive Router — her "mind" for deciding how to respond.
 
-This module decides HOW Lilly should answer.
-It never calculates astrology itself.
+Why this file exists:
+    In software architecture, a "router" decides where traffic goes.
+    Lilly's brain reads your message, understands your intent, and
+    routes it to the right module. It does NOT calculate astrology,
+    draw tarot cards, or call the LLM. It just decides WHO should.
 """
 
-from datetime import datetime
-from llm import ask_llm
+from dataclasses import dataclass
+
+
+@dataclass
+class Intent:
+    """
+    A decision produced by the brain.
+
+    Attributes:
+        action:     What Lilly should do (e.g., "chat", "sky", "tarot").
+        argument:   Extra data extracted from the message.
+        confidence: How certain the brain is (1.0 = sure, 0.0 = guessing).
+    """
+    action: str
+    argument: str = ""
+    confidence: float = 1.0
+
 
 class Brain:
+    """
+    Lilly's cognitive core.
 
-    def __init__(self, engine, responder=None):
+    Design philosophy:
+        Keep it simple. No external libraries. No neural networks yet.
+        Just clean keyword matching and pattern recognition.
+    """
+
+    CHAT     = "chat"
+    SKY      = "sky"
+    TAROT    = "tarot"
+    HOUR     = "hour"
+    MANSION  = "mansion"
+    TRANSIT  = "transit"
+    NATAL    = "natal"
+    ABJAD    = "abjad"
+    CHARTS   = "charts"
+    REMEMBER = "remember"
+    RECALL   = "recall"
+    ADOPT    = "adopt"
+    SAVE     = "save"
+    CLEAR    = "clear"
+    QUIT     = "quit"
+    UNKNOWN  = "unknown"
+
+    def __init__(self, engine=None):
         self.engine = engine
-        self.responder = responder
 
-    def think(self, question: str, history=None) -> str:
+    def think(self, message: str) -> Intent:
         """
-        Main reasoning function.
+        Analyze a message and return a routing decision.
         """
+        if not message:
+            return Intent(self.CHAT, confidence=1.0)
 
-        q = question.lower()
+        text = message.strip().lower()
 
-        # Always obtain fresh celestial data
-        sky = self.engine.live()
+        # Phase 1: Slash commands
+        if text.startswith("/"):
+            return self._route_slash(text)
 
-        if any(word in q for word in [
-            "sky",
-            "planet",
-            "today",
-            "transit",
-            "moon",
-            "sun",
-            "astrology",
-            "spiritual",
-            "hour",
-            "mansion"
-        ]):
-            return self.interpret_sky(sky, question)
+        # Phase 2: Keyword matching
+        intent = self._route_keywords(text)
+        if intent.action != self.UNKNOWN:
+            return intent
 
-        if self.responder:
-            return self.responder(question, history)
+        # Phase 3: Default to chat
+        return Intent(self.CHAT, argument=message, confidence=0.5)
 
-        return (
-            "My reasoning core is awake, but my language core is not connected yet."
-        )
+    def _route_slash(self, text: str) -> Intent:
+        """Route explicit slash commands."""
+        parts = text[1:].split(maxsplit=1)
+        cmd = parts[0] if parts else ""
+        arg = parts[1] if len(parts) > 1 else ""
 
-    def interpret_sky(self, sky, question):
+        command_map = {
+            "sky": self.SKY,
+            "tarot": self.TAROT,
+            "hour": self.HOUR,
+            "mansion": self.MANSION,
+            "transit": self.TRANSIT,
+            "natal": self.NATAL,
+            "abjad": self.ABJAD,
+            "charts": self.CHARTS,
+            "remember": self.REMEMBER,
+            "adopt": self.ADOPT,
+            "save": self.SAVE,
+            "clear": self.CLEAR,
+            "quit": self.QUIT,
+            "exit": self.QUIT,
+            "q": self.QUIT,
+            "bye": self.QUIT,
+        }
 
-        asc = sky["ascendant"]
-        moon = sky["planets"]["Moon"]
-        sun = sky["planets"]["Sun"]
+        action = command_map.get(cmd, self.UNKNOWN)
+        return Intent(action, argument=arg, confidence=1.0)
 
-        return f"""
-My dear Gigi ❤️,
+    def _route_keywords(self, text: str) -> Intent:
+        """Route based on keywords in natural language."""
 
-I have consulted my Celestial Engine.
+        sky_words = [
+            "sky", "stars", "heavens", "celestial", "planets",
+            "what's up there", "above us", "cosmos", "firmament",
+        ]
+        if any(w in text for w in sky_words):
+            return Intent(self.SKY, confidence=0.9)
 
-Verified Time:
-{sky['timestamp']}
+        tarot_words = [
+            "tarot", "card", "draw a card", "reading", "spread",
+            "what do the cards say", "fortune", "divination",
+        ]
+        if any(w in text for w in tarot_words):
+            return Intent(self.TAROT, confidence=0.9)
 
-Ascendant:
-{asc['sign']} {asc['degree']:.2f}°
+        hour_words = [
+            "planetary hour", "what hour is it", "ruling hour",
+            "hour of", "which planet rules",
+        ]
+        if any(w in text for w in hour_words):
+            return Intent(self.HOUR, confidence=0.9)
 
-Sun:
-{sun['sign']} {sun['degree']:.2f}°
-House {sun['house']}
+        mansion_words = [
+            "lunar mansion", "moon mansion", "manzil", "nakshatra",
+            "where is the moon",
+        ]
+        if any(w in text for w in mansion_words):
+            return Intent(self.MANSION, confidence=0.9)
 
-Moon:
-{moon['sign']} {moon['degree']:.2f}°
-House {moon['house']}
+        transit_words = [
+            "transit", "upcoming", "what's coming", "forecast",
+            "prediction", "what should i watch for",
+        ]
+        if any(w in text for w in transit_words):
+            return Intent(self.TRANSIT, confidence=0.85)
 
-Planetary Hour:
-{sky['planetary_hour']['planet']}
+        natal_words = [
+            "natal chart", "birth chart", "my chart", "cast a chart",
+            "calculate chart", "horoscope",
+        ]
+        if any(w in text for w in natal_words):
+            return Intent(self.NATAL, confidence=0.9)
 
-Lunar Mansion:
-{sky['lunar_mansion']['name']}
+        abjad_words = [
+            "abjad", "numerology", "calculate", "taksir", "taksīr",
+            "letter value", "arabic number",
+        ]
+        if any(w in text for w in abjad_words):
+            return Intent(self.ABJAD, confidence=0.9)
 
-Only after confirming these verified positions do I begin my interpretation.
-"""
+        remember_patterns = [
+            "remember that", "don't forget", "keep in mind",
+            "i want you to remember", "note that",
+        ]
+        for pattern in remember_patterns:
+            if pattern in text:
+                idx = text.find(pattern) + len(pattern)
+                fact = text[idx:].strip(" .")
+                return Intent(self.REMEMBER, argument=fact, confidence=0.9)
+
+        recall_patterns = [
+            "what do you remember", "my memories", "what do you know about me",
+            "tell me what you remember", "recall",
+        ]
+        if any(p in text for p in recall_patterns):
+            return Intent(self.RECALL, confidence=0.9)
+
+        adopt_patterns = [
+            "adopt", "learn this", "teach you", "new skill",
+            "i want you to learn",
+        ]
+        if any(p in text for p in adopt_patterns):
+            return Intent(self.ADOPT, argument=text, confidence=0.7)
+
+        return Intent(self.UNKNOWN, confidence=0.0)
