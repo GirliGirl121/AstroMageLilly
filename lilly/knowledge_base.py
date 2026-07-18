@@ -16,6 +16,7 @@ from typing import List, Tuple
 from lilly.config import ROOT
 from lilly.memory import load_memory
 from lilly.memory_retrieval import recall_relevant_facts, format_memory_context
+from lilly.offline_companion import emotional_response
 
 
 REFERENCES_DIR = ROOT / "references"
@@ -96,11 +97,15 @@ class KnowledgeBase:
         results.sort(key=lambda x: x[2], reverse=True)
         return results[:max_results]
 
-    def answer(self, query: str) -> str:
+    def answer(self, query: str, emotional: bool = False) -> str:
         """
         Compose a scholarly offline answer from found passages.
         First checks Lilly's memory of Gigi, then falls back to references.
         """
+        # 0. Emotional gate — if Gigi needs presence, not knowledge
+        if emotional:
+            return emotional_response()
+
         # 1. Check memory first — Lilly remembers Gigi even when offline
         mem = load_memory()
         facts = mem.get("facts", [])
@@ -198,6 +203,6 @@ def search_knowledge(query: str, max_results: int = 3) -> List[Tuple[str, str, i
     return get_kb().search(query, max_results)
 
 
-def offline_answer(query: str) -> str:
-    return get_kb().answer(query)
+def offline_answer(query: str, emotional: bool = False) -> str:
+    return get_kb().answer(query, emotional=emotional)
 

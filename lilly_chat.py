@@ -123,7 +123,7 @@ def generate_lilly_response(
     api_key = load_api_key()
     if not api_key:
         # Fallback to offline scholarly knowledge base
-        return offline_answer(prompt)
+        return offline_answer(prompt, emotional=emotional)
 
     # Celestial context
     sky = get_sky_data()
@@ -434,7 +434,7 @@ def main():
             continue
 
         elif intent.action == brain.KNOWLEDGE:
-            print(f"\n{offline_answer(intent.argument)}")
+            print(f"\n{offline_answer(intent.argument, emotional=intent.emotional)}")
             continue
 
         elif intent.action == brain.FACT:
