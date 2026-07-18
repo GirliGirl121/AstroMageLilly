@@ -52,6 +52,7 @@ from lilly.commands import (
     sky_line,
 )
 from lilly.knowledge_base import offline_answer
+from lilly.pdf_reader import read_pdf_for_llm, find_pdf, is_available
 from brain import Brain
 from llm import ask_llm
 
@@ -337,6 +338,68 @@ def main():
             else:
                 skills = list_skills(mem)
                 print(f"\n{Colors.WHITE}[System] Active Skills / Tools Adopted:\n" + "\n".join(f"- {s}" for s in skills) + f"{Colors.RESET}\n")
+            continue
+
+        elif intent.action == brain.PDF:
+            pdf_arg = intent.argument.strip()
+            # Try to extract a path from the message
+            pdf_path = ""
+            if pdf_arg.startswith("/"):
+                pdf_path = pdf_arg
+            elif pdf_arg.lower().endswith(".pdf"):
+                pdf_path = pdf_arg
+            else:
+                # Ask for path
+                print(f"\n{Colors.WHITE}📖 Which PDF shall I read, Gigi?")
+                print(f"   I'll search your Lilly_Vault folder on the SD card.{Colors.RESET}")
+                pdf_path = input("   > ").strip().lstrip("> ").strip()
+
+            if not pdf_path:
+                print(f"\n{Colors.WHITE}⚠ No PDF path given.{Colors.RESET}")
+                continue
+
+            # If not a full path, search for it
+            if not pdf_path.startswith("/"):
+                from pathlib import Path
+                # Search recursively within Gigi's Lilly_Vault only
+                search_dirs = [
+                    Path.home() / "storage" / "external-1" / "Lilly_Vault",
+                ]
+                found = find_pdf(pdf_path, search_dirs)
+                if found:
+                    pdf_path = str(found)
+                    print(f"   {Colors.WHITE}Found: {pdf_path}{Colors.RESET}")
+                else:
+                    print(f"\n{Colors.WHITE}⚠ Could not find '{pdf_path}' in your Lilly_Vault folder.{Colors.RESET}")
+                    continue
+
+            # Read the PDF
+            try:
+                if not is_available():
+                    print(f"\n{Colors.WHITE}⚠ PyPDF2 is not installed. Run: pip install PyPDF2{Colors.RESET}")
+                    continue
+
+                pdf_text = read_pdf_for_llm(pdf_path)
+                print(f"\n{Colors.WHITE}📖 Reading {pdf_path} ({len(pdf_text)} characters)...{Colors.RESET}")
+
+                # Check if API is available
+                api_key = load_api_key()
+                if api_key:
+                    reply = generate_lilly_response(
+                        f"Please read and discuss this PDF document. Summarize its key points and share anything relevant to astrology, occult science, or spiritual practice.\n\n[PDF CONTENT]:\n{pdf_text}",
+                        conversation,
+                        pdf_text=pdf_text,
+                    )
+                    conversation.append({"user": f"[PDF: {pdf_path}]", "lilly": reply})
+                    say("lilly", reply)
+                else:
+                    # Offline mode: show extracted text directly
+                    print(f"\n{Colors.WHITE}{pdf_text[:2000]}{Colors.RESET}")
+                    if len(pdf_text) > 2000:
+                        print(f"\n{Colors.WHITE}[... {len(pdf_text) - 2000} more characters ...]{Colors.RESET}")
+                        print(f"\n{Colors.WHITE}I am offline, Gigi. I can show you the text, but I cannot synthesize it without the LLM. When the stars return, ask me again and I shall weave it into wisdom.{Colors.RESET}")
+            except Exception as e:
+                print(f"\n{Colors.WHITE}⚠ Could not read PDF: {e}{Colors.RESET}")
             continue
 
         elif intent.action == brain.KNOWLEDGE:

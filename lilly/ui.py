@@ -155,7 +155,7 @@ def print_dashboard(sky: dict | None, skills_count: int = 0):
     print(f"{C.BLUE}{single}")
     print(f"{C.WHITE}📚 KNOWLEDGE LIBRARY")
     print("   ✓ Astrology        ✓ Tarot")
-    print("   ✓ Abjad            ○ PDF Research")
+    print("   ✓ Abjad            ✓ PDF Research")
     print("   ○ Vision Analysis  ○ Local Documents")
     print(f"{C.BLUE}{double}{C.RESET}")
     print("Commands")

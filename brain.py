@@ -50,6 +50,7 @@ class Brain:
     REMEMBER = "remember"
     RECALL   = "recall"
     ADOPT    = "adopt"
+    PDF      = "pdf"
     KNOWLEDGE = "knowledge"
     SAVE     = "save"
     CLEAR    = "clear"
@@ -218,6 +219,17 @@ class Brain:
             return Intent(self.KNOWLEDGE, argument=message, confidence=0.85)
         if "explain" in text and any(w in text for w in ["picatrix", "al-biruni", "al biruni", "al-buni", "al buni", "abu mashar", "tukhi", "ibn arabi", "shams al-maarif"]):
             return Intent(self.KNOWLEDGE, argument=message, confidence=0.85)
+
+        # PDF reading requests
+        pdf_patterns = [
+            "read pdf", "read my pdf", "read this pdf", "read the pdf",
+            "read book", "read my book", "read this book", "read the book",
+            "open pdf", "open book", "pdf file", "read document",
+            "read the file", "summarize pdf", "summarize this pdf", "summarize book", "summarize this book",
+            "what does this pdf say", "what does this book say",
+        ]
+        if any(p in text for p in pdf_patterns):
+            return Intent(self.PDF, argument=message, confidence=0.9)
 
         sky_words = [
             "sky", "stars", "heavens", "celestial", "planets",
