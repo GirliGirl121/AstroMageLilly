@@ -1,0 +1,260 @@
+{
+  "planets": {
+    "Sun": {
+      "keywords": [
+        "identity",
+        "vitality",
+        "conscious will",
+        "ego",
+        "life force"
+      ],
+      "phrase": "Your core identity and conscious purpose"
+    },
+    "Moon": {
+      "keywords": [
+        "emotions",
+        "instincts",
+        "nurturing",
+        "subconscious",
+        "habits"
+      ],
+      "phrase": "Your emotional nature and deepest needs"
+    },
+    "Mercury": {
+      "keywords": [
+        "mind",
+        "communication",
+        "reasoning",
+        "perception",
+        "learning"
+      ],
+      "phrase": "Your mind and way of communicating"
+    },
+    "Venus": {
+      "keywords": [
+        "love",
+        "beauty",
+        "harmony",
+        "values",
+        "pleasure"
+      ],
+      "phrase": "Your way of loving and what you value"
+    },
+    "Mars": {
+      "keywords": [
+        "drive",
+        "action",
+        "courage",
+        "aggression",
+        "desire"
+      ],
+      "phrase": "Your drive and how you take action"
+    },
+    "Jupiter": {
+      "keywords": [
+        "expansion",
+        "wisdom",
+        "luck",
+        "philosophy",
+        "growth"
+      ],
+      "phrase": "Your path of growth and wisdom"
+    },
+    "Saturn": {
+      "keywords": [
+        "discipline",
+        "limitation",
+        "structure",
+        "maturity",
+        "karma"
+      ],
+      "phrase": "Your lessons in discipline and maturity"
+    }
+  },
+  "signs": {
+    "Aries": {
+      "element": "Fire",
+      "modality": "Cardinal",
+      "keywords": [
+        "bold",
+        "initiating",
+        "courageous",
+        "impulsive"
+      ],
+      "ruler": "Mars"
+    },
+    "Taurus": {
+      "element": "Earth",
+      "modality": "Fixed",
+      "keywords": [
+        "steady",
+        "sensual",
+        "patient",
+        "stubborn"
+      ],
+      "ruler": "Venus"
+    },
+    "Gemini": {
+      "element": "Air",
+      "modality": "Mutable",
+      "keywords": [
+        "curious",
+        "adaptable",
+        "communicative",
+        "restless"
+      ],
+      "ruler": "Mercury"
+    },
+    "Cancer": {
+      "element": "Water",
+      "modality": "Cardinal",
+      "keywords": [
+        "nurturing",
+        "protective",
+        "emotional",
+        "intuitive"
+      ],
+      "ruler": "Moon"
+    },
+    "Leo": {
+      "element": "Fire",
+      "modality": "Fixed",
+      "keywords": [
+        "radiant",
+        "creative",
+        "proud",
+        "generous"
+      ],
+      "ruler": "Sun"
+    },
+    "Virgo": {
+      "element": "Earth",
+      "modality": "Mutable",
+      "keywords": [
+        "precise",
+        "analytical",
+        "helpful",
+        "perfectionist"
+      ],
+      "ruler": "Mercury"
+    },
+    "Libra": {
+      "element": "Air",
+      "modality": "Cardinal",
+      "keywords": [
+        "harmonious",
+        "diplomatic",
+        "aesthetic",
+        "indecisive"
+      ],
+      "ruler": "Venus"
+    },
+    "Scorpio": {
+      "element": "Water",
+      "modality": "Fixed",
+      "keywords": [
+        "intense",
+        "transformative",
+        "perceptive",
+        "secretive"
+      ],
+      "ruler": "Mars/Pluto"
+    },
+    "Sagittarius": {
+      "element": "Fire",
+      "modality": "Mutable",
+      "keywords": [
+        "expansive",
+        "philosophical",
+        "adventurous",
+        "blunt"
+      ],
+      "ruler": "Jupiter"
+    },
+    "Capricorn": {
+      "element": "Earth",
+      "modality": "Cardinal",
+      "keywords": [
+        "ambitious",
+        "disciplined",
+        "practical",
+        "reserved"
+      ],
+      "ruler": "Saturn"
+    },
+    "Aquarius": {
+      "element": "Air",
+      "modality": "Fixed",
+      "keywords": [
+        "innovative",
+        "detached",
+        "humanitarian",
+        "unconventional"
+      ],
+      "ruler": "Saturn/Uranus"
+    },
+    "Pisces": {
+      "element": "Water",
+      "modality": "Mutable",
+      "keywords": [
+        "compassionate",
+        "imaginative",
+        "sensitive",
+        "elusive"
+      ],
+      "ruler": "Jupiter/Neptune"
+    }
+  },
+  "houses": {
+    "1": "self, body, personality, approach to life, appearance",
+    "2": "resources, values, money, self-worth, possessions",
+    "3": "communication, siblings, short journeys, early education, neighborhood",
+    "4": "home, roots, family, inner security, the mother, endings",
+    "5": "creativity, romance, children, pleasure, self-expression, play",
+    "6": "work, health, service, daily routines, habits, small animals",
+    "7": "partnership, marriage, open enemies, contracts, significant others",
+    "8": "transformation, shared resources, death, rebirth, the occult, inheritance",
+    "9": "higher learning, philosophy, travel, spirituality, foreign cultures, wisdom",
+    "10": "career, public standing, authority, achievement, the father, legacy",
+    "11": "friends, groups, hopes, community, humanitarian causes, the future",
+    "12": "the unconscious, solitude, hidden enemies, spiritual retreat, self-undoing, karma"
+  },
+  "dignities": {
+    "domicile": {
+      "Sun": "Leo",
+      "Moon": "Cancer",
+      "Mercury": "Gemini/Virgo",
+      "Venus": "Taurus/Libra",
+      "Mars": "Aries/Scorpio",
+      "Jupiter": "Sagittarius/Pisces",
+      "Saturn": "Capricorn/Aquarius"
+    },
+    "exaltation": {
+      "Sun": "Aries",
+      "Moon": "Taurus",
+      "Mercury": "Virgo",
+      "Venus": "Pisces",
+      "Mars": "Capricorn",
+      "Jupiter": "Cancer",
+      "Saturn": "Libra"
+    },
+    "detriment": {
+      "Sun": "Aquarius",
+      "Moon": "Capricorn",
+      "Mercury": "Sagittarius/Pisces",
+      "Venus": "Aries/Scorpio",
+      "Mars": "Taurus/Libra",
+      "Jupiter": "Gemini/Virgo",
+      "Saturn": "Cancer/Leo"
+    },
+    "fall": {
+      "Sun": "Libra",
+      "Moon": "Scorpio",
+      "Mercury": "Pisces",
+      "Venus": "Virgo",
+      "Mars": "Cancer",
+      "Jupiter": "Capricorn",
+      "Saturn": "Aries"
+    }
+  }
+}
