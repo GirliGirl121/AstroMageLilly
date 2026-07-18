@@ -55,6 +55,7 @@ from lilly.commands import (
     sky_line,
 )
 from lilly.knowledge_base import offline_answer
+from lilly.astrology_interpreter import interpret_chart
 from lilly.pdf_reader import read_pdf_for_llm, find_pdf, is_available
 from lilly.web_search import search_and_summarize
 from brain import Brain
@@ -123,7 +124,21 @@ def generate_lilly_response(
     # API key
     api_key = load_api_key()
     if not api_key:
-        # Fallback to offline scholarly knowledge base
+        # Fallback to offline mode
+        # Astrological queries get the interpreter, not book search
+        astro_keywords = [
+            "sky", "chart", "natal", "horoscope", "planets", "stars",
+            "sun sign", "moon sign", "ascendant", "my chart", "the heavens",
+            "celestial", "what's up there", "above us", "cosmos",
+        ]
+        text = prompt.lower()
+        if any(kw in text for kw in astro_keywords):
+            try:
+                sky = get_sky_data()
+                if sky and sky.get("planets"):
+                    return interpret_chart(sky["planets"])
+            except Exception:
+                pass  # Fall through to standard offline answer
         return offline_answer(prompt, emotional=emotional)
 
     # Celestial context
