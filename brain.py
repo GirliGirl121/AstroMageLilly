@@ -48,6 +48,7 @@ class Brain:
     REMEMBER = "remember"
     RECALL   = "recall"
     ADOPT    = "adopt"
+    FACT     = "fact"
     SAVE     = "save"
     CLEAR    = "clear"
     QUIT     = "quit"
@@ -70,7 +71,7 @@ class Brain:
             return self._route_slash(text)
 
         # Phase 2: Keyword matching
-        intent = self._route_keywords(text)
+        intent = self._route_keywords(text, message)
         if intent.action != self.UNKNOWN:
             return intent
 
@@ -105,7 +106,7 @@ class Brain:
         action = command_map.get(cmd, self.UNKNOWN)
         return Intent(action, argument=arg, confidence=1.0)
 
-    def _route_keywords(self, text: str) -> Intent:
+    def _route_keywords(self, text: str, message: str = "") -> Intent:
         """Route based on keywords in natural language."""
 
         sky_words = [
@@ -180,5 +181,17 @@ class Brain:
         ]
         if any(p in text for p in adopt_patterns):
             return Intent(self.ADOPT, argument=text, confidence=0.7)
+
+        # Personal facts & declarations
+        fact_patterns = [
+            "my favourite", "my favorite", "my color", "my colour",
+            "my name is", "i am", "i was born", "i love", "i like",
+            "i prefer", "i enjoy", "i always", "i never", "i hate",
+            "i'm from", "i live in", "my birthday", "my birth date",
+        ]
+        for pattern in fact_patterns:
+            if pattern in text:
+                # Extract the fact (everything after the pattern, or the whole sentence)
+                return Intent(self.FACT, argument=message.strip(), confidence=0.85)
 
         return Intent(self.UNKNOWN, confidence=0.0)
