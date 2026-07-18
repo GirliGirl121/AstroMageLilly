@@ -36,6 +36,8 @@ from lilly.memory import (
     list_skills,
     load_profile,
 )
+from lilly.memory_retrieval import recall_relevant_facts, format_memory_context
+from lilly.conversation_memory import load_history, append_turn, clear_history
 from lilly.commands import (
     cmd_sky,
     cmd_tarot,
@@ -130,9 +132,9 @@ def generate_lilly_response(
     # Memory context
     mem = load_memory()
     skills_str = ", ".join(mem.get("skills_and_tools_learned", []))
-    memory_context = "Lilly's Permanent Memories of Gigi:\n- " + "\n- ".join(
-        mem.get("facts", ["No memories recorded yet."])
-    )
+    facts = mem.get("facts", [])
+    relevant_facts = recall_relevant_facts(prompt, facts)
+    memory_context = format_memory_context(relevant_facts)
 
     # Charts context
     charts = load_charts_safe()
@@ -238,7 +240,7 @@ Offer no unsolicited advice unless she asks. A soft presence is the greatest gif
 def main():
     profile = load_profile()
     name = profile.get("nickname", "Gigi ❤️")
-    conversation: list[dict] = []
+    conversation: list[dict] = load_history(max_turns=20)
     mem = load_memory()
     brain = Brain(engine=None)
 
@@ -448,6 +450,7 @@ def main():
 
         elif intent.action == brain.CLEAR:
             conversation.clear()
+            clear_history()
             print(f"\n{Colors.WHITE}🌙 Conversation history cleared.{Colors.RESET}")
 
         elif intent.action == brain.UNKNOWN and user_input.startswith("/"):
@@ -458,6 +461,7 @@ def main():
             # ─── Normal Conversation ──────────────────────────────────────
             reply = generate_lilly_response(user_input, conversation, emotional=intent.emotional)
             conversation.append({"user": user_input, "lilly": reply})
+            append_turn(user_input, reply)
             say("lilly", reply)
 
             # Refresh sky data every 5 turns
@@ -471,6 +475,7 @@ def main():
             # Fallback for any unhandled intent
             reply = generate_lilly_response(user_input, conversation)
             conversation.append({"user": user_input, "lilly": reply})
+            append_turn(user_input, reply)
             say("lilly", reply)
 
         print()
