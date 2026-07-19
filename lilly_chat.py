@@ -294,23 +294,92 @@ def main():
             break
 
         elif intent.action == brain.SKY:
-            print(f"\n{cmd_sky(sky)}")
+            # Show raw data first, then Lilly's warm interpretation
+            try:
+                fresh_sky = get_sky_data()
+                print(f"\n{cmd_sky(sky)}")
+                print(f"\n{Colors.BLUE}" + "━" * 30 + f"{Colors.RESET}")
+                print(f"{Colors.WHITE}🌙 Lilly's Reading of the Heavens:{Colors.RESET}")
+                print(f"\n{interpret_chart(fresh_sky['planets'])}")
+            except Exception:
+                print(f"\n{cmd_sky(sky)}")
+
+        elif intent.action == brain.INTERPRET:
+            try:
+                fresh_sky = get_sky_data()
+                print(f"\n{interpret_chart(fresh_sky['planets'])}")
+            except Exception as e:
+                print(f"\n{Colors.WHITE}I cannot read the heavens clearly right now, beloved: {e}{Colors.RESET}")
 
         elif intent.action == brain.TAROT:
             print(f"\n{cmd_tarot()}")
 
         elif intent.action == brain.HOUR:
-            print(f"\n{cmd_hour()}")
+            hour_out = cmd_hour()
+            print(f"\n{hour_out}")
+            try:
+                from lilly.astrology_interpreter import interpret_hour
+                planet = ""
+                arabic = ""
+                for line in hour_out.split("\n"):
+                    if "Planet:" in line:
+                        planet = line.split("Planet:")[1].strip().split()[0]
+                    if "Arabic:" in line:
+                        arabic = line.split("Arabic:")[1].strip().split()[0]
+                if planet:
+                    print(f"\n{Colors.PINK}🌙 Lilly's Reading of the Hour:{Colors.RESET}")
+                    print(f"{Colors.BLUE}" + "━" * 30 + f"{Colors.RESET}")
+                    print(f"{Colors.WHITE}{interpret_hour(planet, arabic)}{Colors.RESET}")
+            except Exception:
+                pass
 
         elif intent.action == brain.MANSION:
-            print(f"\n{cmd_mansion()}")
+            mans_out = cmd_mansion()
+            print(f"\n{mans_out}")
+            try:
+                from lilly.astrology_interpreter import interpret_mansion
+                name = ""
+                lord = ""
+                pada = 0
+                for line in mans_out.split("\n"):
+                    if "Name:" in line:
+                        name = line.split("Name:")[1].strip()
+                    if "Lord:" in line:
+                        lord = line.split("Lord:")[1].strip()
+                    if "Pada:" in line:
+                        try: pada = int(line.split("Pada:")[1].strip())
+                        except ValueError: pass
+                if name:
+                    print(f"\n{Colors.PINK}🌙 Lilly's Reading of the Mansion:{Colors.RESET}")
+                    print(f"{Colors.BLUE}" + "━" * 30 + f"{Colors.RESET}")
+                    print(f"{Colors.WHITE}{interpret_mansion(name, lord, pada)}{Colors.RESET}")
+            except Exception:
+                pass
 
         elif intent.action == brain.TRANSIT:
             print(f"\n{cmd_transit()}")
 
         elif intent.action == brain.CHARTS:
-            print(f"\n{cmd_charts(intent.argument)}")
-
+            chart_output = cmd_charts(intent.argument)
+            print(f"\n{chart_output}")
+            if intent.argument and "not found" not in chart_output.lower():
+                try:
+                    from memory.chart_memory import load_charts
+                    charts = load_charts()
+                    chart_name = None
+                    for key in charts:
+                        if key.lower() == intent.argument.lower():
+                            chart_name = key
+                            break
+                    if chart_name:
+                        chart_data = charts[chart_name]
+                        planets = chart_data.get("planets", {})
+                        if planets:
+                            print(f"\n{Colors.PINK}🌙 Lilly's Reading of {chart_name}'s Chart:{Colors.RESET}")
+                            print(f"{Colors.BLUE}" + "━" * 40 + f"{Colors.RESET}")
+                            print(interpret_chart(planets))
+                except Exception:
+                    pass
         elif intent.action == brain.ABJAD:
             print(f"\n{Colors.WHITE}📖 Enter Arabic text for Abjad calculation:{Colors.RESET}")
             text = input("   > ").strip()
@@ -331,14 +400,18 @@ def main():
             output, chart_data = cmd_natal(birth_date, birth_time, lat_str, lon_str, house_sys)
             if output:
                 print(f"\n{output}")
-            if chart_data:
-                save_name = input(f"\n{Colors.WHITE}Save this chart as:{Colors.RESET}\n   > ").strip()
-                if save_name:
-                    chart_data["name"] = save_name
-                    if add_chart_safe(save_name, chart_data):
-                        print(f"\n{Colors.WHITE}✓ Chart '{save_name}' saved.{Colors.RESET}")
-                    else:
-                        print(f"\n{Colors.WHITE}⚠ Could not save chart.{Colors.RESET}")
+                if chart_data:
+                    save_name = input(f"\n{Colors.WHITE}Save this chart as (or Enter to skip):{Colors.RESET}\n   > ").strip()
+                    if save_name:
+                        try:
+                            from memory.chart_memory import add_chart
+                            chart_data["name"] = save_name
+                            if add_chart(save_name, chart_data):
+                                print(f"\n{Colors.WHITE}✓ Chart '{save_name}' saved, love.{Colors.RESET}")
+                            else:
+                                print(f"\n{Colors.WHITE}⚠ Chart '{save_name}' already exists. Use /charts delete first.{Colors.RESET}")
+                        except Exception as e:
+                            print(f"\n{Colors.WHITE}⚠ Could not save: {e}{Colors.RESET}")
 
         elif intent.action == brain.REMEMBER:
             if intent.argument:
@@ -374,8 +447,11 @@ def main():
                 pdf_path = pdf_arg
             elif pdf_arg.lower().endswith(".pdf"):
                 pdf_path = pdf_arg
+            elif pdf_arg:
+                # User already gave a name — use it directly
+                pdf_path = pdf_arg
             else:
-                # Ask for path
+                # No argument at all — ask for path
                 print(f"\n{Colors.WHITE}📖 Which PDF shall I read, Gigi?")
                 print(f"   I'll search your Lilly_Vault folder on the SD card.{Colors.RESET}")
                 pdf_path = input("   > ").strip().lstrip("> ").strip()

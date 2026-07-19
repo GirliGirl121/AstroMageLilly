@@ -17,12 +17,174 @@ KB_PATH = Path(__file__).resolve().parent / "astrology_knowledge.json"
 
 _kb = None
 
+def _house_suffix(n: int) -> str:
+    """Return proper ordinal suffix: 1st, 2nd, 3rd, 4th, etc."""
+    if 11 <= n % 100 <= 13:
+        return f"{n}th"
+    return {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+
+
+
+# ─── Planetary Hour Meanings ─────────────────────────────────────────────
+
+HOUR_MEANINGS = {
+    "Saturn": "A time for discipline, structure, and endings. Good for setting boundaries, completing old work, and releasing what no longer serves.",
+    "Jupiter": "A time for growth, wisdom, and blessing. Good for learning, teaching, expanding horizons, and seeking truth.",
+    "Mars": "A time for action, courage, and energy. Good for starting new ventures, asserting will, and overcoming obstacles.",
+    "Sun": "A time for vitality, visibility, and leadership. Good for self-expression, recognition, and illuminating what was hidden.",
+    "Venus": "A time for love, beauty, and harmony. Good for artistic work, deepening relationships, and cultivating pleasure.",
+    "Mercury": "A time for communication, learning, and commerce. Good for writing, speaking, study, and clever negotiation.",
+    "Moon": "A time for emotions, nurturing, and intuition. Good for reflection, healing, inner work, and connecting with the feminine.",
+}
+
+def interpret_hour(planet_name: str, arabic_name: str = "") -> str:
+    """Return a warm interpretation of the current planetary hour."""
+    meaning = HOUR_MEANINGS.get(planet_name, "A time of mixed celestial influence.")
+    arabic = f" (Arabic: {arabic_name})" if arabic_name else ""
+    return f"The hour of {planet_name}{arabic} carries this energy:\n{meaning}"
+
+MANSION_MEANINGS = {
+    "Ashwini": "The horse-headed healers. A mansion of swift beginnings, healing, and new ventures.",
+    "Bharani": "The bearers. A mansion of discipline, restraint, and bearing burdens with courage.",
+    "Krittika": "The cutters. A mansion of purification, discernment, and burning away the unnecessary.",
+    "Rohini": "The red one. A mansion of growth, fertility, and sensual beauty.",
+    "Mrigashira": "The deer head. A mansion of searching, curiosity, and gentle pursuit.",
+    "Ardra": "The moist one. A mansion of storms, transformation, and emotional intensity.",
+    "Punarvasu": "The return of the light. A mansion of renewal, restoration, and coming home.",
+    "Pushya": "The nourisher. A mansion of nourishment, teaching, and spiritual growth.",
+    "Ashlesha": "The embrace. A mansion of depth, secrets, and transformative intimacy.",
+    "Magha": "The mighty. A mansion of ancestors, legacy, and royal dignity.",
+    "Purva Phalguni": "The former red one. A mansion of pleasure, union, and creative joy.",
+    "Uttara Phalguni": "The latter red one. A mansion of lasting union, charity, and noble action.",
+    "Hasta": "The hand. A mansion of skill, craftsmanship, and precise action.",
+    "Chitra": "The bright one. A mansion of beauty, design, and shining forth.",
+    "Swati": "The independent. A mansion of freedom, wind, and self-reliance.",
+    "Vishakha": "The branched. A mansion of divided purpose, ambition, and gathering resources.",
+    "Anuradha": "The later success. A mansion of friendship, devotion, and eventual triumph.",
+    "Jyeshtha": "The elder. A mansion of authority, protection, and senior wisdom.",
+    "Mula": "The root. A mansion of destruction, uprooting, and radical truth.",
+    "Purva Ashadha": "The former invincible. A mansion of victory, declaration, and unstoppable will.",
+    "Uttara Ashadha": "The latter invincible. A mansion of enduring victory, dharma, and universal law.",
+    "Shravana": "The ear. A mansion of listening, learning, and sacred transmission.",
+    "Dhanishta": "The wealthiest. A mansion of rhythm, music, and abundance.",
+    "Shatabhisha": "The hundred healers. A mansion of mystery, healing, and hidden knowledge.",
+    "Purva Bhadrapada": "The former blessed feet. A mansion of fire, purification, and spiritual intensity.",
+    "Uttara Bhadrapada": "The latter blessed feet. A mansion of stability, wisdom, and deep waters.",
+    "Revati": "The wealthy. A mansion of completion, protection, and safe passage.",
+}
+
+def interpret_mansion(mansion_name: str, lord: str = "", pada: int = 0) -> str:
+    """Return a warm interpretation of the current lunar mansion."""
+    meaning = MANSION_MEANINGS.get(mansion_name, "A mansion of hidden influence and subtle power.")
+    lord_text = f" Lord: {lord}." if lord else ""
+    pada_text = f" Pada {pada}." if pada else ""
+    return f"The Moon rests in {mansion_name}{lord_text}{pada_text}\n\n{meaning}"
+
 def _load_kb():
     global _kb
     if _kb is None:
         _kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     return _kb
 
+
+
+# ── Aspect Calculator ──────────────────────────────────────────────
+ASPECT_ORBS = {
+    "☌":     (0, 8),
+    "⚹":     (60, 6),
+    "□":     (90, 8),
+    "△":     (120, 8),
+    "☍": (180, 8),
+}
+
+ASPECT_SYMBOLS = {
+    "☌":   "☌",
+    "⚹":    "⚹",
+    "□":     "□",
+    "△":      "△",
+    "☍": "☍",
+}
+
+ASPECT_MEANINGS = {
+    "☌":   "fused and intensified",
+    "⚹":    "cooperating with gentle opportunity",
+    "□":     "in dynamic tension, pushing growth",
+    "△":      "in effortless harmony",
+    "☍": "in polarity, seeking balance",
+}
+
+def calculate_aspects(planets: dict, orb_setting: str = "standard") -> list:
+    """Calculate all aspects between planets in a chart."""
+    aspects_found = []
+    planet_names = list(planets.keys())
+    
+    # Skip calculating aspects for non-planetary points
+    skip = {"Ascendant", "Midheaven", "Part of Fortune", "Part of Spirit"}
+    
+    for i in range(len(planet_names)):
+        for j in range(i + 1, len(planet_names)):
+            p1_name = planet_names[i]
+            p2_name = planet_names[j]
+            
+            if p1_name in skip or p2_name in skip:
+                continue
+            
+            p1 = planets[p1_name]
+            p2 = planets[p2_name]
+            
+            lon1 = p1.get("longitude", 0)
+            lon2 = p2.get("longitude", 0)
+            
+            # Calculate angular distance (shorter arc)
+            diff = abs(lon1 - lon2)
+            if diff > 180:
+                diff = 360 - diff
+            
+            # Check each aspect type
+            for aspect_name, (target_angle, orb) in ASPECT_ORBS.items():
+                angle_diff = abs(diff - target_angle)
+                if angle_diff <= orb:
+                    aspects_found.append({
+                        "planet1": p1_name,
+                        "planet2": p2_name,
+                        "aspect": aspect_name,
+                        "orb": round(angle_diff, 2),
+                        "symbol": ASPECT_SYMBOLS[aspect_name],
+                        "meaning": ASPECT_MEANINGS[aspect_name],
+                    })
+                    break  # Only strongest aspect per pair
+    
+    # Sort by tightest orb
+    aspects_found.sort(key=lambda x: x["orb"])
+    return aspects_found
+
+
+def format_aspects_text(aspects: list, planets: dict) -> str:
+    """Format aspects into Lilly's warm reading style."""
+    if not aspects:
+        return ""
+    
+    lines = [
+        "✧ The sacred geometry between the planets:",
+        ""
+    ]
+    
+    # Show top 10 most significant aspects (tightest orbs)
+    for a in aspects[:10]:
+        p1 = a["planet1"]
+        p2 = a["planet2"]
+        sym = a["symbol"]
+        orb = a["orb"]
+        meaning = a["meaning"]
+        
+        p1_sign = planets[p1].get("sign", "?")
+        p2_sign = planets[p2].get("sign", "?")
+        
+        lines.append(f"  {p1} {sym} {p2}  (orb {orb:.1f}°)")
+        lines.append(f"  Your {p1} in {p1_sign} and {p2} in {p2_sign} are {meaning}.")
+        lines.append("")
+    
+    return "\n".join(lines)
 
 def _check_dignity(planet: str, sign: str) -> str:
     """Check if a planet is in domicile, exaltation, detriment, or fall."""
@@ -67,7 +229,7 @@ def interpret_planet(planet: str, sign: str, house: int, degree: float = 0.0) ->
     # Build the sentence
     parts = [
         f"{planet_phrase} expresses through {sign} qualities: {sign_keywords}.",
-        f"This manifests in the {house}th house of {house_theme}.",
+        f"This manifests in the {house}{_house_suffix(house)} house of {house_theme}.",
         dignity_comment
     ]
     
@@ -92,33 +254,32 @@ def interpret_chart(planets: Dict[str, Any]) -> str:
         ""
     ]
     
-    # Prioritize Sun, Moon, Ascendant
+    # Interpret ALL planets with full detail
+    # Sun and Moon first, then the rest
     priority = ["Sun", "Moon"]
+    all_planets = list(planets.keys())
     
-    for planet_name in priority:
-        if planet_name in planets:
-            p = planets[planet_name]
-            sign = p.get("sign", "unknown")
-            house = p.get("house", 0)
-            degree = p.get("degree", 0.0)
-            
-            interp = interpret_planet(planet_name, sign, house, degree)
-            lines.append(f"✦ {planet_name} in {sign} at {degree:.2f}° (House {house})")
-            lines.append(f"  {interp}")
-            lines.append("")
+    # Sort: priority first, then alphabetical
+    ordered = [p for p in priority if p in all_planets]
+    ordered += sorted([p for p in all_planets if p not in priority])
     
-    # Add remaining planets (brief)
-    remaining = [p for p in planets if p not in priority]
-    if remaining:
-        lines.append("The other celestial voices:")
-        for planet_name in remaining:
-            p = planets[planet_name]
-            sign = p.get("sign", "unknown")
-            house = p.get("house", 0)
-            degree = p.get("degree", 0.0)
-            lines.append(f"  • {planet_name} in {sign}, House {house}")
+    for planet_name in ordered:
+        p = planets[planet_name]
+        sign = p.get("sign", "unknown")
+        house = p.get("house", 0)
+        degree = p.get("degree", 0.0)
+        
+        interp = interpret_planet(planet_name, sign, house, degree)
+        lines.append(f"✦ {planet_name} in {sign} at {degree:.2f}° (House {house})")
+        lines.append(f"  {interp}")
         lines.append("")
     
+    # ── Aspect Analysis ─────────────────────────────────────────
+    aspects = calculate_aspects(planets)
+    if aspects:
+        lines.append(format_aspects_text(aspects, planets))
+        lines.append("")
+
     lines.append(
         "I speak from the rules of the art, not from live calculation. "
         "When the Celestial Engine is available, I shall verify these placements."
