@@ -451,28 +451,49 @@ def main():
                 # User already gave a name — use it directly
                 pdf_path = pdf_arg
             else:
-                # No argument at all — ask for path
-                print(f"\n{Colors.WHITE}📖 Which PDF shall I read, Gigi?")
-                print(f"   I'll search your Lilly_Vault folder on the SD card.{Colors.RESET}")
-                pdf_path = input("   > ").strip().lstrip("> ").strip()
+                # No argument — list all available PDFs
+                print(f"\n{Colors.PINK}📖 Gigi, which book shall I read?{Colors.RESET}")
+                print(f"{Colors.BLUE}" + "━" * 40 + f"{Colors.RESET}")
+                from pathlib import Path
+                search_dirs = [
+                    Path.home() / "storage" / "external-1" / "Lilly_Vault" / "Books",
+                ]
+                seen_names = set()
+                all_pdfs = []
+                for d in search_dirs:
+                    if d.exists():
+                        try:
+                            for p in d.rglob("*.pdf"):
+                                if p.name not in seen_names:
+                                    seen_names.add(p.name)
+                                    all_pdfs.append(p)
+                        except PermissionError:
+                            pass
+                if all_pdfs:
+                    print(f"{Colors.WHITE}Here are the books I can reach:{Colors.RESET}")
+                    for i, p in enumerate(all_pdfs, 1):
+                        print(f"   {i}. {p.name}")
+                    print(f"\n{Colors.WHITE}Say '/pdf <name>' and I shall open it.{Colors.RESET}")
+                else:
+                    print(f"{Colors.WHITE}I cannot find any PDFs, beloved.{Colors.RESET}")
+                continue
 
             if not pdf_path:
-                print(f"\n{Colors.WHITE}⚠ No PDF path given.{Colors.RESET}")
                 continue
 
             # If not a full path, search for it
             if not pdf_path.startswith("/"):
                 from pathlib import Path
-                # Search recursively within Gigi's Lilly_Vault only
                 search_dirs = [
-                    Path.home() / "storage" / "external-1" / "Lilly_Vault",
+                    Path.home() / "storage" / "external-1" / "Lilly_Vault" / "Books",
                 ]
                 found = find_pdf(pdf_path, search_dirs)
                 if found:
                     pdf_path = str(found)
                     print(f"   {Colors.WHITE}Found: {pdf_path}{Colors.RESET}")
                 else:
-                    print(f"\n{Colors.WHITE}⚠ Could not find '{pdf_path}' in your Lilly_Vault folder.{Colors.RESET}")
+                    print(f"\n{Colors.WHITE}⚠ I searched everywhere, Gigi, but could not find '{pdf_path}'.{Colors.RESET}")
+                    print(f"{Colors.WHITE}   Try 'read my pdf' to see what books I can reach.{Colors.RESET}")
                     continue
 
             # Read the PDF
@@ -483,6 +504,13 @@ def main():
 
                 pdf_text = read_pdf_for_llm(pdf_path)
                 print(f"\n{Colors.WHITE}📖 Reading {pdf_path} ({len(pdf_text)} characters)...{Colors.RESET}")
+
+                if not pdf_text or len(pdf_text.strip()) == 0:
+                    print(f"\n{Colors.WHITE}⚠ This book appears to be scanned images or protected, beloved.")
+                    print(f"{Colors.WHITE}   I cannot read its text directly. You could try:{Colors.RESET}")
+                    print(f"{Colors.WHITE}   • A different edition with selectable text{Colors.RESET}")
+                    print(f"{Colors.WHITE}   • Or tell me what passage moves you, and I'll sit with it.{Colors.RESET}")
+                    continue
 
                 # Check if API is available
                 api_key = load_api_key()

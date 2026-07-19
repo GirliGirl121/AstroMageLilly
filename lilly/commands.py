@@ -370,6 +370,7 @@ def cmd_transit() -> str:
                     desc += f" — {t.get('significance')}"
                 day_str = f" ({day})" if day else ""
                 lines.append(f"{Colors.WHITE}   • {date}{day_str}: {desc}{Colors.RESET}")
+
         return "\n".join(lines)
     except Exception as e:
         return f"{Colors.WHITE}The chart could not be cast: {e}{Colors.RESET}", None
@@ -395,6 +396,7 @@ def cmd_charts(arg: str = "") -> str:
         lines.append(
             f"\n{Colors.WHITE}Use /charts <name> to show a chart, or /charts delete <name> to remove.{Colors.RESET}"
         )
+
         return "\n".join(lines)
 
     if arg.startswith("delete "):
@@ -502,7 +504,26 @@ def cmd_natal(
         lines.append(
             f"\n{Colors.WHITE}Use /charts <name> to show a chart, or /charts delete <name> to remove.{Colors.RESET}"
         )
-        return "\n".join(lines)
+
+        # Build chart_data dict for saving
+        chart_data = {
+            "name": "",
+            "birth_date": birth_date,
+            "birth_time": birth_time,
+            "latitude": lat_f,
+            "longitude": lon_f,
+            "house_system": sys_name,
+            "ascendant": {
+                "sign": house_data["ascendant"]["sign"],
+                "degree": house_data["ascendant"]["degree"],
+            },
+            "midheaven": {
+                "sign": house_data["midheaven"]["sign"],
+                "degree": house_data["midheaven"]["degree"],
+            },
+            "planets": planets,
+        }
+        return "\n".join(lines), chart_data
 
     except Exception as e:
         traceback.print_exc()
@@ -607,11 +628,27 @@ def add_chart_safe(name: str, chart_data: dict) -> bool:
 
 
 def get_chart_safe(name: str) -> dict | None:
-    """Get a single chart by name."""
+    """Get a single chart by name. Case-insensitive fallback."""
     try:
         if _CHART_MEMORY_AVAILABLE:
-            return get_chart(name)
-        return _load_charts_inline().get(name)
+            result = get_chart(name)
+            if result:
+                return result
+            # Case-insensitive fallback
+            charts = list_charts()
+            for key in charts:
+                if key.lower() == name.lower():
+                    return get_chart(key)
+            return None
+        charts = _load_charts_inline()
+        result = charts.get(name)
+        if result:
+            return result
+        # Case-insensitive fallback
+        for key, value in charts.items():
+            if key.lower() == name.lower():
+                return value
+        return None
     except Exception:
         return None
 
@@ -672,6 +709,7 @@ def cmd_charts(arg: str = "") -> str:
         lines.append(
             f"\n{Colors.WHITE}Use /charts <name> to show a chart, or /charts delete <name> to remove.{Colors.RESET}"
         )
+
         return "\n".join(lines)
 
     if arg.startswith("delete "):

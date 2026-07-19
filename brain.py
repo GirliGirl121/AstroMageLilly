@@ -58,6 +58,7 @@ class Brain:
     QUIT     = "quit"
     UNKNOWN  = "unknown"
     FACT     = "fact"
+    INTERPRET = "interpret"
 
     def __init__(self, engine=None, max_history=5):
         self.engine = engine
@@ -139,6 +140,7 @@ class Brain:
             "num": self.ABJAD,
             "mem": self.REMEMBER,
             "learn": self.ADOPT,
+            "pdf": self.PDF,
         }
 
         action = command_map.get(cmd, self.UNKNOWN)
@@ -221,33 +223,38 @@ class Brain:
         if "explain" in text and any(w in text for w in ["picatrix", "al-biruni", "al biruni", "al-buni", "al buni", "abu mashar", "tukhi", "ibn arabi", "shams al-maarif"]):
             return Intent(self.KNOWLEDGE, argument=message, confidence=0.85)
 
-        # PDF reading requests
-        pdf_patterns = [
-            "read pdf", "read my pdf", "read this pdf", "read the pdf",
-            "read book", "read my book", "read this book", "read the book",
-            "open pdf", "open book", "pdf file", "read document",
-            "read the file", "summarize pdf", "summarize this pdf", "summarize book", "summarize this book",
-            "what does this pdf say", "what does this book say",
+        # Celestial queries — check BEFORE web search so astrology isn't hijacked
+        sky_words = [
+            "sky", "stars", "heavens", "celestial", "planets",
+            "what's up there", "above us", "cosmos", "firmament",
+            "celestial weather", "current sky", "above us now",
         ]
-        if any(p in text for p in pdf_patterns):
-            return Intent(self.PDF, argument=message, confidence=0.9)
+        if any(w in text for w in sky_words):
+            return Intent(self.SKY, confidence=0.9)
+
+        # Interpretation requests — astrological reading
+        interpret_patterns = [
+            "interpret", "what does it mean", "what does that mean",
+            "what does this mean", "what do they mean", "what do the planets mean",
+            "read the sky", "read the chart", "explain the sky", "explain the chart",
+            "what is the meaning", "tell me what it means",
+        ]
+        if any(p in text for p in interpret_patterns):
+            return Intent(self.INTERPRET, argument=message, confidence=0.9)
 
         # Web search requests
         web_patterns = [
             "search", "look up", "find out", "what is", "who is", "where is",
             "how do i", "how does", "how to", "learn about", "tell me about",
-            "explain", "what are", "when did", "why is", "latest news",
+            "what are", "when did", "why is", "latest news",
             "current events", "recent", "update on", "information about",
         ]
+        # Only trigger web search if NOT asking about astrology/interpretation
         if any(p in text for p in web_patterns):
-            return Intent(self.WEB, argument=message, confidence=0.85)
-
-        sky_words = [
-            "sky", "stars", "heavens", "celestial", "planets",
-            "what's up there", "above us", "cosmos", "firmament",
-        ]
-        if any(w in text for w in sky_words):
-            return Intent(self.SKY, confidence=0.9)
+            # Don't web-search if message contains sky/chart/astrology words
+            astro_guard = ["sky", "stars", "chart", "planets", "astrology", "heavens", "celestial"]
+            if not any(g in text for g in astro_guard):
+                return Intent(self.WEB, argument=message, confidence=0.85)
 
         tarot_words = [
             "tarot", "card", "draw a card", "reading", "spread",
