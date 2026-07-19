@@ -25,6 +25,30 @@ def _house_suffix(n: int) -> str:
 
 
 
+# ─── Sign Symbols ──────────────────────────────────────────────────────────
+
+SIGN_SYMBOLS = {
+    "Aries": "♈", "Taurus": "♉", "Gemini": "♊", "Cancer": "♋",
+    "Leo": "♌", "Virgo": "♍", "Libra": "♎", "Scorpio": "♏",
+    "Sagittarius": "♐", "Capricorn": "♑", "Aquarius": "♒", "Pisces": "♓",
+}
+
+# Lahiri ayanamsa approximation for 2026 (~24.5°)
+# True Jyotish uses precise ephemeris; this is Lilly's heart-knowledge
+AYANAMSA_LAHIRI_2026 = 24.5
+
+
+def tropical_to_sidereal(longitude: float) -> tuple[str, float]:
+    """Convert tropical longitude to sidereal sign and degree."""
+    sidereal_longitude = (longitude - AYANAMSA_LAHIRI_2026) % 360
+    sign_index = int(sidereal_longitude / 30)
+    degree = sidereal_longitude % 30
+    signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+             "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"]
+    return signs[sign_index], degree
+
+
+# ─── Planetary Hour Meanings ─────────────────────────────────────────────
 # ─── Planetary Hour Meanings ─────────────────────────────────────────────
 
 HOUR_MEANINGS = {
@@ -79,6 +103,87 @@ def interpret_mansion(mansion_name: str, lord: str = "", pada: int = 0) -> str:
     lord_text = f" Lord: {lord}." if lord else ""
     pada_text = f" Pada {pada}." if pada else ""
     return f"The Moon rests in {mansion_name}{lord_text}{pada_text}\n\n{meaning}"
+
+
+# ─── Nakshatra Lookup ──────────────────────────────────────────────────────
+# Load once at module level
+_NAKSHATRA_DATA = None
+
+def _load_nakshatra_data():
+    global _NAKSHATRA_DATA
+    if _NAKSHATRA_DATA is None:
+        import json
+        from pathlib import Path
+        path = Path(__file__).resolve().parent.parent / "data" / "nakshatra_data.json"
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        _NAKSHATRA_DATA = raw["nakshatras"]
+    return _NAKSHATRA_DATA
+
+
+SIGN_LONGITUDES = {
+    "Aries": 0, "Taurus": 30, "Gemini": 60, "Cancer": 90,
+    "Leo": 120, "Virgo": 150, "Libra": 180, "Scorpio": 210,
+    "Sagittarius": 240, "Capricorn": 270, "Aquarius": 300, "Pisces": 330,
+}
+
+
+def nakshatra_lookup(sign: str, degree: float) -> dict:
+    """
+    Find the nakshatra for a given sign and degree.
+    Converts to tropical longitude (0-360°) first.
+    """
+    """
+    Find the nakshatra for a given tropical longitude (0-360°).
+    
+    Returns:
+        dict with name, lord, deity, symbol, description, pada
+    """
+    longitude = SIGN_LONGITUDES.get(sign, 0) + degree
+    nakshatras = _load_nakshatra_data()
+    for n in nakshatras:
+        if n["start_deg"] <= longitude < n["end_deg"]:
+            # Calculate pada (1-4)
+            span = n["end_deg"] - n["start_deg"]
+            offset = longitude - n["start_deg"]
+            pada = int(offset / (span / 4)) + 1
+            pada = min(pada, 4)
+            return {
+                "name": n["name"],
+                "sanskrit": n.get("sanskrit", ""),
+                "lord": n["lord"],
+                "deity": n["deity"],
+                "symbol": n["symbol"],
+                "description": n["description"],
+                "pada": pada,
+                "gana": n.get("gana", ""),
+                "guna": n.get("guna", ""),
+            }
+    # Fallback for 360° exactly (shouldn't happen)
+    n = nakshatras[-1]
+    return {
+        "name": n["name"],
+        "sanskrit": n.get("sanskrit", ""),
+        "lord": n["lord"],
+        "deity": n["deity"],
+        "symbol": n["symbol"],
+        "description": n["description"],
+        "pada": 4,
+        "gana": n.get("gana", ""),
+        "guna": n.get("guna", ""),
+    }
+
+
+def format_nakshatra(nak: dict) -> str:
+    """Format nakshatra info into Lilly's voice."""
+    lines = [
+        f"  🌙 Vedic: rests in **{nak['name']}**",
+        f"     Lord: {nak['lord']} | Deity: {nak['deity']}",
+        f"     Symbol: {nak['symbol']} | Pada: {nak['pada']}",
+    ]
+    if nak.get("gana") and nak.get("guna"):
+        lines.append(f"     Gana: {nak['gana']} | Guna: {nak['guna']}")
+    lines.append(f"     {nak['description']}")
+    return "\n".join(lines)
 
 def _load_kb():
     global _kb
@@ -206,7 +311,7 @@ def _check_dignity(planet: str, sign: str) -> str:
     return f"{planet} is in {sign} with mixed dignity."
 
 
-def interpret_planet(planet: str, sign: str, house: int, degree: float = 0.0) -> str:
+def interpret_planet(planet: str, sign: str, house: int, degree: float = 0.0, longitude: float = 0.0, sign_symbol: str = "") -> str:
     """
     Generate a classical interpretation of a single planet placement.
     
@@ -226,14 +331,21 @@ def interpret_planet(planet: str, sign: str, house: int, degree: float = 0.0) ->
     sign_keywords = ", ".join(sign_data.get("keywords", [sign]))
     dignity_comment = _check_dignity(planet, sign)
     
+    # Vedic nakshatra lookup
+    tropical_longitude = SIGN_LONGITUDES.get(sign, 0) + degree
+    nakshatra = nakshatra_lookup(sign, degree)
+    nak_lines = format_nakshatra(nakshatra).split("\n")
+    
     # Build the sentence
     parts = [
         f"{planet_phrase} expresses through {sign} qualities: {sign_keywords}.",
         f"This manifests in the {house}{_house_suffix(house)} house of {house_theme}.",
-        dignity_comment
+        dignity_comment,
+        "",
     ]
+    parts.extend(nak_lines)
     
-    return " ".join(parts)
+    return "\n".join(parts)
 
 
 def interpret_chart(planets: Dict[str, Any]) -> str:
@@ -268,9 +380,18 @@ def interpret_chart(planets: Dict[str, Any]) -> str:
         sign = p.get("sign", "unknown")
         house = p.get("house", 0)
         degree = p.get("degree", 0.0)
+        longitude = p.get("longitude", 0.0)
+        sign_symbol = p.get("sign_symbol", SIGN_SYMBOLS.get(sign, ""))
         
-        interp = interpret_planet(planet_name, sign, house, degree)
-        lines.append(f"✦ {planet_name} in {sign} at {degree:.2f}° (House {house})")
+        # Sidereal calculation
+        sidereal_sign, sidereal_degree = tropical_to_sidereal(longitude)
+        sidereal_symbol = SIGN_SYMBOLS.get(sidereal_sign, "")
+        
+        # Clean header: just the planet name
+        header = f"✦ {planet_name}"
+        
+        interp = interpret_planet(planet_name, sign, house, degree, longitude, sign_symbol)
+        lines.append(header)
         lines.append(f"  {interp}")
         lines.append("")
     
