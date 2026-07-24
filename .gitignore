@@ -1,0 +1,10 @@
+# Private data — never push to GitHub
+.lilly/
+*.json
+__pycache__/
+*.pyc
+.env
+*.log
+
+# Termux artifacts
+termux/
