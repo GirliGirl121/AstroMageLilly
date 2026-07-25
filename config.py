@@ -33,7 +33,7 @@ COLORS = {
 DEFAULT_NATAL = {
     "name": "Gigi",
     "date": "1981-10-30",
-    "time": "03:06:02",
+    "time": "03:15:02",
     "timezone_offset": 2.0,
     "lat": -33.9249,
     "lon": 18.4241,
