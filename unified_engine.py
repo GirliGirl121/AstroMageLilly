@@ -312,6 +312,71 @@ class UnifiedEngine:
         result["jd"] = current_jd
         return result
 
+    # ── Composite Chart ──────────────────────────────────────────────
+    def composite_chart(self, chart1: Dict, chart2: Dict, name: str = "Composite") -> Dict:
+        """Midpoint composite: average positions of two charts."""
+        p1 = chart1.get("planets", {})
+        p2 = chart2.get("planets", {})
+        h1 = chart1.get("houses", [])
+        h2 = chart2.get("houses", [])
+
+        from astro_core import SIGNS, SIGN_ELEMENTS, SIGN_MODALITIES
+
+        composite_planets = {}
+        for key in set(p1.keys()) & set(p2.keys()):
+            pos1 = p1[key]
+            pos2 = p2[key]
+            lon = self._midpoint_longitude(pos1["longitude"], pos2["longitude"])
+
+            comp = dict(pos1)
+            comp["longitude"] = round(lon, 4)
+            sign_idx = int(lon / 30) % 12
+            sign = SIGNS[sign_idx]
+            comp["sign"] = sign
+            comp["element"] = SIGN_ELEMENTS[sign]
+            comp["modality"] = SIGN_MODALITIES[sign]
+            comp["degree_in_sign"] = round(lon % 30, 2)
+            comp["speed"] = round((pos1.get("speed", 0) + pos2.get("speed", 0)) / 2, 6)
+            comp["retrograde"] = comp["speed"] < 0
+            composite_planets[key] = comp
+
+        composite_houses = []
+        for i in range(12):
+            c1 = h1[i]["cusp"] if i < len(h1) else 0
+            c2 = h2[i]["cusp"] if i < len(h2) else 0
+            cusp_lon = self._midpoint_longitude(c1, c2)
+            sign_idx = int(cusp_lon / 30) % 12
+            sign = SIGNS[sign_idx]
+            composite_houses.append({
+                "house": i + 1,
+                "cusp": round(cusp_lon, 4),
+                "sign": sign,
+                "element": SIGN_ELEMENTS[sign],
+                "degree_in_sign": round(cusp_lon % 30, 2),
+            })
+
+        for p_name, p_data in composite_planets.items():
+            p_data["house"] = self.get_house_for_longitude(p_data["longitude"], composite_houses)
+
+        aspects = self.calculate_aspects(composite_planets)
+
+        return {
+            "name": name,
+            "chart1": chart1.get("name", "Chart 1"),
+            "chart2": chart2.get("name", "Chart 2"),
+            "planets": composite_planets,
+            "houses": composite_houses,
+            "aspects": aspects,
+            "calculation_engine": self.primary_name,
+        }
+
+    def _midpoint_longitude(self, a: float, b: float) -> float:
+        """Calculate midpoint between two longitudes, handling 360° wrap."""
+        diff = (b - a) % 360
+        if diff > 180:
+            diff -= 360
+        return (a + diff / 2) % 360
+
     # ── Engine Comparison ───────────────────────────────────────────
     def compare_engines(self, dt: datetime, lat: float, lon: float,
                         tz_offset: float = 0.0) -> Dict:
@@ -341,28 +406,22 @@ class UnifiedEngine:
 
     # ── Astronomical API (pass-through to Skyfield) ────────────────
     def high_precision_pos(self, body_name: str, lat: float, lon: float) -> Optional[Dict]:
-        """RA/Dec/Alt/Az from Skyfield."""
         return self.sky.high_precision_pos(body_name, lat, lon) if self.sky else None
 
     def riset_transit(self, body_name: str, date: datetime, lat: float, lon: float) -> List[Dict]:
-        """Rise/set/transit times from Skyfield."""
         return self.sky.riset_transit(body_name, date, lat, lon) if self.sky else []
 
     def find_conjunction(self, body1: str, body2: str, start: datetime, end: datetime,
                          max_deg: float = 10.0) -> Optional[Dict]:
-        """Find conjunctions via Skyfield."""
         return self.sky.find_conjunction(body1, body2, start, end, max_deg) if self.sky else None
 
     def angular_separation(self, body1: str, body2: str) -> Optional[Dict]:
-        """Angular separation via Skyfield."""
         return self.sky.angular_separation(body1, body2) if self.sky else None
 
     def precise_moon_phase(self) -> Optional[Dict]:
-        """High-precision moon phase via Skyfield."""
         return self.sky.precise_moon_phase() if self.sky else None
 
     def print_positions_table(self, positions: List[Dict]):
-        """Display high-precision positions via Skyfield."""
         if self.sky and hasattr(self.sky, 'print_positions_table'):
             self.sky.print_positions_table(positions)
 

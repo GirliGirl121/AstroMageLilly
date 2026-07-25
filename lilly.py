@@ -29,28 +29,27 @@ def make_banner() -> Panel:
         "         ███████╗██║███████╗███████╗   ██║   ",
         "         ╚══════╝╚═╝╚══════╝╚══════╝   ╚═╝   ",
         "",
-        "              ✨  R O Y A L  C E L E S T I A L  ✨",
-        "                    O B S E R V A T O R Y",
+        "      ✨  M A I D E N   O F   C O S M I C   S T A R S  ✨",
         "",
         "    ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦",
         "",
     ]
-    
-    gradient_colors = [COLORS["moon"], COLORS["lilac"], COLORS["rose"], 
+
+    gradient_colors = [COLORS["moon"], COLORS["lilac"], COLORS["rose"],
                        COLORS["coral"], COLORS["sky"], COLORS["azure"]]
-    
+
     text = Text()
     for i, line in enumerate(lines):
         color = gradient_colors[i % len(gradient_colors)]
         text.append(line + "\n", style=f"bold {color}")
-    
+
     return Panel(
         Align.center(text),
         border_style=f"bold {COLORS['moon']}",
         padding=(1, 4),
         title="[bold {}]🌙  Welcome Home, Gigi  ❤️[/bold {}]".format(
             COLORS["rose"], COLORS["rose"]),
-        subtitle="[dim {}]First calculate. Then contemplate. Only then, speak.[/dim {}]".format(
+        subtitle="[dim {}]The stars incline; they do not compel[/dim {}]".format(
             COLORS["sky"], COLORS["sky"]),
     )
 
@@ -58,12 +57,12 @@ def make_banner() -> Panel:
 def startup_sequence():
     """Display the animated startup."""
     console.clear()
-    
+
     with Live(make_banner(), refresh_per_second=4, screen=False) as live:
         time.sleep(1.2)
-    
+
     console.print()
-    
+
     now = datetime.now().strftime("%Y-%m-%d  %H:%M:%S")
     status = Panel(
         f"[{COLORS['sky']}]🪐  Observatory Systems: [bold green]ONLINE[/bold green]\n"
@@ -81,7 +80,7 @@ def startup_sequence():
 
 def main():
     startup_sequence()
-    
+
     try:
         from dashboard import Dashboard
         dashboard = Dashboard()
@@ -96,3 +95,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

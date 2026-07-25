@@ -23,6 +23,7 @@ from vedic import vedic
 from electional import planner
 from fixed_stars import scanner
 from companion import companion
+from profiles import vault
 
 console = Console()
 
@@ -52,10 +53,12 @@ class Dashboard:
             "[" + c['coral'] + "]9[/]  Companion Chat\n"
             "[" + c['azure'] + "]10[/] High-Precision Sky (Skyfield)\n"
             "[" + c['lilac'] + "]11[/] Synastry & Transits\n"
+            "[" + c['gold'] + "]12[/] Profile Vault\n"
+            "[" + c['rose'] + "]13[/] Composite Chart\n"
             "[" + c['moon'] + "]0[/]  Exit Observatory\n\n"
             "[dim]Enter a number to select...[/dim]",
             border_style=COLORS["lilac"],
-            width=52,
+            width=56,
         )
         console.print(Align.center(menu))
 
@@ -367,10 +370,154 @@ class Dashboard:
         console.print(overlay_table)
         console.print()
 
+    def profile_vault_menu(self):
+        while True:
+            sub = Panel(
+                "[" + COLORS['rose'] + "]1[/]  List Profiles\n"
+                "[" + COLORS['sky'] + "]2[/]  Add Profile\n"
+                "[" + COLORS['coral'] + "]3[/]  Delete Profile\n"
+                "[" + COLORS['azure'] + "]4[/]  View Profile Chart\n"
+                "[" + COLORS['moon'] + "]0[/]  Back to Main Menu",
+                title="[bold " + COLORS['gold'] + "]📚 Profile Vault[/bold " + COLORS['gold'] + "]",
+                border_style=COLORS["lilac"],
+            )
+            console.print(Align.center(sub))
+
+            choice = Prompt.ask("Vault", choices=["1","2","3","4","0"], default="1")
+
+            if choice == "1":
+                console.print("[bold " + COLORS['gold'] + "]Saved Profiles[/bold " + COLORS['gold'] + "]")
+                vault.display_all()
+                console.print()
+
+            elif choice == "2":
+                console.print("[bold " + COLORS['sky'] + "]Add New Profile[/bold " + COLORS['sky'] + "]")
+                name = Prompt.ask("Name")
+                date = Prompt.ask("Date (YYYY-MM-DD)")
+                time = Prompt.ask("Time (HH:MM:SS)")
+                lat = float(Prompt.ask("Latitude"))
+                lon = float(Prompt.ask("Longitude"))
+                tz = float(Prompt.ask("Timezone offset (e.g. 2.0)", default="2.0"))
+                loc = Prompt.ask("Location", default="")
+                vault.add(name, date, time, lat, lon, tz, loc)
+                console.print(f"[green]✓ {name} saved to the vault.[/green]\n")
+
+            elif choice == "3":
+                console.print("[bold " + COLORS['coral'] + "]Delete Profile[/bold " + COLORS['coral'] + "]")
+                names = vault.list()
+                if not names:
+                    console.print("[dim]No profiles to delete.[/dim]\n")
+                    continue
+                for n in names:
+                    console.print(f"  • {n}")
+                target = Prompt.ask("Name to delete")
+                if vault.delete(target):
+                    console.print(f"[green]✓ {target} removed.[/green]\n")
+                else:
+                    console.print(f"[red]✗ {target} not found.[/red]\n")
+
+            elif choice == "4":
+                names = vault.list()
+                if not names:
+                    console.print("[dim]No profiles saved yet.[/dim]\n")
+                    continue
+                for n in names:
+                    console.print(f"  • {n}")
+                target = Prompt.ask("Whose chart")
+                pdata = vault.get(target)
+                if not pdata:
+                    console.print("[red]✗ Profile not found.[/red]\n")
+                    continue
+                dt = datetime.strptime(f"{pdata['date']} {pdata['time']}", "%Y-%m-%d %H:%M:%S")
+                chart = engine.get_full_chart(
+                    dt, pdata["lat"], pdata["lon"],
+                    pdata["timezone_offset"], name=target
+                )
+                self._print_chart_table(chart)
+
+            elif choice == "0":
+                break
+
+            if choice != "0":
+                Prompt.ask("[dim]Press Enter...[/dim]", default="")
+                console.clear()
+
+    def composite_menu(self):
+        names = vault.list()
+        if len(names) < 2:
+            console.print("[dim]You need at least two saved profiles to build a composite.[/dim]")
+            console.print("[dim]Go to Profile Vault (12) and add more souls.[/dim]\n")
+            return
+
+        console.print("[bold " + COLORS['gold'] + "]✨ Composite Chart Builder[/bold " + COLORS['gold'] + "]")
+        console.print("[dim]Select two profiles to merge into a midpoint composite.[/dim]\n")
+        for n in names:
+            console.print(f"  • {n}")
+
+        p1_name = Prompt.ask("First profile")
+        p2_name = Prompt.ask("Second profile")
+
+        pdata1 = vault.get(p1_name)
+        pdata2 = vault.get(p2_name)
+
+        if not pdata1 or not pdata2:
+            console.print("[red]✗ One or both profiles not found.[/red]\n")
+            return
+
+        dt1 = datetime.strptime(f"{pdata1['date']} {pdata1['time']}", "%Y-%m-%d %H:%M:%S")
+        dt2 = datetime.strptime(f"{pdata2['date']} {pdata2['time']}", "%Y-%m-%d %H:%M:%S")
+
+        chart1 = engine.get_full_chart(
+            dt1, pdata1["lat"], pdata1["lon"],
+            pdata1["timezone_offset"], name=p1_name
+        )
+        chart2 = engine.get_full_chart(
+            dt2, pdata2["lat"], pdata2["lon"],
+            pdata2["timezone_offset"], name=p2_name
+        )
+
+        comp = engine.composite_chart(chart1, chart2, name=f"{p1_name} + {p2_name}")
+
+        console.print("\n[bold " + COLORS['moon'] + "]✨ " + comp['name'] + " — Midpoint Composite[/bold " + COLORS['moon'] + "]")
+        console.print("[dim]The child of two skies, born from the space between.[/dim]\n")
+
+        self._print_chart_table(comp)
+
+        if comp["aspects"]:
+            asp_table = Table(title="Composite Aspects", border_style=COLORS["lilac"])
+            asp_table.add_column("Aspect", style=COLORS["gold"])
+            asp_table.add_column("Planets", style=COLORS["sky"])
+            asp_table.add_column("Orb", justify="right")
+            for a in comp["aspects"][:10]:
+                asp_table.add_row(a["aspect"], f"{a['planet1']} — {a['planet2']}", f"{a['orb']}°")
+            console.print(asp_table)
+        console.print()
+
+    def _print_chart_table(self, chart: Dict):
+        """Helper to print any chart as a table."""
+        table = Table(border_style=COLORS["lilac"])
+        table.add_column("Planet", style=COLORS["sky"])
+        table.add_column("Sign", style=COLORS["rose"])
+        table.add_column("House", style=COLORS["coral"])
+        table.add_column("Deg", justify="right")
+
+        houses = chart.get("houses", [])
+        for name, p in chart.get("planets", {}).items():
+            house_num = engine.get_house_for_longitude(p["longitude"], houses) if houses else "-"
+            retro = " ℞" if p.get("retrograde") else ""
+            table.add_row(
+                f"{p.get('symbol', '')} {name}{retro}",
+                p["sign"],
+                str(house_num),
+                str(p["degree_in_sign"])
+            )
+        console.print(table)
+        console.print()
+
     def run(self):
         while self.running:
             self.show_menu()
-            choice = Prompt.ask("Select", choices=["1","2","3","4","5","6","7","8","9","10","11","0","?"], default="1")
+            choice = Prompt.ask("Select", choices=["1","2","3","4","5","6","7","8","9","10","11","12","13","0","?"], default="1")
 
             if choice == "1":
                 self.live_sky()
@@ -394,12 +541,16 @@ class Dashboard:
                 self.skyfield_menu()
             elif choice == "11":
                 self.synastry_menu()
+            elif choice == "12":
+                self.profile_vault_menu()
+            elif choice == "13":
+                self.composite_menu()
             elif choice == "0":
                 self.running = False
             elif choice == "?":
                 console.print("[dim]Each number opens a different chamber of the observatory.[/dim]")
 
-            if self.running and choice not in ("9", "10", "11"):
+            if self.running and choice not in ("9", "10", "11", "12", "13"):
                 Prompt.ask("[dim]Press Enter to continue...[/dim]", default="")
                 console.clear()
 
