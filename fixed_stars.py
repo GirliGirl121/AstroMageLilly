@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 
-from config import BEHENIAN_STARS, COLORS
+from config import BEHENIAN_STARS, COLORS, PLANET_SYMBOLS
 from astro_core import engine
 
 console = Console()
@@ -98,7 +98,7 @@ class FixedStarScanner:
             interp = self.interpret_alignment(a)
             table.add_row(
                 a["star"],
-                f"{engine.get_planet_pos(a['planet'], 0).get('symbol', '')} {a['planet']}",
+                f"{PLANET_SYMBOLS.get(a['planet'], '')} {a['planet']}",
                 f"{a['separation']}°",
                 a["nature"],
                 royal,

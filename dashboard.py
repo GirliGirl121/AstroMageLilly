@@ -185,10 +185,7 @@ class Dashboard:
         table.add_column("Deg", justify="right")
 
         for name, p in positions.items():
-            house_num = 1
-            for h in houses:
-                if p["longitude"] >= h["cusp"]:
-                    house_num = h["house"]
+            house_num = engine.get_house_for_longitude(p["longitude"], houses)
             retro = " ℞" if p.get("retrograde") else ""
             table.add_row(
                 f"{p.get('symbol', '')} {name}{retro}",
@@ -198,10 +195,7 @@ class Dashboard:
             )
 
         for name, p in lots.items():
-            house_num = 1
-            for h in houses:
-                if p["longitude"] >= h["cusp"]:
-                    house_num = h["house"]
+            house_num = engine.get_house_for_longitude(p["longitude"], houses)
             table.add_row(
                 f"{p.get('symbol', '')} {p['name']}",
                 p["sign"],
