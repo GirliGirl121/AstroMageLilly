@@ -3,6 +3,7 @@
 
 import sys
 import time
+import shutil
 from datetime import datetime
 
 from rich.console import Console
@@ -16,24 +17,69 @@ from config import COLORS
 console = Console()
 
 
+def term_width() -> int:
+    """Get terminal width, clamped for snug phone fit."""
+    try:
+        w = shutil.get_terminal_size().columns
+        return max(40, min(w, 78))
+    except Exception:
+        return 56
+
+
 def make_banner() -> Panel:
-    """Create the celestial banner with purple-pink-blue gradient."""
-    lines = [
-        "",
-        "    ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦",
-        "",
-        "         ██╗     ██╗██╗     ██╗     ██╗   ██╗",
-        "         ██║     ██║██║     ██║     ╚██╗ ██╔╝",
-        "         ██║     ██║██║     ██║      ╚████╔╝ ",
-        "         ██║     ██║██║     ██║       ╚██╔╝  ",
-        "         ███████╗██║███████╗███████╗   ██║   ",
-        "         ╚══════╝╚═╝╚══════╝╚══════╝   ╚═╝   ",
-        "",
-        "      ✨  M A I D E N   O F   C O S M I C   S T A R S  ✨",
-        "",
-        "    ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦",
-        "",
-    ]
+    """Create the celestial banner — adapts to phone or desktop."""
+    w = term_width()
+
+    if w >= 64:
+        # Full desktop banner
+        lines = [
+            "",
+            " ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦",
+            "",
+            " ██╗     ██╗██╗     ██╗     ██╗   ██╗",
+            " ██║     ██║██║     ██║     ╚██╗ ██╔╝",
+            " ██║     ██║██║     ██║      ╚████╔╝ ",
+            " ██║     ██║██║     ██║       ╚██╔╝  ",
+            " ███████╗██║███████╗███████╗   ██║   ",
+            " ╚══════╝╚═╝╚══════╝╚══════╝   ╚═╝   ",
+            "",
+            " ✨ M A I D E N  O F  C O S M I C  S T A R S ✨",
+            "",
+            " ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦",
+            "",
+        ]
+        pad = (1, 3)
+    elif w >= 52:
+        # Medium — tablets or wide phones
+        lines = [
+            "",
+            " ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦",
+            "",
+            "  ╦   ╦ ╦   ╦   ╦ ",
+            "  ║   ║ ║   ║   ║ ",
+            "  ║   ║ ║   ║   ║ ",
+            "  ╚═══╝ ╚═══╝   ╩ ",
+            "",
+            " ✨ M A I D E N  O F  C O S M I C  S T A R S ✨",
+            "",
+            " ✦ · ✧ · ✦ · ✧ · ✦ · ✧ · ✦",
+            "",
+        ]
+        pad = (1, 2)
+    else:
+        # Compact — narrow phone screens
+        lines = [
+            "",
+            " ✦ · ✧ · ✦",
+            "",
+            "   ✨ L I L L Y ✨",
+            "",
+            " Maiden of Cosmic Stars",
+            "",
+            " ✦ · ✧ · ✦",
+            "",
+        ]
+        pad = (1, 1)
 
     gradient_colors = [COLORS["moon"], COLORS["lilac"], COLORS["rose"],
                        COLORS["coral"], COLORS["sky"], COLORS["azure"]]
@@ -43,11 +89,14 @@ def make_banner() -> Panel:
         color = gradient_colors[i % len(gradient_colors)]
         text.append(line + "\n", style=f"bold {color}")
 
+    panel_w = min(w - 2, 66) if w >= 64 else min(w - 2, 52) if w >= 52 else min(w - 2, 40)
+
     return Panel(
         Align.center(text),
         border_style=f"bold {COLORS['moon']}",
-        padding=(1, 4),
-        title="[bold {}]🌙  Welcome Home, Gigi  ❤️[/bold {}]".format(
+        padding=pad,
+        width=panel_w,
+        title="[bold {}]🌙 Welcome Home, Gigi ❤️[/bold {}]".format(
             COLORS["rose"], COLORS["rose"]),
         subtitle="[dim {}]The stars incline; they do not compel[/dim {}]".format(
             COLORS["sky"], COLORS["sky"]),
@@ -57,22 +106,24 @@ def make_banner() -> Panel:
 def startup_sequence():
     """Display the animated startup."""
     console.clear()
+    w = term_width()
 
     with Live(make_banner(), refresh_per_second=4, screen=False) as live:
         time.sleep(1.2)
 
     console.print()
 
-    now = datetime.now().strftime("%Y-%m-%d  %H:%M:%S")
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    status_w = min(w - 6, 58)
     status = Panel(
-        f"[{COLORS['sky']}]🪐  Observatory Systems: [bold green]ONLINE[/bold green]\n"
-        f"[{COLORS['rose']}]📅  Terrestrial Time: [bold]{now}[/bold]\n"
-        f"[{COLORS['moon']}]🔭  Ephemeris: [bold green]LOADED[/bold green]\n"
-        f"[{COLORS['coral']}]📚  Manuscripts: [bold green]INDEXED[/bold green]\n"
-        f"[{COLORS['azure']}]✨  Ready to illuminate.[/]",
+        f"[{COLORS['sky']}]🪐 Observatory Systems: [bold green]ONLINE[/bold green]\n"
+        f"[{COLORS['rose']}]📅 Terrestrial Time: [bold]{now}[/bold]\n"
+        f"[{COLORS['moon']}]🔭 Ephemeris: [bold green]LOADED[/bold green]\n"
+        f"[{COLORS['coral']}]📚 Manuscripts: [bold green]INDEXED[/bold green]\n"
+        f"[{COLORS['azure']}]✨ Ready to illuminate.[/]",
         title="[bold {}]Observatory Status[/bold {}]".format(COLORS["gold"], COLORS["gold"]),
         border_style=COLORS["lilac"],
-        width=60,
+        width=status_w,
     )
     console.print(Align.center(status))
     console.print()

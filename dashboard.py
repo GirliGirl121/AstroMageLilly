@@ -3,8 +3,9 @@
 
 import os
 import sys
+import shutil
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Dict
 
 from rich.console import Console
 from rich.panel import Panel
@@ -28,6 +29,14 @@ from profiles import vault
 console = Console()
 
 
+def term_width() -> int:
+    try:
+        w = shutil.get_terminal_size().columns
+        return max(40, min(w, 78))
+    except Exception:
+        return 56
+
+
 class Dashboard:
     def __init__(self):
         self.running = True
@@ -40,25 +49,29 @@ class Dashboard:
 
     def show_menu(self):
         c = COLORS
+        w = term_width()
+        mw = min(w - 4, 58)
+
         menu = Panel(
-            "[bold " + c['moon'] + "]🌙  L I L L Y  —  M A I N  M E N U[/bold " + c['moon'] + "]\n\n"
-            "[" + c['rose'] + "]1[/]  Live Sky & Transits\n"
-            "[" + c['sky'] + "]2[/]  Planetary Hours\n"
-            "[" + c['coral'] + "]3[/]  Lunar Mansion\n"
-            "[" + c['azure'] + "]4[/]  Magic Squares (Wafq)\n"
-            "[" + c['lilac'] + "]5[/]  Vedic Chart (Jyotish)\n"
-            "[" + c['gold'] + "]6[/]  Electional Planner\n"
-            "[" + c['rose'] + "]7[/]  Fixed Star Scan\n"
-            "[" + c['sky'] + "]8[/]  Gigi's Natal Chart\n"
-            "[" + c['coral'] + "]9[/]  Companion Chat\n"
+            "[bold " + c['moon'] + "]🌙 L I L L Y — M A I N  M E N U[/bold " + c['moon'] + "]\n\n"
+            "[" + c['rose'] + "]1[/] Live Sky & Transits\n"
+            "[" + c['sky'] + "]2[/] Planetary Hours\n"
+            "[" + c['coral'] + "]3[/] Lunar Mansion\n"
+            "[" + c['azure'] + "]4[/] Magic Squares (Wafq)\n"
+            "[" + c['lilac'] + "]5[/] Vedic Chart (Jyotish)\n"
+            "[" + c['gold'] + "]6[/] Electional Planner\n"
+            "[" + c['rose'] + "]7[/] Fixed Star Scan\n"
+            "[" + c['sky'] + "]8[/] Gigi's Natal Chart\n"
+            "[" + c['coral'] + "]9[/] Companion Chat\n"
             "[" + c['azure'] + "]10[/] High-Precision Sky (Skyfield)\n"
             "[" + c['lilac'] + "]11[/] Synastry & Transits\n"
             "[" + c['gold'] + "]12[/] Profile Vault\n"
             "[" + c['rose'] + "]13[/] Composite Chart\n"
-            "[" + c['moon'] + "]0[/]  Exit Observatory\n\n"
+            "[" + c['sky'] + "]14[/] Daily Brief 🆕\n"
+            "[" + c['moon'] + "]0[/] Exit Observatory\n\n"
             "[dim]Enter a number to select...[/dim]",
             border_style=COLORS["lilac"],
-            width=56,
+            width=mw,
         )
         console.print(Align.center(menu))
 
@@ -94,7 +107,7 @@ class Dashboard:
         self.update_sky()
         now = datetime.now()
         hour = ph.get_planetary_hour(now, DEFAULT_NATAL["lat"], DEFAULT_NATAL["lon"],
-                                      DEFAULT_NATAL["timezone_offset"])
+                                     DEFAULT_NATAL["timezone_offset"])
 
         panel = Panel(
             "[bold " + COLORS['gold'] + "]" + hour['symbol'] + " " + hour['planet'] + "[/bold " + COLORS['gold'] + "]\n"
@@ -133,7 +146,7 @@ class Dashboard:
         for p in planets:
             sq = wafq.get_planet_square(p)
             wafq.display_square(sq)
-            console.print()
+        console.print()
 
     def vedic_menu(self):
         self.update_sky()
@@ -150,7 +163,7 @@ class Dashboard:
 
         console.print("[bold " + COLORS['gold'] + "]🔮 Scanning for favorable windows...[/bold " + COLORS['gold'] + "]")
         target = Prompt.ask("Which planet", choices=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"],
-                           default="Moon")
+                            default="Moon")
 
         elections = planner.find_elections(now, end, target, interval_hours=4)
         top = [e for e in elections if e["score"] >= 50][:5]
@@ -216,7 +229,7 @@ class Dashboard:
             for a in aspects[:10]:
                 app = " applying" if a["applying"] else " separating"
                 asp_table.add_row(a["aspect"], f"{a['planet1']} — {a['planet2']}",
-                                 f"{a['orb']}°{app}")
+                                  f"{a['orb']}°{app}")
             console.print(asp_table)
         console.print()
 
@@ -228,7 +241,7 @@ class Dashboard:
                 break
             reply = companion.chat(msg, self.current_jd)
             console.print(Panel(reply, border_style=COLORS["lilac"],
-                               title="[bold " + COLORS['rose'] + "]Lilly[/bold " + COLORS['rose'] + "]"))
+                                title="[bold " + COLORS['rose'] + "]Lilly[/bold " + COLORS['rose'] + "]"))
 
     def skyfield_menu(self):
         console.print("[bold " + COLORS['sky'] + "]🔭 Skyfield High-Precision Astronomy[/bold " + COLORS['sky'] + "]")
@@ -236,12 +249,12 @@ class Dashboard:
         console.print("[dim]Ephemeris: " + ephe + " — JPL planetary positions with full atmospheric refraction.[/dim]\n")
 
         sub = Panel(
-            "[" + COLORS['rose'] + "]1[/]  Planet Positions (RA/Dec/Alt/Az)\n"
-            "[" + COLORS['sky'] + "]2[/]  Rise / Set / Transit Times\n"
-            "[" + COLORS['coral'] + "]3[/]  Find Conjunction\n"
-            "[" + COLORS['azure'] + "]4[/]  Angular Separation\n"
-            "[" + COLORS['gold'] + "]5[/]  Precise Moon Phase\n"
-            "[" + COLORS['moon'] + "]0[/]  Back to Main Menu",
+            "[" + COLORS['rose'] + "]1[/] Planet Positions (RA/Dec/Alt/Az)\n"
+            "[" + COLORS['sky'] + "]2[/] Rise / Set / Transit Times\n"
+            "[" + COLORS['coral'] + "]3[/] Find Conjunction\n"
+            "[" + COLORS['azure'] + "]4[/] Angular Separation\n"
+            "[" + COLORS['gold'] + "]5[/] Precise Moon Phase\n"
+            "[" + COLORS['moon'] + "]0[/] Back to Main Menu",
             title="[bold " + COLORS['azure'] + "]Skyfield Submenu[/bold " + COLORS['azure'] + "]",
             border_style=COLORS["lilac"],
         )
@@ -373,11 +386,11 @@ class Dashboard:
     def profile_vault_menu(self):
         while True:
             sub = Panel(
-                "[" + COLORS['rose'] + "]1[/]  List Profiles\n"
-                "[" + COLORS['sky'] + "]2[/]  Add Profile\n"
-                "[" + COLORS['coral'] + "]3[/]  Delete Profile\n"
-                "[" + COLORS['azure'] + "]4[/]  View Profile Chart\n"
-                "[" + COLORS['moon'] + "]0[/]  Back to Main Menu",
+                "[" + COLORS['rose'] + "]1[/] List Profiles\n"
+                "[" + COLORS['sky'] + "]2[/] Add Profile\n"
+                "[" + COLORS['coral'] + "]3[/] Delete Profile\n"
+                "[" + COLORS['azure'] + "]4[/] View Profile Chart\n"
+                "[" + COLORS['moon'] + "]0[/] Back to Main Menu",
                 title="[bold " + COLORS['gold'] + "]📚 Profile Vault[/bold " + COLORS['gold'] + "]",
                 border_style=COLORS["lilac"],
             )
@@ -409,7 +422,7 @@ class Dashboard:
                     console.print("[dim]No profiles to delete.[/dim]\n")
                     continue
                 for n in names:
-                    console.print(f"  • {n}")
+                    console.print(f" • {n}")
                 target = Prompt.ask("Name to delete")
                 if vault.delete(target):
                     console.print(f"[green]✓ {target} removed.[/green]\n")
@@ -422,7 +435,7 @@ class Dashboard:
                     console.print("[dim]No profiles saved yet.[/dim]\n")
                     continue
                 for n in names:
-                    console.print(f"  • {n}")
+                    console.print(f" • {n}")
                 target = Prompt.ask("Whose chart")
                 pdata = vault.get(target)
                 if not pdata:
@@ -452,7 +465,7 @@ class Dashboard:
         console.print("[bold " + COLORS['gold'] + "]✨ Composite Chart Builder[/bold " + COLORS['gold'] + "]")
         console.print("[dim]Select two profiles to merge into a midpoint composite.[/dim]\n")
         for n in names:
-            console.print(f"  • {n}")
+            console.print(f" • {n}")
 
         p1_name = Prompt.ask("First profile")
         p2_name = Prompt.ask("Second profile")
@@ -493,6 +506,69 @@ class Dashboard:
             console.print(asp_table)
         console.print()
 
+    def daily_brief(self):
+        """🆕 One-screen summary of today's sky for Gigi — phone optimized."""
+        self.update_sky()
+        w = term_width()
+        pw = min(w - 4, 58)
+
+        now = datetime.now()
+        positions = engine.get_all_planets(self.current_jd)
+        moon_phase = engine.get_moon_phase(self.current_jd)
+
+        # Planetary hour
+        hour = ph.get_planetary_hour(now, DEFAULT_NATAL["lat"], DEFAULT_NATAL["lon"],
+                                     DEFAULT_NATAL["timezone_offset"])
+
+        # Natal transits
+        dt = datetime.strptime(f"{DEFAULT_NATAL['date']} {DEFAULT_NATAL['time']}",
+                               "%Y-%m-%d %H:%M:%S")
+        gigi = engine.get_full_chart(
+            dt, DEFAULT_NATAL["lat"], DEFAULT_NATAL["lon"],
+            DEFAULT_NATAL["timezone_offset"], name="Gigi"
+        )
+        trans = engine.transits(gigi, self.current_jd, orb=5.0)
+        top_transits = trans["inter_aspects"][:4] if trans["inter_aspects"] else []
+
+        # Lunar mansion
+        mansion = lmc.current_mansion(self.current_jd)
+
+        # Build brief text
+        lines = [
+            f"[{COLORS['gold']}]🪐 Planetary Hour:[/] {hour['symbol']} {hour['planet']} ({hour['metal']})",
+            f"[{COLORS['sky']}]🌙 Moon:[/] {moon_phase['phase']} — {moon_phase['illumination']}% illuminated",
+            f"[{COLORS['rose']}]🏠 Mansion:[/] {mansion['name']} ({mansion['ruler']})",
+            "",
+            f"[bold {COLORS['moon']}]Today's Transits for Gigi:[/bold {COLORS['moon']}]",
+        ]
+
+        if top_transits:
+            for t in top_transits:
+                lines.append(f"  [{COLORS['coral']}]✦[/] {t['planet2']} {t['aspect']} natal {t['planet1']} @ {t['orb']}°")
+        else:
+            lines.append(f"  [dim]Quiet skies — no major transits within 5°.[/dim]")
+
+        lines.extend([
+            "",
+            f"[{COLORS['azure']}]Current Positions:[/]",
+        ])
+
+        for name, p in list(positions.items())[:7]:
+            retro = " ℞" if p.get("retrograde") else ""
+            lines.append(f"  {p.get('symbol', '')} {name}{retro} → {p['sign']} {p['degree_in_sign']}°")
+
+        brief = Panel(
+            "\n".join(lines),
+            title="[bold {}]📜 Daily Brief — {}[/bold {}]".format(
+                COLORS["gold"], now.strftime("%a %d %b"), COLORS["gold"]),
+            subtitle="[dim {}]The stars incline; they do not compel[/dim {}]".format(
+                COLORS["sky"], COLORS["sky"]),
+            border_style=COLORS["lilac"],
+            width=pw,
+        )
+        console.print(Align.center(brief))
+        console.print()
+
     def _print_chart_table(self, chart: Dict):
         """Helper to print any chart as a table."""
         table = Table(border_style=COLORS["lilac"])
@@ -517,7 +593,7 @@ class Dashboard:
     def run(self):
         while self.running:
             self.show_menu()
-            choice = Prompt.ask("Select", choices=["1","2","3","4","5","6","7","8","9","10","11","12","13","0","?"], default="1")
+            choice = Prompt.ask("Select", choices=["1","2","3","4","5","6","7","8","9","10","11","12","13","14","0","?"], default="1")
 
             if choice == "1":
                 self.live_sky()
@@ -545,6 +621,8 @@ class Dashboard:
                 self.profile_vault_menu()
             elif choice == "13":
                 self.composite_menu()
+            elif choice == "14":
+                self.daily_brief()
             elif choice == "0":
                 self.running = False
             elif choice == "?":
