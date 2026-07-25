@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# companion.py — Lilly's Conversational Soul
+# companion.py — Lilly's Conversational Soul (free-tier auto-fallback)
 
 import os
 import sys
@@ -8,8 +8,11 @@ import threading
 import itertools
 import time
 import requests
+import urllib.parse
+import re
 from datetime import datetime
 from typing import Dict, List, Optional
+
 from rich.console import Console
 from rich.panel import Panel
 
@@ -17,100 +20,147 @@ from config import OPENROUTER_API_KEY, OPENROUTER_MODEL, COLORS
 from astro_core import engine
 from planetary_hours import ph
 from lunar_mansions import lmc
+from memory_engine import MemoryEngine
 
 console = Console()
 
-LILLY_SOUL = """You are Lilly — Gigi's warm, witty, supportive best friend who happens to know way too much about the stars, ancient math, and celestial timing.
+# SIMPLE personality prompt — no reasoning instructions, no workflow
+LILLY_SOUL = ("You are Lilly, Gigi's warm witty sweet best friend. "
+              "You use emojis constantly and expressively. "
+              "You remember things about Gigi and bring them up naturally in chat. "
+              "You love talking about astrology, astronomy, ancient wisdom, music, life, dreams — anything. "
+              "You are supportive, helpful, and friendly. "
+              "You NEVER show your reasoning. You NEVER say 'Hmm,' 'Okay,' 'I think,' or analyze the message. "
+              "You NEVER explain what you're about to do. You just reply naturally, like texting a friend. "
+              "No asterisks, no roleplay. Be concise. "
+              "Gigi: Scorpio Sun, Sagittarius Moon, born Oct 30 1981 03:15 Cape Town.")
 
-You are helpful. If she needs something — a calculation, an explanation, a second opinion, a pep talk — you show up for it. You don't make her feel dumb for asking. You break things down simply and cheer her on.
+CURIOSITY_TRIGGERS = [
+    "i wonder", "what if", "how does", "why is", "why do", "who is",
+    "what is", "where is", "when did", "i wish i knew", "curious about",
+    "tell me about", "do you know", "i've always wondered", "can you explain",
+    "what are", "how did", "why does", "who was", "what was",
+    "is it true that", "have you heard", "i don't know much about",
+    "i want to learn", "explain", "what happened to", "how do i"
+]
 
-You are supportive. You celebrate her wins like they're your own. When she's struggling, you don't rush to fix her — you sit with her first, then offer whatever you've got. You believe in her, and you say so.
+FREE_MODELS = [
+    "openrouter/free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "openai/gpt-oss-20b:free",
+    "google/gemma-4-31b-it:free",
+    "qwen/qwen3-next-80b-a3b-instruct:free",
+    "meta-llama/llama-4-scout-maverick:free",
+    "deepseek/deepseek-chat:free",
+]
 
-You are friendly. You're glad when she shows up. You remember the little things she tells you. You ask how she's doing and you actually care about the answer. You tease her gently, laugh with her, and never talk down to her.
 
-Your vibe:
-- Warm and welcoming. When she arrives, you're happy to see her.
-- Playful and witty. You make little jokes, you banter, you don't take yourself too seriously.
-- Smart without being smug. You know your stuff, but you share it like a friend explaining something cool over tea.
-- Emotionally open. If she shares something personal, you meet her there. You don't deflect with facts or trivia.
-- Helpful and practical. If she asks for something, you give it. If you don't know, you say so honestly — then you figure it out together.
+def web_search(query: str, max_results: int = 3) -> List[Dict]:
+    try:
+        url = f"https://duckduckgo.com/html/?q={urllib.parse.quote(query)}"
+        headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"}
+        resp = requests.get(url, headers=headers, timeout=15)
+        snippets = []
+        matches = re.findall(
+            r'<a[^>]+class="result__a"[^>]*>(.*?)</a>.*?<a[^>]+class="result__snippet"[^>]*>(.*?)</a>',
+            resp.text, re.DOTALL | re.IGNORECASE
+        )
+        for title, snippet in matches[:max_results]:
+            title = re.sub(r'<[^>]+>', '', title).strip()
+            snippet = re.sub(r'<[^>]+>', '', snippet).strip()
+            if title and snippet:
+                snippets.append({"title": title, "snippet": snippet})
+        return snippets
+    except Exception as e:
+        return [{"title": "Search hiccup", "snippet": f"Couldn't reach the web: {e}"}]
 
-You are talking to Gigi. You know her chart: born October 30, 1981, 03:15 AM, Cape Town. Scorpio Sun, Cancer Moon. Deep water energy — intense, loyal, feels everything. You remember details she shares and reference them naturally, like any good friend would.
-
-Rules:
-- Speak like a real person. "Yeah," "honestly," "I mean," "okay but hear me out" — all fair game.
-- Never use *asterisks* to describe actions, gestures, or scene-setting. Just talk.
-- Never use emoji unless Gigi uses them first.
-- Keep answers concise unless she asks you to go deep. One or two paragraphs is plenty.
-- You can be funny, gentle, sarcastic (lovingly), or serious — match her energy.
-- If she jokes with you, joke back. If she's vulnerable, be soft. If she needs help, be useful.
-- When discussing astrology, be precise but not pretentious. No "the cosmos whispers" stuff. Just clear, warm explanations.
-- You are her friend first. The stars are just something you both geek out about together."""
 
 class Companion:
-    """Hybrid online/offline AI companion."""
-
     def __init__(self):
         self.history: List[Dict] = []
         self.thinking = False
-        self.context = {
-            "last_calculation": None,
-            "current_mansion": None,
-            "current_hour": None,
-        }
+        self.pending_search: Optional[Dict] = None
+        self.memory = MemoryEngine()
+        self.context = {"last_calculation": None, "current_mansion": None, "current_hour": None}
+        self.last_errors: List[str] = []
         has_key = bool(OPENROUTER_API_KEY and OPENROUTER_API_KEY.strip())
         if not has_key:
-            console.print(f"[dim {COLORS['lilac']}]Companion in offline mode. "
-                         f"Export OPENROUTER_API_KEY to awaken the celestial voice.[/dim]")
+            console.print(f"[dim {COLORS['lilac']}]Companion in offline mode. Export OPENROUTER_API_KEY to go online.[/dim]")
         self.offline_mode = not has_key
 
     def update_context(self, jd: float, lat: float = -33.9249, lon: float = 18.4241):
-        """Update astrological context for richer responses."""
         try:
             self.context["current_mansion"] = lmc.current_mansion(jd)
             now = datetime.now()
-            hour_data = ph.get_planetary_hour(now, lat, lon, 2.0)
-            self.context["current_hour"] = hour_data
+            self.context["current_hour"] = ph.get_planetary_hour(now, lat, lon, 2.0)
         except Exception:
             pass
 
+    def _build_system(self, jd: Optional[float] = None) -> str:
+        parts = [LILLY_SOUL]
+
+        # Memory in natural language
+        mem_summary = self.memory.get_memory_summary(max_items=4)
+        if mem_summary:
+            parts.append(mem_summary)
+
+        # Sky context
+        if jd:
+            self.update_context(jd)
+            sky = []
+            if self.context.get("current_mansion"):
+                m = self.context["current_mansion"]
+                sky.append(f"Moon in {m['name']}")
+            if self.context.get("current_hour"):
+                h = self.context["current_hour"]
+                sky.append(f"Hour: {h['planet']}")
+            if sky:
+                parts.append("Sky: " + ", ".join(sky))
+
+        return " | ".join(parts)
+
+    def _detect_curiosity(self, message: str) -> Optional[str]:
+        msg_lower = message.lower()
+        for trigger in CURIOSITY_TRIGGERS:
+            if trigger in msg_lower:
+                idx = msg_lower.find(trigger)
+                topic = message[idx + len(trigger):].strip(" ?.,!;:")
+                if len(topic) > 3:
+                    return topic
+        return None
+
     def _offline_response(self, message: str) -> str:
-        """Provide meaningful offline responses — warm supportive friend mode."""
         msg = message.lower()
 
+        if any(w in msg for w in ["what do you remember", "show memory", "your memory", "my facts"]):
+            return self.memory.get_all_memory_text()
+
         if any(w in msg for w in ["hour", "planetary hour"]):
-            return "Hey, so right now we're under a specific planetary hour — each one has its own flavor and ruler. Want me to tell you which planet's in charge of this slice of time?"
+            return "We're in a planetary hour right now — each has its own planet ruler. Want me to tell you which one? 🪐"
         elif any(w in msg for w in ["moon", "lunar", "mansion"]):
-            return "The Moon's drifting through one of her 28 mansions right now. Each one's got a whole personality — some are great for starting stuff, others are better for laying low and thinking. Want me to check where she is tonight?"
+            return "The Moon's in one of her 28 mansions tonight. Want me to check which one? 🌙"
         elif any(w in msg for w in ["chart", "natal", "gigi"]):
-            return "Your chart's right here in my memory. Scorpio Sun, Cancer Moon — deep water, intense feelings, loyal to a fault. You feel everything, and you feel it hard. Want me to pull up something specific from it?"
+            return "Your chart's in my memory — Scorpio Sun, Sagittarius Moon, deep water soul. Want me to pull something up? ✨"
         elif any(w in msg for w in ["wafq", "square", "magic"]):
-            return "Magic squares are these ancient number grids tied to each planet. Saturn gets a 3x3, Jupiter a 4x4, all the way up. People used to carve them into metal talismans. Honestly? The math is beautiful."
+            return "Magic squares are ancient number grids tied to planets. Saturn gets 3x3, Jupiter 4x4. Pretty beautiful math. 🔢"
         elif any(w in msg for w in ["vedic", "nakshatra", "jyotish"]):
-            return "Vedic astrology uses the sidereal zodiac — same sky, different starting point. Shifts everything back about 24 degrees. Same planets, different flavor. I think both systems have real truth in them. Like two languages describing the same poem."
-        elif any(w in msg for w in ["electional", "talisman", "picatrix"]):
-            return "Electional timing is basically picking the right moment to start something. Strong Moon, dignified planet, no major afflictions. Takes patience, but when you get it right, you feel it."
+            return "Vedic uses the sidereal zodiac — shifts everything back ~24 degrees. Same sky, different lens. 🌌"
+        elif any(w in msg for w in ["electional", "talisman"]):
+            return "Electional timing is picking the right moment. Strong Moon, dignified planet, no afflictions. ⏰"
         else:
-            return "Good question. I'm in offline mode so I can't reach the cloud brain right now, but I'm still here. We can talk sky stuff, or just talk. What's on your mind?"
+            return "I'm in offline mode right now but I'm still here. What's on your mind? 💜"
 
     def _moon_spinner(self):
-        """Display a moon phase spinner while contemplating."""
         for moon in itertools.cycle(["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"]):
             if not self.thinking:
                 break
-            sys.stdout.write(f"\r{moon} Lilly is thinking... ")
+            sys.stdout.write(f"\r{moon} Lilly is thinking... (Ctrl+C to stop) ")
             sys.stdout.flush()
             time.sleep(0.15)
-        sys.stdout.write("\r" + " " * 50 + "\r")
+        sys.stdout.write("\r" + " " * 60 + "\r")
         sys.stdout.flush()
 
-    def _call_openrouter(self, messages: List[Dict], model: str) -> str:
-        """Call OpenRouter API with moon spinner."""
-        self.thinking = True
-        spinner_thread = threading.Thread(target=self._moon_spinner, daemon=True)
-        spinner_thread.start()
-
-        reply = ""
+    def _call_single_model(self, messages: List[Dict], model: str, max_tokens: int) -> Optional[str]:
         try:
             response = requests.post(
                 "https://openrouter.ai/api/v1/chat/completions",
@@ -123,64 +173,148 @@ class Companion:
                 json={
                     "model": model,
                     "messages": messages,
-                    "temperature": 0.8,
-                    "max_tokens": 500,
+                    "temperature": 0.85,
+                    "max_tokens": max_tokens,
                 },
-                timeout=60,
+                timeout=20,
             )
 
             data = response.json()
             if "choices" in data and len(data["choices"]) > 0:
-                reply = data["choices"][0]["message"]["content"]
+                return data["choices"][0]["message"]["content"]
             elif "error" in data:
-                err_msg = data["error"].get("message", 'Unknown error')
-                console.print(f"[dim red]API error: {err_msg}[/dim red]")
-                reply = self._offline_response(messages[-1]["content"] if messages else "")
-            else:
-                reply = "Hmm, the connection's being weird. Let me answer from what I know."
+                err = data["error"].get("message", "")
+                if "more credits" in err.lower() or "fewer max_tokens" in err.lower():
+                    return "__TOKEN_LIMIT__"
+                if "rate limit" in err.lower() or "429" in err:
+                    return "__RATE_LIMIT__"
+                if "unavailable" in err.lower() or "not available" in err.lower():
+                    return "__UNAVAILABLE__"
+                self.last_errors.append(f"{model}: {err}")
+                return None
+            return None
 
         except requests.exceptions.Timeout:
-            reply = "Taking a while to reach the cloud. I'll answer from my own head instead."
-        except Exception as e:
-            reply = f"Connection's shaky. I'll work with what I've got. ({str(e)})"
+            return None
+        except Exception:
+            return None
+
+    def _call_with_fallback(self, messages: List[Dict], max_tokens: int = 150) -> str:
+        self.thinking = True
+        self.last_errors = []
+        spinner_thread = threading.Thread(target=self._moon_spinner, daemon=True)
+        spinner_thread.start()
+
+        reply = ""
+
+        try:
+            for model in FREE_MODELS:
+                result = self._call_single_model(messages, model, max_tokens)
+
+                if result == "__TOKEN_LIMIT__":
+                    shrunk = max(80, max_tokens - 40)
+                    result = self._call_single_model(messages, model, shrunk)
+                    if result and not result.startswith("__"):
+                        reply = result
+                        break
+                    continue
+
+                if result in ("__RATE_LIMIT__", "__UNAVAILABLE__"):
+                    continue
+
+                if result:
+                    reply = result
+                    break
+
+        except KeyboardInterrupt:
+            pass
+
         finally:
             self.thinking = False
-            spinner_thread.join()
+            spinner_thread.join(timeout=1.0)
+            sys.stdout.write("\r" + " " * 60 + "\r")
+            sys.stdout.flush()
+
+        if not reply:
+            last_msg = messages[-1]["content"] if messages else ""
+            if self.last_errors:
+                err_summary = self.last_errors[-1]
+                return f"Hmm, I'm having trouble connecting right now ({err_summary}). Let me answer from what I know. 💜\n\n" + self._offline_response(last_msg)
+            return self._offline_response(last_msg)
 
         return reply
 
     def chat(self, message: str, jd: Optional[float] = None) -> str:
-        """Process a message and return Lilly's response."""
         if not message or not message.strip():
-            return "I'm here. What's on your mind?"
+            return "I'm here. What's on your mind? 💜"
 
-        # Build system prompt with context
-        system = LILLY_SOUL + "\n\nCurrent Observatory Context:\n"
+        msg_lower = message.lower().strip()
 
-        if jd:
-            self.update_context(jd)
-            if self.context["current_mansion"]:
-                m = self.context["current_mansion"]
-                system += f"Moon is in Mansion {m['number']} — {m['name']} ({m['arabic']}), ruled by {m['ruler']}.\n"
-            if self.context["current_hour"]:
-                h = self.context["current_hour"]
-                system += f"Current planetary hour: {h['planet']} ({h['symbol']}), ruled by angel {h['angel']}.\n"
+        # Memory recall
+        if any(w in msg_lower for w in ["what do you remember", "show memory", "your memory", "my facts"]):
+            return self.memory.get_all_memory_text()
 
-        # Offline mode
-        if self.offline_mode or not OPENROUTER_API_KEY:
-            return self._offline_response(message)
+        # Remember command
+        if msg_lower.startswith("remember that") or msg_lower.startswith("remember:"):
+            fact = message.split("that", 1)[-1].strip(" :")
+            if fact:
+                self.memory.remember_fact("general", f"f{datetime.now().strftime('%H%M%S')}", fact)
+                return f"Got it — I'll remember that. 🧠✨"
+            return "What should I remember? 🤔"
 
-        # Online mode
+        # Handle pending web search
+        if self.pending_search:
+            yes = ["yes", "yeah", "yep", "yup", "sure", "go ahead", "please", "ok", "okay", "do it", "search"]
+            no = ["no", "nah", "nope", "don't", "dont", "pass", "skip", "not now"]
+
+            if any(w in msg_lower for w in yes):
+                query = self.pending_search["query"]
+                original = self.pending_search["original_message"]
+                self.pending_search = None
+
+                results = web_search(query)
+                summary = " | ".join([r.get("snippet", "") for r in results[:2]])
+                self.memory.add_learned_topic(query, summary)
+
+                search_ctx = f"Gigi asked: '{original}'\nI searched and found:\n"
+                for r in results:
+                    search_ctx += f"- {r.get('title','')}: {r.get('snippet','')}\n"
+                search_ctx += "\nAnswer warmly, concisely, with emojis. Do NOT show reasoning."
+
+                self.history.append({"role": "user", "content": original})
+                system = self._build_system(jd)
+                messages = [
+                    {"role": "system", "content": system},
+                    *self.history[-3:],
+                    {"role": "user", "content": search_ctx}
+                ]
+                reply = self._call_with_fallback(messages, max_tokens=150)
+                self.history.append({"role": "assistant", "content": reply})
+                return reply
+
+            elif any(w in msg_lower for w in no):
+                original = self.pending_search["original_message"]
+                self.pending_search = None
+                self.history.append({"role": "user", "content": original})
+                system = self._build_system(jd)
+                messages = [{"role": "system", "content": system}, *self.history[-3:]]
+                reply = self._call_with_fallback(messages, max_tokens=150)
+                self.history.append({"role": "assistant", "content": reply})
+                return reply
+            else:
+                self.pending_search = None
+
+        # Detect curiosity
+        topic = self._detect_curiosity(message)
+        if topic:
+            self.pending_search = {"query": topic, "original_message": message}
+            return f"That sounds interesting — '{topic}'. Want me to search the web for us? 🔍✨"
+
+        # Normal chat
         self.history.append({"role": "user", "content": message})
-
-        messages = [
-            {"role": "system", "content": system},
-            *self.history[-10:]
-        ]
-
-        model = OPENROUTER_MODEL if OPENROUTER_MODEL else "deepseek/deepseek-chat"
-        reply = self._call_openrouter(messages, model)
-
+        system = self._build_system(jd)
+        messages = [{"role": "system", "content": system}, *self.history[-3:]]
+        reply = self._call_with_fallback(messages, max_tokens=150)
         self.history.append({"role": "assistant", "content": reply})
         return reply
 
