@@ -8,3 +8,5 @@ __pycache__/
 
 # Termux artifacts
 termux/
+ephe/*.bsp
+ephe/*.se1
